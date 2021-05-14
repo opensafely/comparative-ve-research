@@ -10,15 +10,15 @@
 
 ## Import libraries ----
 library('tidyverse')
-
+library('here')
 ## create output directories ----
-dir.create(here::here("output", "data"), showWarnings = FALSE, recursive=TRUE)
+dir.create(here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
 ## Import processed data ----
 
-data_all <- read_rds(here::here("output", "data", "data_all.rds"))
+data_processed <- read_rds(here("output", "data", "data_processed.rds"))
 
-data_criteria <- data_all %>%
+data_criteria <- data_processed %>%
   transmute(
     patient_id,
     has_age = !is.na(age),
@@ -28,31 +28,21 @@ data_criteria <- data_all %>%
     has_region = !is.na(region),
     has_follow_up_previous_year,
     unknown_vaccine_brand,
-    care_home_combined,
-    endoflife,
     nopriorcovid = (is.na(prior_positive_test_date) & is.na(prior_primary_care_covid_case_date) & is.na(prior_covidadmitted_date)),
 
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region &
       has_follow_up_previous_year &
       !unknown_vaccine_brand &
-      !care_home_combined &
-      !endoflife &
       nopriorcovid
     ),
 
-    is_over70s = age>=70 & has_age,
-    is_over80s = age>=80 & has_age,
-    is_in70s = (age>=70 & age<80) & has_age,
     is_under65s = (age<=64) & has_age,
   )
 
 data_cohorts <- data_criteria %>%
   transmute(
     patient_id,
-    over70s = include & is_over70s,
-    over80s = include & is_over80s,
-    in70s = include & is_in70s,
     under65s = include & is_under65s,
   )
 
@@ -61,9 +51,6 @@ data_cohorts <- data_criteria %>%
 
 metadata_cohorts <- tribble(
   ~cohort, ~cohort_descr, #~postvax_cuts, ~knots,
-  "over70s", "Aged 70+, non-carehome, no prior infection",
-  "over80s", "Aged 80+, non-carehome, no prior infection",
-  "in70s", "Aged 70-79, non-carehome, no prior infection",
   "under65s", "Aged <=64, no prior infection",
 ) %>%
 mutate(
@@ -81,8 +68,6 @@ write_rds(data_cohorts, here::here("output", "data", "data_cohorts.rds"))
 write_rds(metadata_cohorts, here::here("output", "data", "metadata_cohorts.rds"))
 write_csv(metadata_cohorts, here::here("output", "data", "metadata_cohorts.csv"))
 
-
-
 ## create flowchart data ----
 
 for(cohort in metadata_cohorts$cohort){
@@ -94,9 +79,7 @@ for(cohort in metadata_cohorts$cohort){
       c1_1yearfup = c0_all & (has_follow_up_previous_year),
       c2_notmissing = c1_1yearfup & (has_age & has_sex & has_imd & has_ethnicity & has_region),
       c3_knownbrand = c2_notmissing & (!unknown_vaccine_brand),
-      c4_noncarehome = c3_knownbrand & (!care_home_combined),
-      c5_nonendoflife = c4_noncarehome & (!endoflife),
-      c6_nopriorcovid = c5_nonendoflife & (nopriorcovid),
+      c4_nopriorcovid = c3_knownbrand & (nopriorcovid),
     ) %>%
     summarise(
       across(.fns=sum)
@@ -129,7 +112,6 @@ metadata_outcomes <- tribble(
   "coviddeath", "coviddeath_date", "COVID-related death",
   "noncoviddeath", "noncoviddeath_date", "Non-COVID-related death",
   "death", "death_date", "Any death",
-  "vaccine", "covid_vax_1_date", "First vaccination date"
 )
 
 write_rds(metadata_outcomes, here::here("output", "data", "metadata_outcomes.rds"))
@@ -174,11 +156,7 @@ formula_comorbs <- . ~ . +
 
   multimorb +
 
-  shielded +
-
-  flu_vaccine +
-
-  efi_cat
+  shielded
 
 
 formula_region <- . ~ . + region
@@ -219,7 +197,7 @@ write_rds(list_formula, here::here("output", "data", glue::glue("list_formula.rd
 
 ## define stratification variables ----
 
-list_strata <- data_all %>%
+list_strata <- data_processed %>%
   mutate(
     all=factor("all")
   ) %>%
@@ -229,3 +207,4 @@ list_strata <- data_all %>%
   lapply(levels)
 
 write_rds(list_strata, here::here("output", "data", glue::glue("list_strata.rds")))
+
