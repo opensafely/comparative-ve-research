@@ -20,6 +20,8 @@ library('lubridate')
 library('arrow')
 library('here')
 
+source(here("analysis", "R", "lib", "utility_functions.R"))
+
 # import globally defined repo variables from
 gbl_vars <- jsonlite::fromJSON(
   txt="./analysis/global-variables.json"
@@ -208,6 +210,6 @@ data_vax <- local({
 })
 
 
-write_rds(data_processed, here("output", "data", "data_all.rds"), compress="gz")
+write_rds(data_processed, here("output", "data", "data_processed.rds"), compress="gz")
 write_rds(data_vax, here("output", "data", "data_long_vax_dates.rds"), compress="gz")
 
