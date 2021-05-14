@@ -11,9 +11,17 @@ from cohortextractor import (
 # Import Codelists
 import codelists
 
+# import json module
+import json
+
+# import global-variables.json
+with open("./analysis/global-variables.json") as f:
+    gbl_vars = json.load(f)
+
 # define variables explicitly
-start_date = "2021-04-01" # change this in global-variables.json if necessary
-end_date = "2021-03-22" # change this in global-variables.json if necessary
+start_date = gbl_vars["start_date"] # change this in global-variables.json if necessary
+end_date = gbl_vars["end_date"] # change this in global-variables.json if necessary
+
 
 # start_date is currently set to the start of the vaccination campaign
 # end_date depends on the most reent data coverage in the database, and the particular variables of interest
