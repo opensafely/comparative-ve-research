@@ -143,6 +143,14 @@ data_processed <- data_extract_reordered %>%
       (psychosis_schiz_bipolar),
     multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, 4, Inf), labels=c("0", "1", "2", "3", "4+"), right=FALSE),
 
+    vax_type = case_when(
+      is.na(covid_vax_az_1_date) ~ "az",
+      is.na(covid_vax_pfizer_1_date) ~ "pfizer",
+      TRUE ~ NA_character_
+    ),
+
+    vax_day = as.integer(covid_vax_1_date - start_date)+1,
+
     cause_of_death = fct_case_when(
       !is.na(coviddeath_date) ~ "covid-related",
       !is.na(death_date) ~ "not covid-related",
