@@ -45,7 +45,7 @@ study = StudyDefinition(
         AND
         NOT has_died
         AND 
-        covid_vax_1_date
+        (covid_vax_az_1_date OR covid_vax_pfizer_1_date)
         """,
         registered=patients.registered_as_of(
             "index_date",
@@ -355,7 +355,8 @@ study = StudyDefinition(
         return_expectations={
             "date": {
                 "earliest": "2020-12-08",  # first vaccine administered on the 8/12
-                "latest": "2021-01-01",
+                "latest": "2021-03-01",
+                "incidence": 1
             }
         },
     ),
@@ -364,21 +365,6 @@ study = StudyDefinition(
     covid_vax_pfizer_2_date=patients.with_tpp_vaccination_record(
         product_name_matches="COVID-19 mRNA Vac BNT162b2 30mcg/0.3ml conc for susp for inj multidose vials (Pfizer-BioNTech)",
         on_or_after="covid_vax_pfizer_1_date + 15 days",
-        find_first_match_in_period=True,
-        returning="date",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {
-                "earliest": "2020-12-29",  # first reported second dose administered on the 29/12
-                "latest": "2021-02-01",
-            }
-        },
-    ),
-    
-    # THIRD DOSE COVID VACCINATION, TYPE = Pfizer (after patient's second dose of same vaccine type)
-    covid_vax_pfizer_3_date=patients.with_tpp_vaccination_record(
-        product_name_matches="COVID-19 mRNA Vac BNT162b2 30mcg/0.3ml conc for susp for inj multidose vials (Pfizer-BioNTech)",
-        on_or_after="covid_vax_pfizer_2_date + 1 day",
         find_first_match_in_period=True,
         returning="date",
         date_format="YYYY-MM-DD",
@@ -403,7 +389,8 @@ study = StudyDefinition(
         return_expectations={
             "date": {
                 "earliest": "2021-01-04",  # first vaccine administered on the 4/1
-                "latest": "2021-02-01",
+                "latest": "2021-03-01",
+                "incidence": 1
             }
         },
     ),
@@ -419,25 +406,11 @@ study = StudyDefinition(
             "date": {
                 "earliest": "2021-02-01",
                 "latest": "2021-03-01",
+                "incidence": 0.3
             }
         },
     ),
 
-    # THIRD DOSE COVID VACCINATION, TYPE = Oxford AZ
-    covid_vax_az_3_date=patients.with_tpp_vaccination_record(
-        product_name_matches="COVID-19 Vac AstraZeneca (ChAdOx1 S recomb) 5x10000000000 viral particles/0.5ml dose sol for inj MDV",
-        on_or_after="covid_vax_az_2_date + 1 day",
-        find_first_match_in_period=True,
-        returning="date",
-        date_format="YYYY-MM-DD",
-        return_expectations={
-            "date": {
-                "earliest": "2021-03-02",  
-                "latest": "2021-04-01",
-            }
-        },
-    ),
-    
 
     unknown_vaccine_brand = patients.satisfying(
         """
