@@ -72,6 +72,7 @@ study = StudyDefinition(
         return_expectations={
             "rate": "universal",
             "category": {"ratios": {"M": 0.49, "F": 0.51}},
+            "incidence": 1,
         }
     ),
 
@@ -232,8 +233,8 @@ study = StudyDefinition(
                     "West Midlands": 0.1,
                     "East of England": 0.1,
                     "London": 0.1,
-                    "South East": 0.09,
-                    "" : 0.01
+                    "South East": 0.1,
+                    #"" : 0.01
                 },
             },
         },
@@ -311,7 +312,8 @@ study = StudyDefinition(
             "date": {
                 "earliest": "2020-12-08",  # first vaccine administered on the 8/12
                 "latest": "2021-02-01",
-            }
+            },
+            "incidence": 1
         },
     ),
     # SECOND DOSE COVID VACCINATION - any type
@@ -356,8 +358,8 @@ study = StudyDefinition(
             "date": {
                 "earliest": "2020-12-08",  # first vaccine administered on the 8/12
                 "latest": "2021-03-01",
-                "incidence": 1
-            }
+            },
+            "incidence": 1
         },
     ),
 
@@ -390,8 +392,8 @@ study = StudyDefinition(
             "date": {
                 "earliest": "2021-01-04",  # first vaccine administered on the 4/1
                 "latest": "2021-03-01",
-                "incidence": 1
-            }
+            },
+            "incidence": 1
         },
     ),
 

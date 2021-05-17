@@ -144,10 +144,14 @@ data_processed <- data_extract_reordered %>%
     multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, 4, Inf), labels=c("0", "1", "2", "3", "4+"), right=FALSE),
 
     vax_type = case_when(
-      is.na(covid_vax_az_1_date) ~ "az",
-      is.na(covid_vax_pfizer_1_date) ~ "pfizer",
+      #!is.na(covid_vax_az_1_date) ~ "az",
+      #!is.na(covid_vax_pfizer_1_date) ~ "pfizer",
+      covid_vax_az_1_date <= covid_vax_pfizer_1_date ~ "az",
+      covid_vax_az_1_date > covid_vax_pfizer_1_date ~ "pfizer",
       TRUE ~ NA_character_
     ),
+
+    covid_vax_1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, na.rm=TRUE),
 
     vax_day = as.integer(covid_vax_1_date - start_date)+1,
 

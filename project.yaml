@@ -45,20 +45,19 @@ actions:
     needs: [data_process, data_define_cohorts]
     outputs:
       highly_sensitive:
-        data: output/data_vax_*.csv
+        data_az: output/data_vax_az_only.csv
+        data_pfizer: output/data_vax_pfizer_only.csv
 
   matching:
-    run: python:latest analysis/matching.py
+    run: python:latest python analysis/matching.py
     needs: [data_matching]
     outputs:
       highly_sensitive:
-        cases: output/matched/matched_cases.csv
-        matches: output/matched/matched_matches.csv
-        combined: output/matched/matched_combined.csv
-        report: output/matched/matching_report.txt
-
-
-
+        cases: output/matched_cases.csv
+        matches: output/matched_matches.csv
+        combined: output/matched_combined.csv
+      moderately_sensitive:
+        report: output/matching_report.txt
 
 
 
