@@ -27,9 +27,22 @@ actions:
       moderately_sensitive:
         datasummary: output/data_properties/data*.txt
 
-  data_matching:
-    run: r:latest analysis/R/matching.R
+  data_define_cohorts:
+    run: r:latest analysis/R/data_define_cohorts.R
     needs: [data_process]
+    outputs:
+      highly_sensitive:
+        data: output/data/data_cohorts.rds
+      moderately_sensitive:
+        metadata: output/data/metadata*
+        formula: output/data/list_formula.rds
+        strata: output/data/list_strata.rds
+        flow: output/data/flowchart*.csv
+
+
+  data_matching:
+    run: r:latest analysis/R/data_matching.R
+    needs: [data_process, data_define_cohorts]
     outputs:
       highly_sensitive:
         data: output/data_vax_*.csv
@@ -47,17 +60,6 @@ actions:
 
 
 
-  data_define_cohorts:
-    run: r:latest analysis/R/data_define_cohorts.R
-    needs: [data_process]
-    outputs:
-      highly_sensitive:
-        data: output/data/data_cohorts.rds
-      moderately_sensitive:
-        metadata: output/data/metadata*
-        formula: output/data/list_formula.rds
-        strata: output/data/list_strata.rds
-        flow: output/data/flowchart*.csv
 
 
 
