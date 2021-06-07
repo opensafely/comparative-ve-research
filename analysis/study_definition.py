@@ -57,7 +57,7 @@ study = StudyDefinition(
             returning="binary_flag",
         ),
         # TEMPORARY FAKE VARIABLE UNTIL AVAILABLE IN BACKEND
-        hscworker = patients.random_sample(percent=0.01, return_expectations={"incidence": 0.01}),
+        hscworker = patients.random_sample(percent=0.05, return_expectations={"incidence": 0.05}),
     ),
 
 
