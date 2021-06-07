@@ -1,8 +1,10 @@
-# {{project_name}}
+# Comparative vaccine effectiveness in health and social care workers
 
-This is the code and configuration for {{project_name}}
+This study investigates the relative effectiveness of Oxford-AstraZenenca versus Pfizer-BNT vaccines in vaccinated health and social care workers. 
 
-* The paper is [here]()
+Occupation is identified at the time of vaccination.
+
+* The [protocol is in the OpenSAFELY Google drive](https://docs.google.com/document/d/1eQ6N0JiFmUOFP2EA-AEE3PhGJ8yxjHEaA5IVSehOAXI/edit#)
 * Raw model outputs, including charts, crosstabs, etc, are in `released_outputs/`
 * If you are interested in how we defined our variables, take a look at the [study definition](analysis/study_definition.py); this is written in `python`, but non-programmers should be able to understand what is going on there
 * If you are interested in how we defined our code lists, look in the [codelists folder](./codelists/).
