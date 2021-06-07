@@ -16,7 +16,7 @@
 # import libraries
 library('tidyverse')
 library('here')
-source(here("analysis", "R", "lib", "redaction_functions.R"))
+source(here("analysis", "lib", "redaction_functions.R"))
 
 # import command-line arguments ----
 
