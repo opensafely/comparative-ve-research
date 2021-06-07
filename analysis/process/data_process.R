@@ -20,7 +20,7 @@ library('lubridate')
 library('arrow')
 library('here')
 
-source(here("analysis", "R", "lib", "utility_functions.R"))
+source(here("analysis", "lib", "utility_functions.R"))
 
 # import globally defined repo variables from
 gbl_vars <- jsonlite::fromJSON(
@@ -117,13 +117,13 @@ data_processed <- data_extract_reordered %>%
 
 
     imd = na_if(imd, "0"),
-    imd = fct_case_when(
-      imd == 1 ~ "1 most deprived",
-      imd == 2 ~ "2",
-      imd == 3 ~ "3",
-      imd == 4 ~ "4",
-      imd == 5 ~ "5 least deprived",
-      #TRUE ~ "Unknown",
+    imd = as.integer(imd),
+    imd_Q5 = fct_case_when(
+      (imd >=1) & (imd < 32844*1/5) ~ "1 most deprived",
+      (imd >= 32844*1/5) & (imd < 32844*2/5) ~ "2",
+      (imd >= 32844*2/5) & (imd < 32844*3/5) ~ "3",
+      (imd >= 32844*3/5) & (imd < 32844*4/5) ~ "4",
+      (imd >= 32844*4/5) ~ "5 least deprived",
       TRUE ~ NA_character_
     ),
 
@@ -143,17 +143,17 @@ data_processed <- data_extract_reordered %>%
       (psychosis_schiz_bipolar),
     multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, 4, Inf), labels=c("0", "1", "2", "3", "4+"), right=FALSE),
 
-    vax_type = case_when(
+    vax1_type = case_when(
       #!is.na(covid_vax_az_1_date) ~ "az",
       #!is.na(covid_vax_pfizer_1_date) ~ "pfizer",
-      covid_vax_az_1_date <= covid_vax_pfizer_1_date ~ "az",
-      covid_vax_az_1_date > covid_vax_pfizer_1_date ~ "pfizer",
+      pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
+      pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) > pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "pfizer",
       TRUE ~ NA_character_
     ),
 
-    covid_vax_1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, na.rm=TRUE),
-
-    vax_day = as.integer(covid_vax_1_date - start_date)+1,
+    vax1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, na.rm=TRUE),
+    vax1_day = floor((vax1_date - start_date))+1,
+    vax1_week = floor((vax1_date - start_date)/7)+1,
 
     cause_of_death = fct_case_when(
       !is.na(coviddeath_date) ~ "covid-related",

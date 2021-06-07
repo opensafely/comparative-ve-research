@@ -1,9 +1,15 @@
 version: '3.0'
 
 expectations:
-  population_size: 50000
+  population_size: 100000
 
 actions:
+
+  design:
+    run: r:latest analysis/process/design.R
+    outputs:
+      moderately_sensitive:
+        metadata: output/data/metadata*
 
   extract:
     run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format feather
@@ -12,116 +18,101 @@ actions:
         cohort: output/input.feather
 
   data_process:
-    run: r:latest analysis/R/data_process.R
+    run: r:latest analysis/process/data_process.R
     needs: [extract]
     outputs:
       highly_sensitive:
         data1: output/data/data_processed.rds
         data2: output/data/data_long_vax_dates.rds
 
-
   data_properties:
-    run: r:latest analysis/R/data_properties.R output/data/data_processed.rds output/data_properties
+    run: r:latest analysis/process/data_properties.R output/data/data_processed.rds output/data_properties
     needs: [data_process]
     outputs:
       moderately_sensitive:
         datasummary: output/data_properties/data*.txt
 
-  data_define_cohorts:
-    run: r:latest analysis/R/data_define_cohorts.R
+  data_selection:
+    run: r:latest analysis/process/data_selection.R
     needs: [data_process]
     outputs:
       highly_sensitive:
-        data: output/data/data_cohorts.rds
+        data: output/data/data_cohort.rds
+        data_az: output/data_vax_az_withoutdate.csv
+        data_pfizer: output/data_vax_pfizer_withoutdate.csv
+        data_az_date: output/data_vax_az_withdate.csv
+        data_pfizer_date: output/data_vax_pfizer_withdate.csv
       moderately_sensitive:
-        metadata: output/data/metadata*
-        formula: output/data/list_formula.rds
-        strata: output/data/list_strata.rds
-        flow: output/data/flowchart*.csv
+        flow: output/data/flowchart.csv
+
+#######################################
+ ## MATCHING
+#######################################
 
 
-  data_matching:
-    run: r:latest analysis/R/data_matching.R
-    needs: [data_process, data_define_cohorts]
+  matchwithoutdate_recipients:
+    run: python:latest python analysis/matching/matchwithoutdate.py
+    needs: [data_selection]
     outputs:
       highly_sensitive:
-        data_az: output/data_vax_az_only.csv
-        data_pfizer: output/data_vax_pfizer_only.csv
+        cases: output/data/matched_cases_withoutdate.csv
+        matches: output/data/matched_matches_withoutdate.csv
+        combined: output/data/matched_combined_withoutdate.csv
+      moderately_sensitive:
+        report: output/data/matching_report_withoutdate.txt
 
-  matching:
-    run: python:latest python analysis/matching.py
-    needs: [data_matching]
+  matchwithoutdate_process:
+    run: r:latest analysis/matching/match_process.R withoutdate
+    needs: [design, matchwithoutdate_recipients, data_selection]
     outputs:
       highly_sensitive:
-        cases: output/matched_cases.csv
-        matches: output/matched_matches.csv
-        combined: output/matched_combined.csv
+        data: output/data/data_matches_withoutdate.rds
       moderately_sensitive:
-        report: output/matching_report.txt
+        report: output/matching/matching_balance_withoutdate.html
 
 
-
-
-##############################################################################
-##############################################################################
-  ## VE in over 80s (over80s)
-##############################################################################
-##############################################################################
-
-  data_stset:
-    run: r:latest analysis/R/data_stset.R
-    needs: [data_define_cohorts, data_process]
+  matchwithdate_recipients:
+    run: python:latest python analysis/matching/matchwithdate.py
+    needs: [data_selection]
     outputs:
       highly_sensitive:
-        data: output/data/data_*.rds
-
-  data_properties_fixed:
-    run: r:latest analysis/R/data_properties.R output/data/data_wide_fixed.rds output/data_properties
-    needs: [data_stset]
-    outputs:
+        cases: output/data/matched_cases_withdate.csv
+        matches: output/data/matched_matches_withdate.csv
+        combined: output/data/matched_combined_withdate.csv
       moderately_sensitive:
-        datasummary: output/data_properties/data_wide_fixed*.txt
+        report: output/data/matching_report_withdate.txt
 
-  data_properties_tte:
-    run: r:latest analysis/R/data_properties.R output/data/data_wide_tte.rds output/data_properties
-    needs: [data_stset]
-    outputs:
-      moderately_sensitive:
-        datasummary: output/data_properties/data_wide_tte*.txt
 
-  descr_table1:
-    run: r:latest analysis/R/table1.R
-    needs: [data_define_cohorts, data_stset]
+  matchwithdate_process:
+    run: r:latest analysis/matching/match_process.R withdate
+    needs: [design, matchwithdate_recipients, data_selection]
     outputs:
+      highly_sensitive:
+        data: output/data/data_matches_withdate.rds
       moderately_sensitive:
-        table1: output/descr/tables/table*
-
-  descr_events:
-    run: r:latest analysis/R/plot_status_over_time.R
-    needs: [data_define_cohorts, data_stset]
-    outputs:
-      moderately_sensitive:
-        plots: output/descr/plots/*.svg
-        tables: output/descr/tables/*.csv
+        report: output/matching/matching_balance_withdate.html
 
 
 
 #######################################
- ## COMPARATIVE EFFECTIVENESS MODELS:
+ ## COMPARATIVE EFFECTIVENESS MODELS
+ ## positive test outcome
 #######################################
 
-  cemodels_cox_postest_compare_all:
-    run: r:latest analysis/R/ce/model_cox.R postest all
-    needs: [data_define_cohorts, data_stset]
+  model1_postest:
+    run: r:latest analysis/models/model_cox.R postest
+    needs: [design, matchwithoutdate_process]
     outputs:
       highly_sensitive:
-        models: output/postest/all/*/modelcox*.rds
-
-  cereport_postest_compare_all:
-    run: r:latest analysis/R/ce/report_cox.R postest all
-    needs: [data_define_cohorts, cemodels_cox_postest_compare_all]
-    outputs:
+        models: output/postest/model*.rds
       moderately_sensitive:
-        plots: output/postest/all/*.svg
-        tables: output/postest/all/*.csv
+        logs:  output/postest/log*.txt
 
+  model1_covidadmitted:
+    run: r:latest analysis/models/model_cox.R covidadmitted
+    needs: [design, matchwithoutdate_process]
+    outputs:
+      highly_sensitive:
+        models: output/covidadmitted/model*.rds
+      moderately_sensitive:
+        logs:  output/covidadmitted/log*.txt

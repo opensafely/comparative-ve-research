@@ -16,25 +16,23 @@
 
 ## Import libraries ----
 library('tidyverse')
+library('here')
 library('survival')
 
 ## Import custom user functions from lib
-source(here::here("lib", "utility_functions.R"))
-source(here::here("lib", "survival_functions.R"))
+source(here("analysis", "R", "lib", "utility_functions.R"))
+source(here("analysis", "R", "lib", "survival_functions.R"))
 
 # import command-line arguments ----
 
 args <- commandArgs(trailingOnly=TRUE)
-
-
-
 
 if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
   sample_size <- 10000
   sample_nonoutcomeprop <- 0.1
-  cohort <- "over80s"
+  cohort <- "under65s"
 
 } else{
   removeobs <- TRUE
@@ -44,14 +42,14 @@ if(length(args)==0){
 }
 
 ## create output directories ----
-dir.create(here::here("output", cohort, "data"), showWarnings = FALSE, recursive=TRUE)
+dir.create(here("output", cohort, "data"), showWarnings = FALSE, recursive=TRUE)
 
 # Import processed data ----
 
 
-data_cohorts <- read_rds(here::here("output", "data", "data_cohorts.rds"))
-metadata_cohorts <- read_rds(here::here("output", "data", "metadata_cohorts.rds"))
-data_all <- read_rds(here::here("output", "data", "data_all.rds"))
+data_cohorts <- read_rds(here("output", "data", "data_cohorts.rds"))
+metadata_cohorts <- read_rds(here("output", "data", "metadata_cohorts.rds"))
+data_processed <- read_rds(here("output", "data", "data_processed.rds"))
 
 stopifnot("cohort does not exist" = (cohort %in% metadata_cohorts[["cohort"]]))
 
@@ -97,7 +95,7 @@ sample_weights <- function(outcome, sampled){
 
 ## one-row-per-patient data ----
 
-data_fixed <- data_all %>%
+data_fixed <- data_processed %>%
   filter(
     patient_id %in% data_cohorts$patient_id # take only the patients from defined "cohort"
   ) %>%
@@ -145,7 +143,7 @@ data_fixed <- data_all %>%
     psychosis_schiz_bipolar,
 
     multimorb,
-    shielded,
+    cev,
 
     flu_vaccine,
     efi_cat
@@ -157,7 +155,7 @@ cat(" \n")
 cat(glue::glue("one-row-per-patient (time-independent) data size = ", nrow(data_fixed)), "\n")
 cat(glue::glue("memory usage = ", format(object.size(data_fixed), units="GB", standard="SI", digits=3L)), "\n")
 
-data_tte <- data_all  %>%
+data_tte <- data_processed  %>%
   filter(
     patient_id %in% data_cohorts$patient_id # take only the patients from defined "cohort"
   ) %>%
