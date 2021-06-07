@@ -38,10 +38,10 @@ actions:
     outputs:
       highly_sensitive:
         data: output/data/data_cohort.rds
-        data_az: output/data_vax_az_withoutdate.csv
-        data_pfizer: output/data_vax_pfizer_withoutdate.csv
-        data_az_date: output/data_vax_az_withdate.csv
-        data_pfizer_date: output/data_vax_pfizer_withdate.csv
+        data_az: output/data/data_vax_az_withoutdate.csv
+        data_pfizer: output/data/data_vax_pfizer_withoutdate.csv
+        data_az_date: output/data/data_vax_az_withdate.csv
+        data_pfizer_date: output/data/data_vax_pfizer_withdate.csv
       moderately_sensitive:
         flow: output/data/flowchart.csv
 

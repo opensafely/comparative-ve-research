@@ -91,7 +91,7 @@ data_cohort %>%
     vax1_type
   ) %>%
   split(.$vax1_type) %>%
-  iwalk(~write_csv(.x, here("output", "data", glue("data_vax_{.y}_only_withoutdate.csv"))))
+  iwalk(~write_csv(.x, here("output", "data", glue("data_vax_{.y}_withoutdate.csv"))))
 
 
 
@@ -109,6 +109,6 @@ data_cohort %>%
     vax1_type
   ) %>%
   split(.$vax1_type) %>%
-  iwalk(~write_csv(.x, here("output", "data", glue("data_vax_{.y}_only_withdate.csv"))))
+  iwalk(~write_csv(.x, here("output", "data", glue("data_vax_{.y}_withdate.csv"))))
 
 
