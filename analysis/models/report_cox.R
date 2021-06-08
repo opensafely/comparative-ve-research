@@ -30,6 +30,8 @@ if(length(args)==0){
 
 ## Import libraries ----
 library('tidyverse')
+library('here')
+library('glue')
 library('lubridate')
 library('survival')
 library('splines')
@@ -68,15 +70,29 @@ coxmod2 <- read_rds(here::here("output", outcome, "modelcox2.rds"))
 
 ## report models ----
 
-tidy0 <- broom::tidy(coxmod0, conf.int = TRUE, exponentiate=TRUE)
-tidy1 <- broom::tidy(coxmod1, conf.int = TRUE, exponentiate=TRUE)
-tidy2 <- broom::tidy(coxmod2, conf.int = TRUE, exponentiate=TRUE)
+tidypp <- function(model, model_name, ...){
+  broom.helpers::tidy_plus_plus(
+    model,
+    exponentiate=TRUE,
+    ...
+  ) %>%
+  mutate(
+    model_name = model_name
+  )
+}
+
+data_cox_split <- read_rds(here("output", outcome, "data_cox_split.rds"))
+
+tidy0 <- tidypp(coxmod0, "0 Unadjusted")
+tidy1 <- tidypp(coxmod1, "1 Time")
+tidy2 <- tidypp(coxmod2, "2 Time \n+ demographics")
 
 tidy_summary <- bind_rows(
-  tidy0 %>% mutate(model="0 Unadjusted"),
-  tidy1 %>% mutate(model="1 Time"),
-  tidy2 %>% mutate(model="2 Time \n+ Demographics"),
-)
+  tidy0,
+  tidy1,
+  tidy2
+) %>%
+mutate(outcome = outcome)
 
 if(removeobs) rm(coxmod0, coxmod1, coxmod2)
 
@@ -99,7 +115,7 @@ coxmod_forest <-
   geom_point(aes(y=estimate, x=term_midpoint), position = position_dodge(width = 0.5))+
   geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint), position = position_dodge(width = 0.5))+
   geom_hline(aes(yintercept=1), colour='grey')+
-  facet_grid(rows=vars(model), switch="y")+
+  facet_grid(rows=vars(model_name), switch="y")+
   scale_y_log10(
     breaks=c(0.5, 0.67, 0.80, 1, 1.25, 1.5, 2),
     sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = c(0.5, 0.67, 0.80, 1, 1.25, 1.5, 2))

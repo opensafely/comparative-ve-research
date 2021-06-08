@@ -104,15 +104,33 @@ actions:
     needs: [design, matchwithoutdate_process]
     outputs:
       highly_sensitive:
+        data: output/postest/data_cox_split.rds
         models: output/postest/model*.rds
       moderately_sensitive:
         logs:  output/postest/log*.txt
+
+  report1_postest:
+    run: r:latest analysis/models/report_cox.R postest
+    needs: [design, model1_postest]
+    outputs:
+      moderately_sensitive:
+        figure: output/postest/forest*.svg
+        table: output/postest/estimates*.csv
 
   model1_covidadmitted:
     run: r:latest analysis/models/model_cox.R covidadmitted
     needs: [design, matchwithoutdate_process]
     outputs:
       highly_sensitive:
+        data: output/covidadmitted/data_cox_split.rds
         models: output/covidadmitted/model*.rds
       moderately_sensitive:
         logs:  output/covidadmitted/log*.txt
+
+  report1_covidadmitted:
+    run: r:latest analysis/models/report_cox.R covidadmitted
+    needs: [design, model1_covidadmitted]
+    outputs:
+      moderately_sensitive:
+        figure: output/covidadmitted/forest*.svg
+        table: output/covidadmitted/estimates*.csv

@@ -197,6 +197,7 @@ logoutput(
   glue("data_cox_split memory usage = ", format(object.size(data_cox_split), units="GB", standard="SI", digits=3L))
 )
 
+write_rds(data_cox_split, here("output", outcome, "data_cox_split.rds"))
 
 # Time-dependent Cox models ----
 
