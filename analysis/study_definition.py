@@ -185,59 +185,59 @@ study = StudyDefinition(
     ),
     
     # any COVID vaccination (first dose)
-    
-    covid_vax_1_date=patients.minimum_of(
-        "covid_vax_pfizer_1_date", "covid_vax_az_1_date",
-        return_expectations={
-            "date": {
-                "earliest": "2020-12-08",  # first vaccine administered on the 8/12
-                "latest": "2021-04-01",
-            },
-            "incidence": 1
-        },
-    ),
-
-    covid_vax_2_date=patients.minimum_of(
-        "covid_vax_pfizer_2_date", "covid_vax_az_2_date",
-        return_expectations={
-            "date": {
-                "earliest": "2020-12-08",  # first vaccine administered on the 8/12
-                "latest": "2021-02-01",
-            },
-            "incidence": 0.3
-        },
-    ),
-
-    
     # 
-    # covid_vax_1_date=patients.with_tpp_vaccination_record(
-    #     target_disease_matches="SARS-2 CORONAVIRUS",
-    #     on_or_after="index_date",
-    #     find_first_match_in_period=True,
-    #     returning="date",
-    #     date_format="YYYY-MM-DD",
+    # covid_vax_1_date=patients.minimum_of(
+    #     "covid_vax_pfizer_1_date", "covid_vax_az_1_date",
+    #     return_expectations={
+    #         "date": {
+    #             "earliest": "2020-12-08",  # first vaccine administered on the 8/12
+    #             "latest": "2021-04-01",
+    #         },
+    #         "incidence": 1
+    #     },
+    # ),
+    # 
+    # covid_vax_2_date=patients.minimum_of(
+    #     "covid_vax_pfizer_2_date", "covid_vax_az_2_date",
     #     return_expectations={
     #         "date": {
     #             "earliest": "2020-12-08",  # first vaccine administered on the 8/12
     #             "latest": "2021-02-01",
     #         },
-    #         "incidence": 1
+    #         "incidence": 0.3
     #     },
     # ),
-    # # SECOND DOSE COVID VACCINATION - any type
-    # covid_vax_2_date=patients.with_tpp_vaccination_record(
-    #     target_disease_matches="SARS-2 CORONAVIRUS",
-    #     on_or_after="covid_vax_1_date + 15 days",
-    #     find_first_match_in_period=True,
-    #     returning="date",
-    #     date_format="YYYY-MM-DD",
-    #     return_expectations={
-    #         "date": {
-    #             "earliest": "2021-02-02",
-    #             "latest": "2021-04-30",
-    #         }
-    #     },
-    # ),
+    # 
+    # 
+
+    covid_vax_1_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="index_date",
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {
+                "earliest": "2020-12-08",  # first vaccine administered on the 8/12
+                "latest": "2021-02-01",
+            },
+            "incidence": 1
+        },
+    ),
+    # SECOND DOSE COVID VACCINATION - any type
+    covid_vax_2_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="covid_vax_1_date + 15 days",
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {
+                "earliest": "2021-02-02",
+                "latest": "2021-04-30",
+            }
+        },
+    ),
     
     ###############################################################################
     # ADMIN AND DEMOGRAPHICS
@@ -508,11 +508,11 @@ study = StudyDefinition(
         },
     ),
 
-    prior_covid_test_day=patients.with_test_result_in_sgss(
+    prior_covid_test_date=patients.with_test_result_in_sgss(
         pathogen="SARS-CoV-2",
         test_result="any",
         on_or_before="covid_vax_1_date - 1 day",
-        returning="binary_flag", # need "count" here but not yet available
+        returning="date", # need "count" here but not yet available
         date_format="YYYY-MM-DD",
         return_expectations={
             "int": {"distribution": "normal", "mean": 10, "stddev": 3},
