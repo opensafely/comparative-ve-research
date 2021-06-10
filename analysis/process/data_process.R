@@ -34,7 +34,55 @@ dir.create(here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
 # process ----
 
-data_extract0 <- read_feather(here("output", "input.feather"))
+# use externally created dummy data if not running in the server
+# check variables are as they should be
+if(Sys.getenv("OPENSAFELY_BACKEND") %in% c("", "expectations")){
+
+  # ideally in future this will check column existence and types from metadata,
+  # rather than from a cohort-extractor-generated dummy data
+
+  data_studydef_dummy <- read_feather(here("output", "input.feather"))
+  data_custom_dummy <- read_feather(here("output", "inputdummy.feather"))
+
+  not_in_studydef <- names(data_custom_dummy)[!( names(data_custom_dummy) %in% names(data_studydef_dummy) )]
+  not_in_custom  <- names(data_studydef_dummy)[!( names(data_studydef_dummy) %in% names(data_custom_dummy) )]
+
+
+  if(length(not_in_custom)!=0) stop(
+    paste(
+      "These variables are in studydef but not in custom: ",
+      paste(not_in_custom, collapse=", ")
+    )
+  )
+
+
+  if(length(not_in_studydef)!=0) stop(
+    paste(
+      "These variables are in custom but not in studydef: ",
+      paste(not_in_studydef, collapse=", ")
+    )
+  )
+
+  # reorder columns
+  data_studydef_dummy <- data_studydef_dummy[,names(data_custom_dummy)]
+
+  unmatched_types <- cbind(
+    map_chr(data_studydef_dummy, class) ,
+    map_chr(data_custom_dummy, class)
+  )[ (map_chr(data_studydef_dummy, class) != map_chr(data_custom_dummy, class)) ,] %>%
+  as.data.frame() %>% rownames_to_column()
+
+
+  if(nrow(unmatched_types)>0) stop(
+    #unmatched_types
+    "inconsistent typing in studydef : dummy dataset\n",
+    apply(unmatched_types, 1, function(row) paste(paste(row, collapse=" : "), "\n"))
+  )
+
+  data_extract0 <- read_feather(here("output", "inputdummy.feather"))
+} else {
+  data_extract0 <- read_feather(here("output", "input.feather"))
+}
 
 #convert date-strings to dates
 data_extract <- data_extract0 %>%
