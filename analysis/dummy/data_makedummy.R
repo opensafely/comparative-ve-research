@@ -161,4 +161,4 @@ dummy_data_processed <- dummy_data_withmissing %>%
   )
 
 
-write_feather(dummy_data_processed, sink = here("output", "inputdummy.feather"))
+write_feather(dummy_data_processed, sink = here("dummydata", "dummyinput.feather"))

@@ -12,12 +12,6 @@ actions:
       moderately_sensitive:
         metadata: output/data/metadata*
 
-  extract_dummy:
-    run:  r:latest analysis/process/data_makedummy.R
-    outputs:
-      highly_sensitive:
-        cohort: output/input_dummy.feather
-
   extract:
     run: cohortextractor:latest generate_cohort --study-definition study_definition --output-format feather
     outputs:
@@ -26,7 +20,7 @@ actions:
 
   data_process:
     run: r:latest analysis/process/data_process.R
-    needs: [extract, extract_dummy]
+    needs: [extract]
     outputs:
       highly_sensitive:
         data1: output/data/data_processed.rds
