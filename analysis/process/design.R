@@ -36,7 +36,7 @@ formula_exposure <- . ~ . + timesincevax_pw
 formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd + ethnicity_combined
 formula_comorbs <- . ~ . +
   bmi +
-  prior_covid_infecetion +
+  prior_covid_infection +
   #heart_failure +
   #other_heart_disease +
 
