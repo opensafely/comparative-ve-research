@@ -36,20 +36,21 @@ formula_exposure <- . ~ . + timesincevax_pw
 formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd + ethnicity_combined
 formula_comorbs <- . ~ . +
   bmi +
-  heart_failure +
-  other_heart_disease +
+  prior_covid_infecetion +
+  #heart_failure +
+  #other_heart_disease +
 
-  dialysis +
-  diabetes +
-  chronic_liver_disease +
+  #dialysis +
+  #diabetes +
+  #chronic_liver_disease +
 
-  current_copd +
+  #current_copd +
   #cystic_fibrosis +
-  other_resp_conditions +
+  #other_resp_conditions +
 
-  lung_cancer +
-  haematological_cancer +
-  cancer_excl_lung_and_haem +
+  #lung_cancer +
+  #haematological_cancer +
+  #cancer_excl_lung_and_haem +
 
   #chemo_or_radio +
   #solid_organ_transplantation +
@@ -59,11 +60,11 @@ formula_comorbs <- . ~ . +
   #temporary_immunosuppression +
   #asplenia +
   #dmards +
-  any_immunosuppression +
+  #any_immunosuppression +
 
-  other_neuro_conditions +
+  #other_neuro_conditions +
 
-  LD_incl_DS_and_CP +
+  #LD_incl_DS_and_CP +
   psychosis_schiz_bipolar +
 
   multimorb

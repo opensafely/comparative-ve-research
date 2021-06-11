@@ -189,19 +189,19 @@ data_processed <- data_extract_reordered %>%
       (dementia | other_neuro_conditions)+
       (LD_incl_DS_and_CP)+
       (psychosis_schiz_bipolar),
-    multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, 4, Inf), labels=c("0", "1", "2", "3", "4+"), right=FALSE),
+    multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, Inf), labels=c("0", "1", "2", "3+"), right=FALSE),
+
+    prior_covid_infection = !is.na(prior_positive_test_date) | !is.na(prior_covidadmitted_date) | !is.na(prior_primary_care_covid_case_date),
 
     vax1_type = case_when(
-      #!is.na(covid_vax_az_1_date) ~ "az",
-      #!is.na(covid_vax_pfizer_1_date) ~ "pfizer",
       pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
       pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) > pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "pfizer",
       TRUE ~ NA_character_
     ),
 
     vax1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, na.rm=TRUE),
-    vax1_day = floor((vax1_date - start_date))+1,
-    vax1_week = floor((vax1_date - start_date)/7)+1,
+    vax1_day = as.integer(floor((vax1_date - start_date))+1),
+    vax1_week = as.integer(floor((vax1_date - start_date)/7)+1),
 
     cause_of_death = fct_case_when(
       !is.na(coviddeath_date) ~ "covid-related",

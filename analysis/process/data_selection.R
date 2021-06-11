@@ -31,35 +31,38 @@ data_criteria <- data_processed %>%
     has_imd = !is.na(imd),
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
-    has_follow_up_previous_year,
+    #has_follow_up_previous_year,
     no_prior_vaccine = (is.na(prior_covid_vax_date) & is.na(prior_covid_vax_pfizer_date) & is.na(prior_covid_vax_az_date)),
-    no_prior_covid = (is.na(prior_positive_test_date) & is.na(prior_primary_care_covid_case_date) & is.na(prior_covidadmitted_date)),
+    no_unclear_vaccine = (prior_covid_vax_pfizer_date != prior_covid_vax_az_date),
+    #no_prior_covid = (is.na(prior_positive_test_date) & is.na(prior_primary_care_covid_case_date) & is.na(prior_covidadmitted_date)),
     not_cev = !cev,
     vax1_4janonwards = vax1_date>=as.Date("04-01-2021"),
 
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region &
-        has_follow_up_previous_year &
+        #has_follow_up_previous_year &
         !unknown_vaccine_brand &
         no_prior_vaccine &
-        no_prior_covid &
+        #no_prior_covid &
         not_cev
     ),
   )
 
-data_cohort <- data_criteria %>% filter(include)
+data_cohort_allvax <- data_criteria %>% filter(include)
+write_rds(data_cohort_allvax, here("output", "data", "data_cohort_allvax.rds"), compress="gz")
+data_cohort <- data_criteria %>% filter(include & vax1_4janonwards)
 write_rds(data_cohort, here("output", "data", "data_cohort.rds"), compress="gz")
 
 data_flowchart <- data_criteria %>%
   transmute(
     c0_all = TRUE,
-    c1_1yearfup = c0_all & (has_follow_up_previous_year),
-    c2_notmissing = c1_1yearfup & (has_age & has_sex & has_imd & has_ethnicity & has_region),
-    c3_notcev = c2_notmissing & not_cev,
-    c4_nopriorcovid = c3_notcev & (no_prior_covid),
-    c5_nopriorvaccine = c4_nopriorcovid & (no_prior_vaccine),
-    c6_knownbrand = c5_nopriorvaccine & (!unknown_vaccine_brand),
-    c7_4jan = c6_knownbrand & vax1_4janonwards
+    #c1_1yearfup = c0_all & (has_follow_up_previous_year),
+    c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
+    c2_notcev = c1_notmissing & not_cev,
+    #c4_nopriorcovid = c3_notcev & (no_prior_covid),
+    c3_nopriorvaccine = c2_notcev & (no_prior_vaccine),
+    c4_knownbrand = c3_nopriorvaccine & (!unknown_vaccine_brand),
+    c5_4jan = c4_knownbrand & vax1_4janonwards
   ) %>%
   summarise(
     across(.fns=sum)
