@@ -86,15 +86,17 @@ data_cox_split <- read_rds(here("output", outcome, "data_cox_split.rds"))
 tidy0 <- tidypp(coxmod0, "0 Unadjusted")
 tidy1 <- tidypp(coxmod1, "1 Time")
 tidy2 <- tidypp(coxmod2, "2 Time \n+ demographics")
+tidy3 <- tidypp(coxmod3, "2 Time \n+ demographics \n+ clinical")
 
 tidy_summary <- bind_rows(
   tidy0,
   tidy1,
-  tidy2
+  tidy2,
+  tidy3
 ) %>%
 mutate(outcome = outcome)
 
-if(removeobs) rm(coxmod0, coxmod1, coxmod2)
+if(removeobs) rm(coxmod0, coxmod1, coxmod2, coxmod3)
 
 write_csv(tidy_summary, path = here::here("output", outcome, glue::glue("estimates_cox.csv")))
 
