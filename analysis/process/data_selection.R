@@ -33,7 +33,6 @@ data_criteria <- data_processed %>%
     has_region = !is.na(region),
     #has_follow_up_previous_year,
     no_prior_vaccine = (is.na(prior_covid_vax_date) & is.na(prior_covid_vax_pfizer_date) & is.na(prior_covid_vax_az_date)),
-    no_unclear_vaccine = (prior_covid_vax_pfizer_date != prior_covid_vax_az_date),
     #no_prior_covid = (is.na(prior_positive_test_date) & is.na(prior_primary_care_covid_case_date) & is.na(prior_covidadmitted_date)),
     not_cev = !cev,
     vax1_4janonwards = vax1_date>=as.Date("04-01-2021"),
@@ -41,7 +40,7 @@ data_criteria <- data_processed %>%
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region &
         #has_follow_up_previous_year &
-        !unknown_vaccine_brand &
+        #no_unclear_brand &
         no_prior_vaccine &
         #no_prior_covid &
         not_cev
@@ -61,8 +60,7 @@ data_flowchart <- data_criteria %>%
     c2_notcev = c1_notmissing & not_cev,
     #c4_nopriorcovid = c3_notcev & (no_prior_covid),
     c3_nopriorvaccine = c2_notcev & (no_prior_vaccine),
-    c4_knownbrand = c3_nopriorvaccine & (!unknown_vaccine_brand),
-    c5_4jan = c4_knownbrand & vax1_4janonwards
+    c4_4jan = c3_nopriorvaccine & vax1_4janonwards
   ) %>%
   summarise(
     across(.fns=sum)
