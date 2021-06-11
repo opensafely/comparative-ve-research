@@ -38,11 +38,8 @@ actions:
     needs: [data_process]
     outputs:
       highly_sensitive:
+        data_allvax: output/data/data_cohort_allvax.rds
         data: output/data/data_cohort.rds
-        data_az: output/data/data_vax_az_withoutdate.csv
-        data_pfizer: output/data/data_vax_pfizer_withoutdate.csv
-        data_az_date: output/data/data_vax_az_withdate.csv
-        data_pfizer_date: output/data/data_vax_pfizer_withdate.csv
       moderately_sensitive:
         flow: output/data/flowchart.csv
 
@@ -50,48 +47,57 @@ actions:
  ## MATCHING
 #######################################
 
-
-  matchwithoutdate_recipients:
-    run: python:latest python analysis/matching/matchwithoutdate.py
-    needs: [data_selection]
-    outputs:
-      highly_sensitive:
-        cases: output/data/matched_cases_withoutdate.csv
-        matches: output/data/matched_matches_withoutdate.csv
-        combined: output/data/matched_combined_withoutdate.csv
-      moderately_sensitive:
-        report: output/data/matching_report_withoutdate.txt
-
-  matchwithoutdate_process:
-    run: r:latest analysis/matching/match_process.R withoutdate
-    needs: [design, matchwithoutdate_recipients, data_selection]
-    outputs:
-      highly_sensitive:
-        data: output/data/data_matches_withoutdate.rds
-      moderately_sensitive:
-        report: output/matching/matching_balance_withoutdate.html
-
-
-  matchwithdate_recipients:
-    run: python:latest python analysis/matching/matchwithdate.py
-    needs: [data_selection]
-    outputs:
-      highly_sensitive:
-        cases: output/data/matched_cases_withdate.csv
-        matches: output/data/matched_matches_withdate.csv
-        combined: output/data/matched_combined_withdate.csv
-      moderately_sensitive:
-        report: output/data/matching_report_withdate.txt
-
-
-  matchwithdate_process:
-    run: r:latest analysis/matching/match_process.R withdate
-    needs: [design, matchwithdate_recipients, data_selection]
-    outputs:
-      highly_sensitive:
-        data: output/data/data_matches_withdate.rds
-      moderately_sensitive:
-        report: output/matching/matching_balance_withdate.html
+  # data_selection:
+  #   run: r:latest analysis/process/data_selection.R
+  #   needs: [data_process]
+  #   outputs:
+  #     highly_sensitive:
+  #       data_az: output/data/data_vax_az_withoutdate.csv
+  #       data_pfizer: output/data/data_vax_pfizer_withoutdate.csv
+  #       data_az_date: output/data/data_vax_az_withdate.csv
+  #       data_pfizer_date: output/data/data_vax_pfizer_withdate.csv
+  #
+  # matchwithoutdate_recipients:
+  #   run: python:latest python analysis/matching/matchwithoutdate.py
+  #   needs: [data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       cases: output/data/matched_cases_withoutdate.csv
+  #       matches: output/data/matched_matches_withoutdate.csv
+  #       combined: output/data/matched_combined_withoutdate.csv
+  #     moderately_sensitive:
+  #       report: output/data/matching_report_withoutdate.txt
+  #
+  # matchwithoutdate_process:
+  #   run: r:latest analysis/matching/match_process.R withoutdate
+  #   needs: [design, matchwithoutdate_recipients, data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       data: output/data/data_matches_withoutdate.rds
+  #     moderately_sensitive:
+  #       report: output/matching/matching_balance_withoutdate.html
+  #
+  #
+  # matchwithdate_recipients:
+  #   run: python:latest python analysis/matching/matchwithdate.py
+  #   needs: [data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       cases: output/data/matched_cases_withdate.csv
+  #       matches: output/data/matched_matches_withdate.csv
+  #       combined: output/data/matched_combined_withdate.csv
+  #     moderately_sensitive:
+  #       report: output/data/matching_report_withdate.txt
+  #
+  #
+  # matchwithdate_process:
+  #   run: r:latest analysis/matching/match_process.R withdate
+  #   needs: [design, matchwithdate_recipients, data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       data: output/data/data_matches_withdate.rds
+  #     moderately_sensitive:
+  #       report: output/matching/matching_balance_withdate.html
 
 
 
@@ -100,9 +106,9 @@ actions:
  ## positive test outcome
 #######################################
 
-  model1_postest:
-    run: r:latest analysis/models/model_cox.R postest
-    needs: [design, matchwithoutdate_process]
+  model_calendar_postest:
+    run: r:latest analysis/models/model_cox_calendar.R postest
+    needs: [design, data_selection]
     outputs:
       highly_sensitive:
         data: output/postest/data_cox_split.rds
@@ -110,17 +116,17 @@ actions:
       moderately_sensitive:
         logs:  output/postest/log*.txt
 
-  report1_postest:
-    run: r:latest analysis/models/report_cox.R postest
-    needs: [design, model1_postest]
+  report_calendar_postest:
+    run: r:latest analysis/models/report_cox_calendar.R postest
+    needs: [design, model_calendar_postest]
     outputs:
       moderately_sensitive:
         figure: output/postest/forest*.svg
         table: output/postest/estimates*.csv
 
-  model1_covidadmitted:
+  model_calendar_covidadmitted:
     run: r:latest analysis/models/model_cox.R covidadmitted
-    needs: [design, matchwithoutdate_process]
+    needs: [design, data_selection]
     outputs:
       highly_sensitive:
         data: output/covidadmitted/data_cox_split.rds
@@ -128,9 +134,9 @@ actions:
       moderately_sensitive:
         logs:  output/covidadmitted/log*.txt
 
-  report1_covidadmitted:
+  report_calendar_covidadmitted:
     run: r:latest analysis/models/report_cox.R covidadmitted
-    needs: [design, model1_covidadmitted]
+    needs: [design, model_calendar_covidadmitted]
     outputs:
       moderately_sensitive:
         figure: output/covidadmitted/forest*.svg

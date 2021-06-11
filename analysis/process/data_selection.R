@@ -79,39 +79,3 @@ data_flowchart <- data_criteria %>%
     pct_step = n / lag(n),
   )
 write_csv(data_flowchart, here("output", "data", "flowchart.csv"))
-
-
-data_cohort %>%
-  select(
-    patient_id,
-    age,
-    sex,
-    imd,
-    ethnicity_combined,
-    region,
-    vax1_day,
-    vax1_date,
-    vax1_type
-  ) %>%
-  split(.$vax1_type) %>%
-  iwalk(~write_csv(.x, here("output", "data", glue("data_vax_{.y}_withoutdate.csv"))))
-
-
-
-data_cohort %>%
-  filter(vax1_4janonwards) %>%
-  select(
-    patient_id,
-    age,
-    sex,
-    imd,
-    ethnicity_combined,
-    region,
-    vax1_day,
-    vax1_date,
-    vax1_type
-  ) %>%
-  split(.$vax1_type) %>%
-  iwalk(~write_csv(.x, here("output", "data", glue("data_vax_{.y}_withdate.csv"))))
-
-
