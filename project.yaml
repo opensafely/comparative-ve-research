@@ -117,7 +117,7 @@ actions:
         logs:  output/postest/log*.txt
 
   report_calendar_postest:
-    run: r:latest analysis/models/report_cox_calendar.R postest
+    run: r:latest analysis/models/report_cox.R postest
     needs: [design, model_calendar_postest]
     outputs:
       moderately_sensitive:
