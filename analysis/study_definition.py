@@ -56,8 +56,8 @@ study = StudyDefinition(
             on_or_before="covid_vax_1_date - 1 day",
             returning="binary_flag",
         ),
-        # TEMPORARY FAKE VARIABLE UNTIL AVAILABLE IN BACKEND
-        hscworker = patients.random_sample(percent=0.05),
+
+        hscworker = patients.with_healthcare_worker_flag_on_covid_vaccine_record(returning="binary_flag"),
     ),
     
     
