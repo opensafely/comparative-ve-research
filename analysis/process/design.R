@@ -97,6 +97,7 @@ write_rds(list_formula, here("output", "data", "metadata_formulas.rds"))
 
 ## variable labels
 var_labels <- list(
+  vax1_type ~ "Vaccine type",
   age ~ "Age",
   ageband ~ "Age",
   sex ~ "Sex",
@@ -139,7 +140,9 @@ var_labels <- list(
   LD_incl_DS_and_CP ~ "Learning disabilities",
   psychosis_schiz_bipolar ~ "Serious mental illness",
 
-  multimorb ~ "Morbidity count"
+  multimorb ~ "Morbidity count",
+
+  prior_covid_infection ~ "Prior SARS-CoV-2 infection"
 
 ) %>%
   set_names(., map_chr(., all.vars))
