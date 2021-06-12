@@ -69,35 +69,32 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 data_tte <- data_cohort %>%
   mutate(
 
-    #composite of death, deregistration and end date
-    lastfup_date = pmin(end_date, death_date, dereg_date, na.rm=TRUE),
-
     # time to last follow up day
     tte_enddate = tte(vax1_date, end_date, end_date),
 
     # time to last follow up day or death or deregistration
-    tte_lastfup = tte(vax1_date, lastfup_date, lastfup_date),
+    tte_censor = tte(vax1_date, censor_date, censor_date),
 
-    tte_covidtest =tte(vax1_date, covid_test_date, lastfup_date, na.censor=TRUE),
-    ind_covidtest = censor_indicator(covid_test_date, lastfup_date),
+    tte_covidtest =tte(vax1_date, covid_test_date, censor_date, na.censor=TRUE),
+    ind_covidtest = censor_indicator(covid_test_date, censor_date),
 
-    tte_postest = tte(vax1_date, positive_test_date, lastfup_date, na.censor=TRUE),
-    ind_postest = censor_indicator(positive_test_date, lastfup_date),
+    tte_postest = tte(vax1_date, positive_test_date, censor_date, na.censor=TRUE),
+    ind_postest = censor_indicator(positive_test_date, censor_date),
 
-    tte_emergency = tte(vax1_date, emergency_date, lastfup_date, na.censor=TRUE),
-    ind_emergency = censor_indicator(emergency_date, lastfup_date),
+    tte_emergency = tte(vax1_date, emergency_date, censor_date, na.censor=TRUE),
+    ind_emergency = censor_indicator(emergency_date, censor_date),
 
-    tte_covidadmitted = tte(vax1_date, covidadmitted_date, lastfup_date, na.censor=TRUE),
-    ind_covidadmitted = censor_indicator(covidadmitted_date, lastfup_date),
+    tte_covidadmitted = tte(vax1_date, covidadmitted_date, censor_date, na.censor=TRUE),
+    ind_covidadmitted = censor_indicator(covidadmitted_date, censor_date),
 
-    tte_coviddeath = tte(vax1_date, coviddeath_date, lastfup_date, na.censor=TRUE),
-    ind_coviddeath = censor_indicator(coviddeath_date, lastfup_date),
+    tte_coviddeath = tte(vax1_date, coviddeath_date, censor_date, na.censor=TRUE),
+    ind_coviddeath = censor_indicator(coviddeath_date, censor_date),
 
-    tte_noncoviddeath = tte(vax1_date, noncoviddeath_date, lastfup_date, na.censor=TRUE),
-    ind_noncoviddeath = censor_indicator(noncoviddeath_date, lastfup_date),
+    tte_noncoviddeath = tte(vax1_date, noncoviddeath_date, censor_date, na.censor=TRUE),
+    ind_noncoviddeath = censor_indicator(noncoviddeath_date, censor_date),
 
-    tte_death = tte(vax1_date, death_date, lastfup_date, na.censor=TRUE),
-    ind_death = censor_indicator(death_date, lastfup_date),
+    tte_death = tte(vax1_date, death_date, censor_date, na.censor=TRUE),
+    ind_death = censor_indicator(death_date, censor_date),
 
     all = factor("all",levels=c("all")),
 
@@ -120,9 +117,9 @@ data_cox <- data_tte %>%
   ) %>%
   filter(
     !is.na(vax1_date),
-    vax1_date<=lastfup_date,
-    tte_outcome>0, # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
-    tte_lastfup>0, # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
+    vax1_date<=censor_date,
+    tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
+    tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )
 
 stopifnot("there is some unvaccinated person-time" = !any(is.na(data_cox$vax1_type)))
@@ -149,7 +146,7 @@ data_cox_split <- tmerge(
   data2 = data_cox,
   id = patient_id,
   tstart = 0L,
-  tstop = pmin(tte_lastfup, tte_outcome, na.rm=TRUE),
+  tstop = pmin(tte_censor, tte_outcome, na.rm=TRUE),
   ind_outcome = event(tte_outcome)
 ) %>%
  tmerge( # create treatment timescale variables
