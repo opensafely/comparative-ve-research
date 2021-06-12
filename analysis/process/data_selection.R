@@ -35,7 +35,7 @@ data_criteria <- data_processed %>%
     no_prior_vaccine = (is.na(prior_covid_vax_date) & is.na(prior_covid_vax_pfizer_date) & is.na(prior_covid_vax_az_date)),
     #no_prior_covid = (is.na(prior_positive_test_date) & is.na(prior_primary_care_covid_case_date) & is.na(prior_covidadmitted_date)),
     not_cev = !cev,
-    vax1_4janonwards = vax1_date>=as.Date("04-01-2021"),
+    vax1_4janonwards = vax1_date>=start_date_az,
 
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region &

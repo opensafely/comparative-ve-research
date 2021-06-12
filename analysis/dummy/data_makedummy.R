@@ -8,13 +8,20 @@ source(here("analysis", "lib", "utility_functions.R"))
 
 population_size <- 1000
 
-index_date <- as.Date("2020-12-08")
-end_date <- as.Date("2021-05-01")
-pfizer_date <- as.Date("2020-12-08")
-az_date <- as.Date("2021-01-04")
+# import globally defined repo variables from
+gbl_vars <- jsonlite::fromJSON(
+  txt="./analysis/global-variables.json"
+)
 
-pfizer_day <- as.integer(pfizer_date - index_date)
-az_day <- as.integer(az_date - index_date)
+
+index_date <- as.Date(gbl_vars$start_date)
+start_date_pfizer <- as.Date(gbl_vars$start_date_pfizer)
+start_date_az <- as.Date(gbl_vars$start_date_az)
+end_date <- as.Date(gbl_vars$end_date)
+#censor_date <- pmin(end_date, dereg_date, death_date, na.rm=TRUE)
+
+pfizer_day <- as.integer(start_date_pfizer - index_date)
+az_day <- as.integer(start_date_az - index_date)
 end_day <- as.integer(end_date - index_date)
 
 def <-
