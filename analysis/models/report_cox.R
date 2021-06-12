@@ -67,6 +67,7 @@ list2env(list_formula, globalenv())
 coxmod0 <- read_rds(here::here("output", outcome, "modelcox0.rds"))
 coxmod1 <- read_rds(here::here("output", outcome, "modelcox1.rds"))
 coxmod2 <- read_rds(here::here("output", outcome, "modelcox2.rds"))
+coxmod3 <- read_rds(here::here("output", outcome, "modelcox3.rds"))
 
 ## report models ----
 
@@ -86,7 +87,7 @@ data_cox_split <- read_rds(here("output", outcome, "data_cox_split.rds"))
 tidy0 <- tidypp(coxmod0, "0 Unadjusted")
 tidy1 <- tidypp(coxmod1, "1 Time")
 tidy2 <- tidypp(coxmod2, "2 Time \n+ demographics")
-tidy3 <- tidypp(coxmod3, "2 Time \n+ demographics \n+ clinical")
+tidy3 <- tidypp(coxmod3, "3 Time \n+ demographics \n+ clinical")
 
 tidy_summary <- bind_rows(
   tidy0,
@@ -154,6 +155,7 @@ coxmod_forest <-
 coxmod_forest
 ## save plot
 ggsave(filename=here::here("output", outcome, glue::glue("forest_plot_cox.svg")), coxmod_forest, width=20, height=15, units="cm")
+
 
 
 
