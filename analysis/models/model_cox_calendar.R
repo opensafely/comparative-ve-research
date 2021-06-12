@@ -62,7 +62,7 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here::here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
-# Import matched data ----
+# Import data ----
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 
 # redo tte variables to indclude censoring date (ie use na.censor=FALSE)
