@@ -61,6 +61,7 @@ def <-
   defData(varname = "positive_test_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
   defData(varname = "emergency_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
   defData(varname = "covidadmitted_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
+  defData(varname = "covidadmitted_ccdays", dist = "uniformInt", formula = "0; 1") %>%
   defData(varname = "death_day", dist = "uniformInt", formula = "1; end_day") %>%
   defData(varname = "coviddeath_day", dist = "nonrandom", formula = "if_else(runif(length(death_day))<0.2, death_day, NA_integer_)") %>%
 
@@ -116,6 +117,7 @@ defm <-
   defMiss(varname = "positive_test_day", formula = 0.90) %>%
   defMiss(varname = "emergency_day", formula = 0.90) %>%
   defMiss(varname = "covidadmitted_day", formula = 0.94) %>%
+  defMiss(varname = "covidadmitted_ccdays", formula = "if_else(is.na(covidadmitted_day), 1, 0)") %>%
   defMiss(varname = "death_day", formula = 0.99) %>%
   defMiss(varname = "coviddeath_day", formula = "if_else(is.na(death_day), 1, 0)")
 

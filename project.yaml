@@ -150,6 +150,24 @@ actions:
         figure: output/covidadmitted/forest*.svg
         table: output/covidadmitted/estimates*.csv
 
+  model_calendar_covidcc:
+    run: r:latest analysis/models/model_cox_calendar.R covidcc
+    needs: [design, data_selection]
+    outputs:
+      highly_sensitive:
+        data: output/covidcc/data_cox_split.rds
+        models: output/covidcc/model*.rds
+      moderately_sensitive:
+        logs:  output/covidcc/log*.txt
+
+  report_calendar_covidcc:
+    run: r:latest analysis/models/report_cox.R covidcc
+    needs: [design, model_calendar_covidcc]
+    outputs:
+      moderately_sensitive:
+        figure: output/covidcc/forest*.svg
+        table: output/covidcc/estimates*.csv
+
   model_calendar_coviddeath:
     run: r:latest analysis/models/model_cox_calendar.R coviddeath
     needs: [design, data_selection]

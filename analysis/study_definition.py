@@ -571,7 +571,7 @@ study = StudyDefinition(
         returning="date_admitted",
         with_these_diagnoses=codelists.covid_icd10,
         with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"],
-        on_or_after="covid_vax_1_date",
+        on_or_after="covid_vax_any_1_date",
         date_format="YYYY-MM-DD",
         find_first_match_in_period=True,
         return_expectations={
@@ -580,6 +580,21 @@ study = StudyDefinition(
             "incidence": 0.05,
         },
     ),
+    
+    
+    # COVID-RELATED UNPLANNED HOSPITAL ADMISSION DAYS IN CRITICAL CARE
+    # covidadmitted_ccdays=patients.admitted_to_hospital(
+    #     returning="days_in_critical_care",
+    #     with_these_diagnoses=codelists.covid_icd10,
+    #     with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"],
+    #     on_or_after="covid_vax_any_1_date",
+    #     date_format="YYYY-MM-DD",
+    #     find_first_match_in_period=True,
+    #     return_expectations={
+    #         "int": {"distribution": "normal", "mean": 10, "stddev": 5},
+    #         "incidence": 0.05,
+    #     },
+    # ),
 
     # COVID-RELATED DEATH
     coviddeath_date=patients.with_these_codes_on_death_certificate(
