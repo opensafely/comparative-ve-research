@@ -149,3 +149,22 @@ actions:
       moderately_sensitive:
         figure: output/covidadmitted/forest*.svg
         table: output/covidadmitted/estimates*.csv
+
+  model_calendar_coviddeath:
+    run: r:latest analysis/models/model_cox_calendar.R coviddeath
+    needs: [design, data_selection]
+    outputs:
+      highly_sensitive:
+        data: output/coviddeath/data_cox_split.rds
+        models: output/coviddeath/model*.rds
+      moderately_sensitive:
+        logs:  output/coviddeath/log*.txt
+
+  report_calendar_coviddeath:
+    run: r:latest analysis/models/report_cox.R coviddeath
+    needs: [design, model_calendar_coviddeath]
+    outputs:
+      moderately_sensitive:
+        figure: output/coviddeath/forest*.svg
+        table: output/coviddeath/estimates*.csv
+
