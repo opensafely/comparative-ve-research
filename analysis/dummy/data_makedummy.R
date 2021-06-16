@@ -1,10 +1,14 @@
 
 library('tidyverse')
+library('arrow')
 library('here')
 library('glue')
-library('simstudy')
-library('arrow')
+
 source(here("analysis", "lib", "utility_functions.R"))
+
+#remotes::install_github("https://github.com/wjchulme/dd4d")
+library('dd4d')
+
 
 population_size <- 1000
 
@@ -17,157 +21,252 @@ gbl_vars <- jsonlite::fromJSON(
 index_date <- as.Date(gbl_vars$start_date)
 start_date_pfizer <- as.Date(gbl_vars$start_date_pfizer)
 start_date_az <- as.Date(gbl_vars$start_date_az)
+start_date_moderna <- as.Date(gbl_vars$start_date_moderna)
 end_date <- as.Date(gbl_vars$end_date)
 #censor_date <- pmin(end_date, dereg_date, death_date, na.rm=TRUE)
 
+index_day <- 0
 pfizer_day <- as.integer(start_date_pfizer - index_date)
 az_day <- as.integer(start_date_az - index_date)
+moderna_day <- as.integer(start_date_moderna - index_date)
 end_day <- as.integer(end_date - index_date)
 
-def <-
-  defData(varname = "prior_covid_vax_pfizer_day", dist = "uniformInt", formula = "-100; -1", id="patient_id") %>%
-  defData(varname = "covid_vax_pfizer_1_day", dist = "uniformInt", formula = "pfizer_day; pfizer_day + 120") %>%
-  defData(varname = "covid_vax_pfizer_2_day", dist = "uniformInt", formula = "covid_vax_pfizer_1_day + 80; covid_vax_pfizer_1_day + 100") %>%
-  defData(varname = "prior_covid_vax_az_day", dist = "uniformInt", formula = "-100; -1") %>%
-  defData(varname = "covid_vax_az_1_day", dist = "uniformInt", formula = "az_day; az_day + 120") %>%
-  defData(varname = "covid_vax_az_2_day", dist = "uniformInt", formula = "covid_vax_az_1_day + 80; covid_vax_az_1_day + 100") %>%
-  defData(varname = "prior_covid_vax_day", dist = "uniformInt", formula = "-100; -1") %>%
-  defData(varname = "covid_vax_1_day", dist = "nonrandom", formula = "pmin(covid_vax_pfizer_1_day, covid_vax_az_1_day)") %>%
-  defData(varname = "covid_vax_2_day", dist = "nonrandom", formula = "pmin(covid_vax_pfizer_2_day, covid_vax_az_2_day)") %>%
 
-  defData(varname = "has_follow_up_previous_year", dist = "binary", formula = "0.999") %>%
-  defData(varname = "dereg_day", dist = "uniformInt", formula = "1; end_day") %>%
-
-  defData(varname = "age", dist = "normal", formula = 40, variance = 15) %>%
-  defData(varname = "sex", dist = "categorical", formula = "0.5; 0.5") %>%
-  defData(varname = "bmi", dist = "categorical", formula = "0.7; 0.1; 0.1; 0.1") %>%
-  defData(varname = "ethnicity", dist = "categorical", formula = "0.2; 0.2; 0.2; 0.2; 0.2") %>%
-  defData(varname = "ethnicity_6_sus", dist = "categorical", formula = "0.2; 0.2; 0.2; 0.2; 0.2") %>%
-
-  defData(varname = "practice_id", dist = "uniformInt", formula = "1; 1000") %>%
-  defData(varname = "msoa", dist = "uniformInt", formula = "1; 1000") %>%
-  defData(varname = "stp", dist = "uniformInt", formula = "1; 36") %>%
-  defData(varname = "region", dist = "uniformInt", formula = "1; 8") %>%
-  defData(varname = "imd", dist = "uniformInt", formula = "1; 32000") %>%
-  defData(varname = "rural_urban", dist = "uniformInt", formula = "1; 9") %>%
-
-  defData(varname = "prior_positive_test_day", dist = "uniformInt", formula = "-100; -1") %>%
-  defData(varname = "prior_primary_care_covid_case_day", dist = "uniformInt", formula = "-100; -1") %>%
-  defData(varname = "prior_covidadmitted_day", dist = "uniformInt", formula = "-100; -1") %>%
-  defData(varname = "prior_covid_test_day", dist = "uniformInt", formula = "-100; -1") %>%
-
-  defData(varname = "covid_test_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
-
-  defData(varname = "positive_test_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
-  defData(varname = "emergency_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
-  defData(varname = "covidadmitted_day", dist = "uniformInt", formula = "covid_vax_1_day; covid_vax_1_day + 200") %>%
-  defData(varname = "covidadmitted_ccdays", dist = "uniformInt", formula = "0; 1") %>%
-  defData(varname = "death_day", dist = "uniformInt", formula = "1; end_day") %>%
-  defData(varname = "coviddeath_day", dist = "nonrandom", formula = "if_else(runif(length(death_day))<0.2, death_day, NA_integer_)") %>%
-
-  defData(varname = "chronic_cardiac_disease", dist = "binary", formula = 0.05) %>%
-  defData(varname = "heart_failure", dist = "binary", formula = 0.05) %>%
-  defData(varname = "other_heart_disease", dist = "binary", formula = 0.05) %>%
-  defData(varname = "diabetes", dist = "binary", formula = 0.05) %>%
-  defData(varname = "dialysis", dist = "binary", formula = 0.05) %>%
-  defData(varname = "chronic_liver_disease", dist = "binary", formula = 0.05) %>%
-  defData(varname = "current_copd", dist = "binary", formula = 0.05) %>%
-  defData(varname = "LD_incl_DS_and_CP", dist = "binary", formula = 0.05) %>%
-  defData(varname = "cystic_fibrosis", dist = "binary", formula = 0.05) %>%
-  defData(varname = "other_resp_conditions", dist = "binary", formula = 0.05) %>%
-  defData(varname = "lung_cancer", dist = "binary", formula = 0.05) %>%
-  defData(varname = "haematological_cancer", dist = "binary", formula = 0.05) %>%
-  defData(varname = "cancer_excl_lung_and_haem", dist = "binary", formula = 0.05) %>%
-  defData(varname = "chemo_or_radio", dist = "binary", formula = 0.05) %>%
-  defData(varname = "solid_organ_transplantation", dist = "binary", formula = 0.05) %>%
-  defData(varname = "bone_marrow_transplant", dist = "binary", formula = 0.05) %>%
-  defData(varname = "sickle_cell_disease", dist = "binary", formula = 0.05) %>%
-  defData(varname = "permanant_immunosuppression", dist = "binary", formula = 0.05) %>%
-  defData(varname = "temporary_immunosuppression", dist = "binary", formula = 0.05) %>%
-  defData(varname = "asplenia", dist = "binary", formula = 0.05) %>%
-  defData(varname = "dmards", dist = "binary", formula = 0.05) %>%
-  defData(varname = "dementia", dist = "binary", formula = 0.05) %>%
-  defData(varname = "other_neuro_conditions", dist = "binary", formula = 0.05) %>%
-  defData(varname = "psychosis_schiz_bipolar", dist = "binary", formula = 0.05) %>%
-  defData(varname = "cev_ever", dist = "binary", formula = 0.02) %>%
-  defData(varname = "cev", dist = "binary", formula = 0.02)
-
-dummy_data_raw <- genData(population_size, def, id = "patient_id")
-
-defm <-
-  defMiss(varname = "prior_covid_vax_pfizer_day", formula = 0.999) %>%
-  defMiss(varname = "covid_vax_pfizer_1_day", formula = "covid_vax_az_1_day<covid_vax_pfizer_1_day") %>%
-  defMiss(varname = "covid_vax_pfizer_2_day", formula = "if_else(covid_vax_az_1_day<covid_vax_pfizer_1_day, 1, 0.2)") %>%
-  defMiss(varname = "prior_covid_vax_az_day", formula = 0.999) %>%
-  defMiss(varname = "covid_vax_az_1_day", formula = "covid_vax_az_1_day>=covid_vax_pfizer_1_day") %>%
-  defMiss(varname = "covid_vax_az_2_day", formula = "if_else(covid_vax_az_1_day>=covid_vax_pfizer_1_day, 1, 0.2)") %>%
-  defMiss(varname = "prior_covid_vax_day", formula = 0.999) %>%
-  defMiss(varname = "covid_vax_2_day", formula = 0.2) %>%
-  defMiss(varname = "dereg_day", formula = 0.95) %>%
-
-  defMiss(varname = "sex", formula = 0.001) %>%
-  defMiss(varname = "ethnicity", formula = 0.25) %>%
-  defMiss(varname = "ethnicity_6_sus", formula = 0.2) %>%
-  defMiss(varname = "prior_positive_test_day", formula = 0.95) %>%
-  defMiss(varname = "prior_primary_care_covid_case_day", formula = 0.95) %>%
-  defMiss(varname = "prior_covidadmitted_day", formula = 0.98) %>%
-  defMiss(varname = "prior_covid_test_day", formula = 0.50) %>%
-
-  defMiss(varname = "covid_test_day", formula = 0.40) %>%
-  defMiss(varname = "positive_test_day", formula = 0.90) %>%
-  defMiss(varname = "emergency_day", formula = 0.90) %>%
-  defMiss(varname = "covidadmitted_day", formula = 0.94) %>%
-  defMiss(varname = "covidadmitted_ccdays", formula = "if_else(is.na(covidadmitted_day), 1, 0)") %>%
-  defMiss(varname = "death_day", formula = 0.99) %>%
-  defMiss(varname = "coviddeath_day", formula = "if_else(is.na(death_day), 1, 0)")
+known_variables <- c("index_date", "start_date_pfizer", "start_date_az", "start_date_moderna", "end_date", "index_day", "pfizer_day",  "az_day", "moderna_day", "end_day")
 
 
+sim_list = list(
+  covid_vax_pfizer_0_day = bn_node(
+    ~round(runif(n=1, pfizer_day-100, pfizer_day-1)),
+    missing_rate = ~0.99
+  ),
+  covid_vax_pfizer_1_day = bn_node(
+    ~round(runif(n=1, pfizer_day, pfizer_day+120)),
+  ),
+  covid_vax_pfizer_2_day = bn_node(
+    ~round(runif(n=1, covid_vax_pfizer_1_day+80, covid_vax_pfizer_1_day+120)),
+    missing_rate = ~0.7
+  ),
+  covid_vax_az_0_day = bn_node(
+    ~round(runif(n=1, az_day-100, az_day-1)),
+    missing_rate = ~0.99
+  ),
+  covid_vax_az_1_day = bn_node(
+    ~round(runif(n=1, az_day, az_day+120)),
+  ),
+  covid_vax_az_2_day = bn_node(
+    ~round(runif(n=1, covid_vax_az_1_day+80, covid_vax_az_1_day+120)),
+    missing_rate = ~0.7
+  ),
+  covid_vax_moderna_0_day = bn_node(
+    ~round(runif(n=1, moderna_day-100, moderna_day-1)),
+    missing_rate = ~0.99
+  ),
+  covid_vax_moderna_1_day = bn_node(
+    ~round(runif(n=1, moderna_day, moderna_day+120)),
+  ),
+  covid_vax_moderna_2_day = bn_node(
+    ~round(runif(n=1, covid_vax_moderna_1_day+80, covid_vax_moderna_1_day+120)),
+    missing_rate = ~0.7
+  ),
 
-missmatt <- genMiss(dummy_data_raw, defm, idvars = "patient_id")
 
-dummy_data_withmissing <- genObs(dummy_data_raw, missmatt, idvars = "patient_id")
+  covid_vax_any_0_day = bn_node(
+    ~pmin(covid_vax_pfizer_0_day, covid_vax_az_0_day, covid_vax_moderna_0_day, na.rm=TRUE),
+  ),
+  covid_vax_any_1_day = bn_node(
+    ~pmin(covid_vax_pfizer_1_day, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE),
+  ),
+  covid_vax_any_2_day = bn_node(
+    ~pmin(covid_vax_pfizer_2_day, covid_vax_az_2_day, covid_vax_moderna_2_day, na.rm=TRUE),
+  ),
 
-dummy_data_processed <- dummy_data_withmissing %>%
+  # assumes covid_vax_disease is the same as covid_vax_any though in reality there will be slight differences
+  covid_vax_disease_0_day = bn_node(
+    ~pmin(covid_vax_pfizer_0_day, covid_vax_az_0_day, covid_vax_moderna_0_day, na.rm=TRUE),
+  ),
+  covid_vax_disease_1_day = bn_node(
+    ~pmin(covid_vax_pfizer_1_day, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE),
+  ),
+  covid_vax_disease_2_day = bn_node(
+    ~pmin(covid_vax_pfizer_2_day, covid_vax_az_2_day, covid_vax_moderna_2_day, na.rm=TRUE),
+  ),
+
+  dereg_day = bn_node(
+    ~round(runif(n=1, index_day, index_day+120)),
+    missing_rate = ~0.99
+  ),
+
+  has_follow_up_previous_year = bn_node(
+    ~rbernoulli(n=1, p=0.999)
+  ),
+
+
+  age = bn_node(
+    ~as.integer(rnorm(n=1, mean=60, sd=15))
+  ),
+  sex = bn_node(
+    ~rfactor(n=1, levels = c("F", "M"), p = c(0.51, 0.49)),
+    missing_rate = ~0.001 # this is shorthand for ~(rbernoulli(n=1, p = 0.2))
+  ),
+
+  bmi = bn_node(
+    ~rfactor(n=1, levels = c("Not obese", "Obese I (30-34.9)", "Obese II (35-39.9)", "Obese III (40+)"), p = c(0.5, 0.2, 0.2, 0.1)),
+  ),
+
+  ethnicity = bn_node(
+    ~rfactor(n=1, levels = c(1,2,3,4,5), p = c(0.8, 0.05, 0.05, 0.05, 0.05)),
+    missing_rate = ~ 0.25
+  ),
+
+  ethnicity_6_sus = bn_node(
+    ~rfactor(n=1, levels = c(0,1,2,3,4,5), p = c(0.1, 0.7, 0.05, 0.05, 0.05, 0.05)),
+    missing_rate = ~ 0
+  ),
+
+  practice_id = bn_node(
+    ~as.integer(runif(n=1, 1, 200))
+  ),
+
+  msoa = bn_node(
+    ~factor(as.integer(runif(n=1, 1, 100)), levels=1:100),
+    missing_rate = ~ 0.005
+  ),
+
+  stp = bn_node(
+    ~factor(as.integer(runif(n=1, 1, 36)), levels=1:36)
+  ),
+
+  region = bn_node(
+    variable_formula = ~rfactor(n=1, levels=c(
+      "North East",
+      "North West",
+      "Yorkshire and the Humber",
+      "East Midlands",
+      "West Midlands",
+      "East of England",
+      "London",
+      "South East",
+      "South West"
+    ), p = c(0.2, 0.2, 0.3, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05))
+  ),
+
+  imd = bn_node(
+    ~factor(plyr::round_any(runif(n=1, 1, 32000), 100), levels=seq(0,32000,100)),
+    missing_rate = ~0.02
+  ),
+
+  rural_urban = bn_node(
+    ~rfactor(n=1, levels = 1:9, p = rep(1/9, 9)),
+    missing_rate = ~ 0.1
+  ),
+
+
+  prior_covid_test_day = bn_node(
+    ~round(runif(n=1, index_day-100, index_day-1)),
+    missing_rate = ~0.7
+  ),
+
+  prior_positive_test_day = bn_node(
+    ~round(runif(n=1, index_day-100, index_day-1)),
+    missing_rate = ~0.95
+  ),
+
+  prior_primary_care_covid_case_day = bn_node(
+    ~round(runif(n=1, index_day-100, index_day-1)),
+    missing_rate = ~0.99
+  ),
+
+  prior_covidadmitted_day = bn_node(
+    ~round(runif(n=1, index_day-100, index_day-1)),
+    missing_rate = ~0.995
+  ),
+
+
+  covid_test_day = bn_node(
+    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    missing_rate = ~0.6
+  ),
+
+  positive_test_day = bn_node(
+    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    missing_rate = ~0.8
+  ),
+
+  emergency_day = bn_node(
+    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    missing_rate = ~0.9
+  ),
+
+  covidadmitted_day = bn_node(
+    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    missing_rate = ~0.95
+  ),
+
+  covidadmitted_ccdays = bn_node(
+    ~rfactor(n=1, levels = 0:3, p = c(0.7, 0.1, 0.1, 0.1)),
+    needs = "covidadmitted_day"
+  ),
+
+  death_day = bn_node(
+    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    missing_rate = ~0.99
+  ),
+
+  coviddeath_day = bn_node(
+    ~death_day,
+    missing_rate = ~0.7,
+    needs = "death_day"
+  ),
+
+  chronic_cardiac_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  heart_failure = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  other_heart_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  diabetes = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  dialysis = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  chronic_liver_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  current_copd = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  LD_incl_DS_and_CP = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  cystic_fibrosis = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  other_resp_conditions = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  lung_cancer = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  haematological_cancer = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  cancer_excl_lung_and_haem = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  chemo_or_radio = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  solid_organ_transplantation = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  bone_marrow_transplant = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  sickle_cell_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  permanant_immunosuppression = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  temporary_immunosuppression = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  asplenia = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  dmards = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  dementia = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  other_neuro_conditions = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  psychosis_schiz_bipolar = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  cev_ever = bn_node( ~rbernoulli(n=1, p = 0.02)),
+  cev = bn_node( ~rbernoulli(n=1, p = 0.02))
+
+)
+
+bn <- bn_create(sim_list, known_variables = known_variables)
+
+
+# bn <- mutate(bn ,
+#   known=if_else(is.na(known), FALSE, known)
+# )
+
+bn_plot(bn)
+
+
+dummydata <-bn_simulate(bn, pop_size = 500, keep_all = FALSE, .id="patient_id")
+
+dummydata_processed <- dummydata %>%
+  #convert logical to integer as study defs output 0/1 not TRUE/FALSE
+  mutate(across(where(is.logical), ~ as.integer(.))) %>%
+  #convert integer days to dates since index date and rename vars
   mutate(across(ends_with("_day"), ~ as.character(index_date + .))) %>%
-  rename_with(~str_replace(., "_day", "_date"), ends_with("_day")) %>%
-  mutate(
-    age = as.integer(round(age, 0)),
-    sex = fct_case_when(
-      sex == 1 ~ "Female",
-      sex == 2 ~ "Male",
-      TRUE ~ NA_character_
-    ),
-    bmi = fct_case_when(
-      bmi == 1 ~ "Not obese",
-      bmi == 2 ~ "Obese I (30-34.9)",
-      bmi == 3 ~ "Obese II (35-39.9)",
-      bmi == 4 ~ "Obese III (40+)",
-      TRUE ~ NA_character_
-    ),
-
-    imd = factor(plyr::round_any(imd, 100)),
-
-    region = fct_case_when(
-      region == 1 ~ "North East",
-      region == 2 ~ "North West",
-      region == 3 ~ "Yorkshire and the Humber",
-      region == 4 ~ "East Midlands",
-      region == 5 ~ "West Midlands",
-      region == 6 ~ "East of England",
-      region == 7 ~ "London",
-      region == 8 ~ "South East",
-      region == 9 ~ "South West",
-      TRUE ~ NA_character_
-    ),
-
-    ethnicity = factor(ethnicity),
-    ethnicity_6_sus = factor(ethnicity_6_sus),
-    msoa = factor(msoa),
-    stp = factor(stp),
-    rural_urban = factor(rural_urban),
+  rename_with(~str_replace(., "_day", "_date"), ends_with("_day"))
 
 
-  )
 
-
-write_feather(dummy_data_processed, sink = here("dummydata", "dummyinput.feather"))
+write_feather(dummydata_processed, sink = here("dummydata", "dummyinput.feather"))

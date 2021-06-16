@@ -42,7 +42,7 @@ if(Sys.getenv("OPENSAFELY_BACKEND") %in% c("", "expectations")){
   # rather than from a cohort-extractor-generated dummy data
 
   data_studydef_dummy <- read_feather(here("output", "input.feather"))
-  data_custom_dummy <- read_feather(here("output", "inputdummy.feather"))
+  data_custom_dummy <- read_feather(here("dummydata", "dummyinput.feather"))
 
   not_in_studydef <- names(data_custom_dummy)[!( names(data_custom_dummy) %in% names(data_studydef_dummy) )]
   not_in_custom  <- names(data_studydef_dummy)[!( names(data_studydef_dummy) %in% names(data_custom_dummy) )]
@@ -79,7 +79,7 @@ if(Sys.getenv("OPENSAFELY_BACKEND") %in% c("", "expectations")){
     apply(unmatched_types, 1, function(row) paste(paste(row, collapse=" : "), "\n"))
   )
 
-  data_extract0 <- read_feather(here("output", "inputdummy.feather"))
+  data_extract0 <- data_custom_dummy
 } else {
   data_extract0 <- read_feather(here("output", "input.feather"))
 }
@@ -113,7 +113,7 @@ data_dates_reordered_long <- data_extract %>%
   arrange(patient_id, event, date) %>%
   group_by(patient_id, event) %>%
   mutate(
-    index = row_number(),
+    index = row_number()-1,
     name = paste0(event,"_",index,"_date")
   ) %>%
   ungroup() %>%
