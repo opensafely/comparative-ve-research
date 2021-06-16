@@ -44,8 +44,6 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here::here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
-postvaxcuts <- c(0, 7, 14, 21, 28)
-
 
 ## Import processed data ----
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
