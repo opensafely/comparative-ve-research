@@ -32,8 +32,7 @@ data_criteria <- data_processed %>%
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
     #has_follow_up_previous_year,
-    no_prior_vaccine = (is.na(prior_covid_vax_date) & is.na(prior_covid_vax_pfizer_date) & is.na(prior_covid_vax_az_date)),
-    #no_prior_covid = (is.na(prior_positive_test_date) & is.na(prior_primary_care_covid_case_date) & is.na(prior_covidadmitted_date)),
+    no_prior_vaccine = is.na(covid_vax_any_0_date),
     not_cev = !cev,
     vax1_4janonwards = vax1_date>=start_date_az,
 
@@ -42,7 +41,6 @@ data_criteria <- data_processed %>%
         #has_follow_up_previous_year &
         #no_unclear_brand &
         no_prior_vaccine &
-        #no_prior_covid &
         not_cev
     ),
   )
@@ -58,7 +56,6 @@ data_flowchart <- data_criteria %>%
     #c1_1yearfup = c0_all & (has_follow_up_previous_year),
     c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
     c2_notcev = c1_notmissing & not_cev,
-    #c4_nopriorcovid = c3_notcev & (no_prior_covid),
     c3_nopriorvaccine = c2_notcev & (no_prior_vaccine),
     c4_4jan = c3_nopriorvaccine & vax1_4janonwards
   ) %>%
