@@ -23,8 +23,7 @@ actions:
     needs: [extract]
     outputs:
       highly_sensitive:
-        data1: output/data/data_processed.rds
-        data2: output/data/data_long_vax_dates.rds
+        data: output/data/data_processed.rds
 
   data_properties:
     run: r:latest analysis/process/data_properties.R output/data/data_processed.rds output/data_properties

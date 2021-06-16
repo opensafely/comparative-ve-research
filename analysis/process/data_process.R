@@ -211,6 +211,7 @@ data_processed <- data_extract_reordered %>%
       TRUE ~ NA_character_
     ),
 
+    covidadmitted_ccdays = as.integer(covidadmitted_ccdays),
     noncoviddeath_date = if_else(!is.na(death_date) & is.na(coviddeath_date), death_date, as.Date(NA_character_)),
     covidcc_date = if_else(!is.na(covidadmitted_date) & covidadmitted_ccdays>0, covidadmitted_date, as.Date(NA_character_))
 
@@ -219,60 +220,72 @@ data_processed <- data_extract_reordered %>%
 
 ## create one-row-per-event datasets ----
 # for vaccination
-
-data_vax <- local({
-
-  data_vax_all <- data_processed %>%
-    select(patient_id, matches("covid\\_vax\\_\\d+\\_date")) %>%
-    pivot_longer(
-      cols = -patient_id,
-      names_to = c(NA, "vax_index"),
-      names_pattern = "^(.*)_(\\d+)_date",
-      values_to = "date",
-      values_drop_na = TRUE
-    ) %>%
-    arrange(patient_id, date)
-
-  data_vax_pf <- data_processed %>%
-    select(patient_id, matches("covid\\_vax\\_pfizer\\_\\d+\\_date")) %>%
-    pivot_longer(
-      cols = -patient_id,
-      names_to = c(NA, "vax_pf_index"),
-      names_pattern = "^(.*)_(\\d+)_date",
-      values_to = "date",
-      values_drop_na = TRUE
-    ) %>%
-    arrange(patient_id, date)
-
-  data_vax_az <- data_processed %>%
-    select(patient_id, matches("covid\\_vax\\_az\\_\\d+\\_date")) %>%
-    pivot_longer(
-      cols = -patient_id,
-      names_to = c(NA, "vax_az_index"),
-      names_pattern = "^(.*)_(\\d+)_date",
-      values_to = "date",
-      values_drop_na = TRUE
-    ) %>%
-    arrange(patient_id, date)
-
-
-  data_vax_all %>%
-    left_join(data_vax_pf, by=c("patient_id", "date")) %>%
-    left_join(data_vax_az, by=c("patient_id", "date")) %>%
-    mutate(
-      vaccine_type = fct_case_when(
-        !is.na(vax_az_index) & is.na(vax_pf_index) ~ "Ox-AZ",
-        is.na(vax_az_index) & !is.na(vax_pf_index) ~ "Pf-BNT",
-        is.na(vax_az_index) & is.na(vax_pf_index) ~ "Unknown",
-        !is.na(vax_az_index) & !is.na(vax_pf_index) ~ "Both",
-        TRUE ~ NA_character_
-      )
-    ) %>%
-    arrange(patient_id, date)
-
-})
+#
+# data_vax <- local({
+#
+#   data_vax_disease <- data_processed %>%
+#     select(patient_id, matches("covid\\_vax\\_disease\\d+\\_date")) %>%
+#     pivot_longer(
+#       cols = -patient_id,
+#       names_to = c(NA, "vax_index"),
+#       names_pattern = "^(.*)_(\\d+)_date",
+#       values_to = "date",
+#       values_drop_na = TRUE
+#     ) %>%
+#     arrange(patient_id, date)
+#
+#   data_vax_pf <- data_processed %>%
+#     select(patient_id, matches("covid\\_vax\\_pfizer\\_\\d+\\_date")) %>%
+#     pivot_longer(
+#       cols = -patient_id,
+#       names_to = c(NA, "vax_pf_index"),
+#       names_pattern = "^(.*)_(\\d+)_date",
+#       values_to = "date",
+#       values_drop_na = TRUE
+#     ) %>%
+#     arrange(patient_id, date)
+#
+#   data_vax_az <- data_processed %>%
+#     select(patient_id, matches("covid\\_vax\\_az\\_\\d+\\_date")) %>%
+#     pivot_longer(
+#       cols = -patient_id,
+#       names_to = c(NA, "vax_az_index"),
+#       names_pattern = "^(.*)_(\\d+)_date",
+#       values_to = "date",
+#       values_drop_na = TRUE
+#     ) %>%
+#     arrange(patient_id, date)
+#
+#   data_vax_moderna <- data_processed %>%
+#     select(patient_id, matches("covid\\_vax\\_moderna\\_\\d+\\_date")) %>%
+#     pivot_longer(
+#       cols = -patient_id,
+#       names_to = c(NA, "vax_az_index"),
+#       names_pattern = "^(.*)_(\\d+)_date",
+#       values_to = "date",
+#       values_drop_na = TRUE
+#     ) %>%
+#     arrange(patient_id, date)
+#
+#
+#   data_vax_disease %>%
+#     left_join(data_vax_pf, by=c("patient_id", "date")) %>%
+#     left_join(data_vax_az, by=c("patient_id", "date")) %>%
+#     left_join(data_vax_moderna, by=c("patient_id", "date")) %>%
+#     mutate(
+#       vaccine_type = fct_case_when(
+#         !is.na(vax_az_index) & is.na(vax_pf_index) & is.na(vax_moderna_index) ~ "Ox-AZ",
+#         is.na(vax_az_index) & !is.na(vax_pf_index) & is.na(vax_moderna_index) ~ "Pf-BNT",
+#         is.na(vax_az_index) & is.na(vax_pf_index) & !is.na(vax_moderna_index) ~ "Moderna",
+#         (is.na(vax_az_index) + is.na(vax_pf_index) + is.na(vax_moderna_index)) >1 ~ "Unknown",
+#         !is.na(vax_az_index) & !is.na(vax_pf_index) ~ "Both",
+#         TRUE ~ NA_character_
+#       )
+#     ) %>%
+#     arrange(patient_id, date)
+#
+# })
 
 
 write_rds(data_processed, here("output", "data", "data_processed.rds"), compress="gz")
-write_rds(data_vax, here("output", "data", "data_long_vax_dates.rds"), compress="gz")
 
