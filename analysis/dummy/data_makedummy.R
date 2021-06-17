@@ -6,7 +6,7 @@ library('glue')
 
 source(here("analysis", "lib", "utility_functions.R"))
 
-#remotes::install_github("https://github.com/wjchulme/dd4d")
+remotes::install_github("https://github.com/wjchulme/dd4d")
 library('dd4d')
 
 
@@ -73,12 +73,15 @@ sim_list = list(
 
   covid_vax_any_0_day = bn_node(
     ~pmin(covid_vax_pfizer_0_day, covid_vax_az_0_day, covid_vax_moderna_0_day, na.rm=TRUE),
+    needs = c("covid_vax_pfizer_0_day", "covid_vax_az_0_day", "covid_vax_moderna_0_day")
   ),
   covid_vax_any_1_day = bn_node(
     ~pmin(covid_vax_pfizer_1_day, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE),
+    needs = c("covid_vax_pfizer_1_day", "covid_vax_az_1_day", "covid_vax_moderna_1_day")
   ),
   covid_vax_any_2_day = bn_node(
     ~pmin(covid_vax_pfizer_2_day, covid_vax_az_2_day, covid_vax_moderna_2_day, na.rm=TRUE),
+    needs = c("covid_vax_pfizer_2_day", "covid_vax_az_2_day", "covid_vax_moderna_2_day")
   ),
 
   # assumes covid_vax_disease is the same as covid_vax_any though in reality there will be slight differences
@@ -250,12 +253,8 @@ sim_list = list(
 
 bn <- bn_create(sim_list, known_variables = known_variables)
 
-
-# bn <- mutate(bn ,
-#   known=if_else(is.na(known), FALSE, known)
-# )
-
 bn_plot(bn)
+bn_plot(bn, connected_only=TRUE)
 
 
 dummydata <-bn_simulate(bn, pop_size = 500, keep_all = FALSE, .id="patient_id")
