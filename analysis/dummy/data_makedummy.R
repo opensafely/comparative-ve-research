@@ -37,36 +37,36 @@ known_variables <- c("index_date", "start_date_pfizer", "start_date_az", "start_
 
 sim_list = list(
   covid_vax_pfizer_0_day = bn_node(
-    ~round(runif(n=1, pfizer_day-100, pfizer_day-1)),
+    ~as.integer(runif(n=1, pfizer_day-100, pfizer_day-1)),
     missing_rate = ~0.99
   ),
   covid_vax_pfizer_1_day = bn_node(
-    ~round(runif(n=1, pfizer_day, pfizer_day+120)),
+    ~as.integer(runif(n=1, pfizer_day, pfizer_day+120)),
   ),
   covid_vax_pfizer_2_day = bn_node(
-    ~round(runif(n=1, covid_vax_pfizer_1_day+80, covid_vax_pfizer_1_day+120)),
+    ~as.integer(runif(n=1, covid_vax_pfizer_1_day+80, covid_vax_pfizer_1_day+120)),
     missing_rate = ~0.7
   ),
   covid_vax_az_0_day = bn_node(
-    ~round(runif(n=1, az_day-100, az_day-1)),
+    ~as.integer(runif(n=1, az_day-100, az_day-1)),
     missing_rate = ~0.99
   ),
   covid_vax_az_1_day = bn_node(
-    ~round(runif(n=1, az_day, az_day+120)),
+    ~as.integer(runif(n=1, az_day, az_day+120)),
   ),
   covid_vax_az_2_day = bn_node(
-    ~round(runif(n=1, covid_vax_az_1_day+80, covid_vax_az_1_day+120)),
+    ~as.integer(runif(n=1, covid_vax_az_1_day+80, covid_vax_az_1_day+120)),
     missing_rate = ~0.7
   ),
   covid_vax_moderna_0_day = bn_node(
-    ~round(runif(n=1, moderna_day-100, moderna_day-1)),
+    ~as.integer(runif(n=1, moderna_day-100, moderna_day-1)),
     missing_rate = ~0.99
   ),
   covid_vax_moderna_1_day = bn_node(
-    ~round(runif(n=1, moderna_day, moderna_day+120)),
+    ~as.integer(runif(n=1, moderna_day, moderna_day+120)),
   ),
   covid_vax_moderna_2_day = bn_node(
-    ~round(runif(n=1, covid_vax_moderna_1_day+80, covid_vax_moderna_1_day+120)),
+    ~as.integer(runif(n=1, covid_vax_moderna_1_day+80, covid_vax_moderna_1_day+120)),
     missing_rate = ~0.7
   ),
 
@@ -96,14 +96,13 @@ sim_list = list(
   ),
 
   dereg_day = bn_node(
-    ~round(runif(n=1, index_day, index_day+120)),
+    ~as.integer(runif(n=1, index_day, index_day+120)),
     missing_rate = ~0.99
   ),
 
   has_follow_up_previous_year = bn_node(
     ~rbernoulli(n=1, p=0.999)
   ),
-
 
   age = bn_node(
     ~as.integer(rnorm(n=1, mean=60, sd=15))
@@ -166,43 +165,43 @@ sim_list = list(
 
 
   prior_covid_test_day = bn_node(
-    ~round(runif(n=1, index_day-100, index_day-1)),
+    ~as.integer(runif(n=1, index_day-100, index_day-1)),
     missing_rate = ~0.7
   ),
 
   prior_positive_test_day = bn_node(
-    ~round(runif(n=1, index_day-100, index_day-1)),
+    ~as.integer(runif(n=1, index_day-100, index_day-1)),
     missing_rate = ~0.95
   ),
 
   prior_primary_care_covid_case_day = bn_node(
-    ~round(runif(n=1, index_day-100, index_day-1)),
+    ~as.integer(runif(n=1, index_day-100, index_day-1)),
     missing_rate = ~0.99
   ),
 
   prior_covidadmitted_day = bn_node(
-    ~round(runif(n=1, index_day-100, index_day-1)),
+    ~as.integer(runif(n=1, index_day-100, index_day-1)),
     missing_rate = ~0.995
   ),
 
 
   covid_test_day = bn_node(
-    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
     missing_rate = ~0.6
   ),
 
   positive_test_day = bn_node(
-    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
     missing_rate = ~0.8
   ),
 
   emergency_day = bn_node(
-    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
     missing_rate = ~0.9
   ),
 
   covidadmitted_day = bn_node(
-    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
     missing_rate = ~0.95
   ),
 
@@ -212,7 +211,7 @@ sim_list = list(
   ),
 
   death_day = bn_node(
-    ~round(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
     missing_rate = ~0.99
   ),
 
@@ -260,6 +259,17 @@ bn_plot(bn, connected_only=TRUE)
 dummydata <-bn_simulate(bn, pop_size = 500, keep_all = FALSE, .id="patient_id")
 
 dummydata_processed <- dummydata %>%
+  mutate(
+    # remove vaccination dates occurring after an earlier vaccination of a different brand
+    covid_vax_pfizer_1_day = if_else(covid_vax_pfizer_1_day<=pmin(Inf, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_pfizer_1_day, NA_integer_),
+    covid_vax_pfizer_2_day = if_else(covid_vax_pfizer_1_day<=pmin(Inf, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_pfizer_1_day, NA_integer_),
+
+    covid_vax_az_1_day = if_else(covid_vax_az_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_az_1_day, NA_integer_),
+    covid_vax_az_2_day = if_else(covid_vax_az_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_az_2_day, NA_integer_),
+
+    covid_vax_moderna_1_day = if_else(covid_vax_moderna_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_az_1_day, na.rm=TRUE), covid_vax_moderna_1_day, NA_integer_),
+    covid_vax_moderna_2_day = if_else(covid_vax_moderna_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_az_1_day, na.rm=TRUE), covid_vax_moderna_2_day, NA_integer_),
+  ) %>%
   #convert logical to integer as study defs output 0/1 not TRUE/FALSE
   mutate(across(where(is.logical), ~ as.integer(.))) %>%
   #convert integer days to dates since index date and rename vars

@@ -97,46 +97,7 @@ data_extract <- data_extract0 %>%
   #))
 
 
-
-##  SECTION TO SORT OUT BAD DUMMY DATA ----
-# this rearranges so events are in date order
-
-data_dates_reordered_long <- data_extract %>%
-  select(patient_id, matches("^(.*)_(\\d+)_date")) %>%
-  pivot_longer(
-    cols = -patient_id,
-    names_to = c("event", "index"),
-    names_pattern = "^(.*)_(\\d+)_date",
-    values_to = "date",
-    values_drop_na = TRUE
-  ) %>%
-  arrange(patient_id, event, date) %>%
-  group_by(patient_id, event) %>%
-  mutate(
-    index = row_number()-1,
-    name = paste0(event,"_",index,"_date")
-  ) %>%
-  ungroup() %>%
-  select(
-    patient_id, name, event, index, date
-  )
-
-data_dates_reordered_wide <- data_dates_reordered_long %>%
-  arrange(name, patient_id) %>%
-  pivot_wider(
-    id_cols=c(patient_id),
-    names_from = name,
-    values_from = date
-  )
-
-data_extract_reordered <- left_join(
-  data_extract %>% select(-matches("^(.*)_(\\d+)_date")),
-  data_dates_reordered_wide,
-  by="patient_id"
-)
-
-
-data_processed <- data_extract_reordered %>%
+data_processed <- data_extract %>%
   mutate(
 
     start_date = as.Date(gbl_vars$start_date), # i.e., this is interpreted later as [midnight at the _end of_ the start date] = [midnight at the _start of_ start date + 1], So that for example deaths on start_date+1 occur at t=1, not t=0.
