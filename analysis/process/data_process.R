@@ -162,7 +162,7 @@ data_processed <- data_extract %>%
       TRUE ~ NA_character_
     ),
 
-    vax1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, na.rm=TRUE),
+    vax1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, covid_vax_moderna_1_date, na.rm=TRUE),
     vax1_day = as.integer(floor((vax1_date - start_date))+1),
     vax1_week = as.integer(floor((vax1_date - start_date)/7)+1),
 

@@ -32,7 +32,7 @@ data_criteria <- data_processed %>%
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
     #has_follow_up_previous_year,
-    no_prior_vaccine = is.na(covid_vax_any_0_date),
+    no_prior_vaccine = is.na(covid_vax_any_0_date) & is.na(covid_vax_moderna_1_date),
     not_cev = !cev,
     vax1_4janonwards = vax1_date>=start_date_az,
 
