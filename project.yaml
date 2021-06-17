@@ -121,6 +121,25 @@ actions:
  ## positive test outcome
 #######################################
 
+
+  model_calendar_test:
+    run: r:latest analysis/models/model_cox_calendar.R test
+    needs: [design, data_selection]
+    outputs:
+      highly_sensitive:
+        data: output/test/data_cox_split.rds
+        models: output/test/model*.rds
+      moderately_sensitive:
+        logs:  output/test/log*.txt
+
+  report_calendar_test:
+    run: r:latest analysis/models/report_cox.R test
+    needs: [design, model_calendar_postest]
+    outputs:
+      moderately_sensitive:
+        figure: output/test/forest*.svg
+        table: output/test/estimates*.csv
+
   model_calendar_postest:
     run: r:latest analysis/models/model_cox_calendar.R postest
     needs: [design, data_selection]
