@@ -49,12 +49,20 @@ list2env(list_formula, globalenv())
 data_cohort <- read_rds(here("output", "data", "data_cohort_allvax.rds"))
 
 
+var_labels$vax1_4janonwards <- vax1_4janonwards~"Vaccinated on or after 4 Jan 2021"
+
 ## baseline variables
 data_baseline <- data_cohort %>%
   select(
     all_of(names(var_labels)),
     vax1_4janonwards,
     -age
+  ) %>%
+  mutate(
+    vax1_4janonwards = case_when(
+      vax1_4janonwards ~ "on or after Jan 2021",
+      !vax1_4janonwards ~ "before 4 Jan 2021"
+    )
   )
 if(removeobs) rm(data_cohort)
 
