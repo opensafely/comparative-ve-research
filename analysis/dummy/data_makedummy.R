@@ -10,7 +10,7 @@ remotes::install_github("https://github.com/wjchulme/dd4d")
 library('dd4d')
 
 
-population_size <- 1000
+population_size <- 5000
 
 # import globally defined repo variables from
 gbl_vars <- jsonlite::fromJSON(
@@ -256,7 +256,7 @@ bn_plot(bn)
 bn_plot(bn, connected_only=TRUE)
 
 
-dummydata <-bn_simulate(bn, pop_size = 500, keep_all = FALSE, .id="patient_id")
+dummydata <-bn_simulate(bn, pop_size = population_size, keep_all = FALSE, .id="patient_id")
 
 dummydata_processed <- dummydata %>%
   mutate(
