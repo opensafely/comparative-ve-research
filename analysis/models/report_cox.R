@@ -115,16 +115,16 @@ coxmod_forest_data <- tidy_summary %>%
 
 coxmod_forest <-
   ggplot(data = coxmod_forest_data) +
-  geom_point(aes(y=estimate, x=term_midpoint), position = position_dodge(width = 0.5))+
-  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint), position = position_dodge(width = 0.5))+
+  geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 0.8))+
+  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 0.8))+
   geom_hline(aes(yintercept=1), colour='grey')+
-  facet_grid(rows=vars(model_name), switch="y")+
+  #facet_grid(rows=vars(model_name), switch="y")+
   scale_y_log10(
-    breaks=c(0.5, 0.67, 0.80, 1, 1.25, 1.5, 2),
-    sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = c(0.5, 0.67, 0.80, 1, 1.25, 1.5, 2))
+    breaks=c(0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3),
+    sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
   )+
   scale_x_continuous(breaks=unique(coxmod_forest_data$term_left))+
-  scale_colour_brewer(type="qual", palette="Set2")+#, guide=guide_legend(reverse = TRUE))+
+  scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+#, guide=guide_legend(reverse = TRUE))+
   labs(
     y="Hazard ratio",
     x="Time since first dose",
@@ -149,7 +149,7 @@ coxmod_forest <-
     plot.caption.position = "plot",
     plot.caption = element_text(hjust = 0, face= "italic"),
 
-    legend.position = "right"
+    legend.position = "bottom"
    ) +
  NULL
 coxmod_forest
