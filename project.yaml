@@ -58,6 +58,14 @@ actions:
         html: output/descriptive/tables/table1_allvax.html
         csv: output/descriptive/tables/table1_allvax.csv
 
+  descr_irr:
+    run: r:latest analysis/descriptive/table_irr.R
+    needs: [design, data_selection]
+    outputs:
+      moderately_sensitive:
+        html: output/descriptive/tables/table_irr.html
+        csv: output/descriptive/tables/table_irr.csv
+
 #######################################
  ## MATCHING
 #######################################
