@@ -66,7 +66,13 @@ tab_summary_baseline <- data_baseline %>%
 
 tab_summary_baseline$inputs$data <- NULL
 
+tab_summary_baseline$table_header
+
+tab_csv <- tab_summary_baseline$table_body
+names(tab_csv) <- tab_summary_baseline$table_header$label
+tab_csv <- tab_csv[, !tab_summary_baseline$table_header$hide]
+
 ## create output directories ----
 dir.create(here::here("output", "descriptive", "tables"), showWarnings = FALSE, recursive=TRUE)
 gtsave(as_gt(tab_summary_baseline), here::here("output", "descriptive", "tables", "table1.html"))
-write_csv(tab_summary_baseline$table_body, here::here("output", "descriptive", "tables", "table1.csv"))
+write_csv(tab_csv, here::here("output", "descriptive", "tables", "table1.csv"))
