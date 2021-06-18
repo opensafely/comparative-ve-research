@@ -18,12 +18,13 @@ dir.create(here("output", "data"), showWarnings = FALSE, recursive=TRUE)
 
 metadata_outcomes <- tribble(
   ~outcome, ~outcome_var, ~outcome_descr,
-  "test", "covid_test_1_date", "Covid test",
-  "postest", "positive_test_1_date", "Positive test",
+  "test", "covid_test_1_date", "SARS-CoV-2 test",
+  "postest", "positive_test_1_date", "Positive SARS-CoV-2 test",
   "emergency", "emergency_1_date", "A&E attendance",
-  "covidadmitted", "covidadmitted_1_date", "COVID-related admission",
-  "coviddeath", "coviddeath_date", "COVID-related death",
-  "noncoviddeath", "noncoviddeath_date", "Non-COVID-related death",
+  "covidadmitted", "covidadmitted_1_date", "COVID-19 hospitalisation",
+  "covidcc", "covidadmitted_1_date", "COVID-19 critical care",
+  "coviddeath", "coviddeath_date", "COVID-19 death",
+  "noncoviddeath", "noncoviddeath_date", "Non-COVID-19 death",
   "death", "death_date", "Any death",
 )
 
