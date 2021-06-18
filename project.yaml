@@ -217,4 +217,23 @@ actions:
         figure2: output/coviddeath/forest*.png
         table: output/coviddeath/estimates*.csv
 
+  model_calendar_noncoviddeath:
+    run: r:latest analysis/models/model_cox_calendar.R noncoviddeath
+    needs: [design, data_selection]
+    outputs:
+      highly_sensitive:
+        data: output/noncoviddeath/data_cox_split.rds
+        models: output/noncoviddeath/model*.rds
+      moderately_sensitive:
+        logs:  output/noncoviddeath/log*.txt
+
+  report_calendar_noncoviddeath:
+    run: r:latest analysis/models/report_cox.R noncoviddeath
+    needs: [design, model_calendar_noncoviddeath]
+    outputs:
+      moderately_sensitive:
+        figure: output/noncoviddeath/forest*.svg
+        figure2: output/noncoviddeath/forest*.png
+        table: output/noncoviddeath/estimates*.csv
+
 
