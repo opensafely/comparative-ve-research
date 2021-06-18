@@ -1,0 +1,25 @@
+## script info for test ##   
+data_cox data size = 351753
+  data_cox memory usage = 0.231 GB
+
+
+data_cox_split data size = 1946851
+  data_cox_split memory usage = 0.771 GB
+
+
+model0 data size = 1946851
+  model0 memory usage = 0.327 GB
+
+
+model1 data size = 1946851
+  model1 memory usage = 0.327 GB
+
+
+model2 data size = 1946851
+  model2 memory usage = 0.327 GB
+
+
+model3 data size = 1946851
+  model3 memory usage = 0.327 GB
+
+
