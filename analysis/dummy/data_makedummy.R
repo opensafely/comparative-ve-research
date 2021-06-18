@@ -10,7 +10,7 @@ remotes::install_github("https://github.com/wjchulme/dd4d")
 library('dd4d')
 
 
-population_size <- 5000
+population_size <- 10000
 
 # import globally defined repo variables from
 gbl_vars <- jsonlite::fromJSON(
