@@ -1,0 +1,25 @@
+## script info for coviddeath ##   
+data_cox data size = 352061
+  data_cox memory usage = 0.231 GB
+
+
+data_cox_split data size = 2002041
+  data_cox_split memory usage = 0.793 GB
+
+
+model0 data size = 2002041
+  model0 memory usage = 0.336 GB
+
+
+model1 data size = 2002041
+  model1 memory usage = 0.336 GB
+
+
+model2 data size = 2002041
+  model2 memory usage = 0.336 GB
+
+
+model3 data size = 2002041
+  model3 memory usage = 0.336 GB
+
+

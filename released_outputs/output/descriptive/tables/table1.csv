@@ -1,0 +1,54 @@
+variable,var_type,var_class,var_label,row_type,label,stat_1,stat_2
+ageband,categorical,factor,Age,label,Age,NA,NA
+ageband,categorical,factor,Age,level,18-30,"16,805 (17%)","46,741 (17%)"
+ageband,categorical,factor,Age,level,30s,"22,859 (24%)","68,562 (25%)"
+ageband,categorical,factor,Age,level,40s,"23,777 (25%)","68,091 (25%)"
+ageband,categorical,factor,Age,level,50s,"25,538 (26%)","69,374 (25%)"
+ageband,categorical,factor,Age,level,60-64,"7,568 (7.8%)","20,559 (7.5%)"
+sex,categorical,factor,Sex,label,Sex,NA,NA
+sex,categorical,factor,Sex,level,F,"74,952 (78%)","216,389 (79%)"
+sex,categorical,factor,Sex,level,M,"21,595 (22%)","56,938 (21%)"
+sex,categorical,factor,Sex,level,I,0 (0%),0 (0%)
+ethnicity_combined,categorical,factor,Ethnicity,label,Ethnicity,NA,NA
+ethnicity_combined,categorical,factor,Ethnicity,level,White,"79,054 (82%)","225,648 (83%)"
+ethnicity_combined,categorical,factor,Ethnicity,level,Black,"5,948 (6.2%)","10,079 (3.7%)"
+ethnicity_combined,categorical,factor,Ethnicity,level,South Asian,"7,915 (8.2%)","26,369 (9.6%)"
+ethnicity_combined,categorical,factor,Ethnicity,level,Mixed,"1,801 (1.9%)","4,381 (1.6%)"
+ethnicity_combined,categorical,factor,Ethnicity,level,Other,"1,829 (1.9%)","6,850 (2.5%)"
+imd,continuous,integer,IMD,label,IMD,"160 (75, 240)","162 (79, 243)"
+region,categorical,factor,Region,label,Region,NA,NA
+region,categorical,factor,Region,level,Yorkshire and The Humber,"17,873 (19%)","39,533 (14%)"
+region,categorical,factor,Region,level,East,"18,996 (20%)","67,081 (25%)"
+region,categorical,factor,Region,level,East Midlands,"21,248 (22%)","45,718 (17%)"
+region,categorical,factor,Region,level,West Midlands,"3,478 (3.6%)","9,512 (3.5%)"
+region,categorical,factor,Region,level,South West,"9,281 (9.6%)","38,896 (14%)"
+region,categorical,factor,Region,level,North East,"5,967 (6.2%)","17,135 (6.3%)"
+region,categorical,factor,Region,level,North West,"10,517 (11%)","25,991 (9.5%)"
+region,categorical,factor,Region,level,London,"3,714 (3.8%)","11,891 (4.4%)"
+region,categorical,factor,Region,level,South East,"5,473 (5.7%)","17,570 (6.4%)"
+vax1_day,continuous,integer,Day of vaccination,label,Day of vaccination,"60 (44, 94)","40 (35, 48)"
+bmi,categorical,factor,Body Mass Index,label,Body Mass Index,NA,NA
+bmi,categorical,factor,Body Mass Index,level,Not obese,"74,635 (77%)","215,942 (79%)"
+bmi,categorical,factor,Body Mass Index,level,Obese I (30-34.9),"12,528 (13%)","32,943 (12%)"
+bmi,categorical,factor,Body Mass Index,level,Obese II (35-39.9),"5,657 (5.9%)","15,001 (5.5%)"
+bmi,categorical,factor,Body Mass Index,level,Obese III (40+),"3,727 (3.9%)","9,441 (3.5%)"
+heart_failure,dichotomous,logical,Heart failure,label,Heart failure,253 (0.3%),648 (0.2%)
+other_heart_disease,dichotomous,logical,Other heart disease,label,Other heart disease,"1,735 (1.8%)","4,800 (1.8%)"
+dialysis,dichotomous,logical,Dialysis,label,Dialysis,8 (<0.1%),18 (<0.1%)
+diabetes,dichotomous,logical,Diabetes,label,Diabetes,"4,906 (5.1%)","14,427 (5.3%)"
+chronic_liver_disease,dichotomous,logical,Chronic liver disease,label,Chronic liver disease,331 (0.3%),689 (0.3%)
+current_copd,dichotomous,logical,COPD,label,COPD,485 (0.5%),"1,341 (0.5%)"
+other_resp_conditions,dichotomous,logical,Other respiratory conditions,label,Other respiratory conditions,320 (0.3%),769 (0.3%)
+lung_cancer,dichotomous,logical,Lung Cancer,label,Lung Cancer,15 (<0.1%),53 (<0.1%)
+haematological_cancer,dichotomous,logical,Haematological cancer,label,Haematological cancer,174 (0.2%),449 (0.2%)
+cancer_excl_lung_and_haem,dichotomous,logical,"Cancer excl. lung, haemo",label,"Cancer excl. lung, haemo","2,326 (2.4%)","6,783 (2.5%)"
+any_immunosuppression,dichotomous,logical,Immunosuppressed,label,Immunosuppressed,"1,874 (1.9%)","5,669 (2.1%)"
+other_neuro_conditions,dichotomous,logical,Other neurological conditions,label,Other neurological conditions,463 (0.5%),"1,281 (0.5%)"
+LD_incl_DS_and_CP,dichotomous,logical,Learning disabilities,label,Learning disabilities,173 (0.2%),383 (0.1%)
+psychosis_schiz_bipolar,dichotomous,logical,Serious mental illness,label,Serious mental illness,917 (0.9%),"1,691 (0.6%)"
+multimorb,categorical,factor,Morbidity count,label,Morbidity count,NA,NA
+multimorb,categorical,factor,Morbidity count,level,0,"77,169 (80%)","220,662 (81%)"
+multimorb,categorical,factor,Morbidity count,level,1,"15,950 (17%)","43,387 (16%)"
+multimorb,categorical,factor,Morbidity count,level,2,"3,027 (3.1%)","8,211 (3.0%)"
+multimorb,categorical,factor,Morbidity count,level,3+,401 (0.4%),"1,067 (0.4%)"
+prior_covid_infection,dichotomous,logical,Prior SARS-CoV-2 infection,label,Prior SARS-CoV-2 infection,"15,736 (16%)","30,755 (11%)"
