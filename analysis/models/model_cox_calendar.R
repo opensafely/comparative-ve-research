@@ -193,6 +193,7 @@ formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:timesincevax
 
 formula_spacetime <- . ~ . + strata(stp)
 
+opt_control <- coxph.control(iter.max = 30)
 
 ### model 0 - unadjusted vaccination effect model ----
 ## no adjustment variables
@@ -203,7 +204,8 @@ coxmod0 <- coxph(
   data = data_cox_split,
   robust = TRUE,
   id = patient_id,
-  na.action = "na.fail"
+  na.action = "na.fail",
+  control = opt_control
 )
 
 
@@ -224,7 +226,8 @@ coxmod1 <- coxph(
   data = data_cox_split,
   robust = TRUE,
   id = patient_id,
-  na.action = "na.fail"
+  na.action = "na.fail",
+  control = opt_control
 )
 
 logoutput(
@@ -246,7 +249,8 @@ coxmod2 <- coxph(
   data = data_cox_split,
   robust = TRUE,
   id = patient_id,
-  na.action = "na.fail"
+  na.action = "na.fail",
+  control = opt_control
 )
 
 logoutput(
@@ -267,7 +271,8 @@ coxmod3 <- coxph(
   data = data_cox_split,
   robust = TRUE,
   id = patient_id,
-  na.action = "na.fail"
+  na.action = "na.fail",
+  control = opt_control
 )
 
 logoutput(
