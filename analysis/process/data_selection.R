@@ -27,7 +27,7 @@ data_criteria <- data_processed %>%
   mutate(
     patient_id,
     has_age = !is.na(age),
-    has_sex = !is.na(sex),
+    has_sex = !is.na(sex) & !(sex %in% c("I", "U")),
     has_imd = !is.na(imd),
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
