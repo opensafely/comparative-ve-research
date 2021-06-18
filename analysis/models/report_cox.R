@@ -84,10 +84,10 @@ tidypp <- function(model, model_name, ...){
 
 data_cox_split <- read_rds(here("output", outcome, "data_cox_split.rds"))
 
-tidy0 <- tidypp(coxmod0, "0 Unadjusted")
-tidy1 <- tidypp(coxmod1, "1 Time")
-tidy2 <- tidypp(coxmod2, "2 Time \n+ demographics")
-tidy3 <- tidypp(coxmod3, "3 Time \n+ demographics \n+ clinical")
+tidy0 <- tidypp(coxmod0, "0 unadjusted")
+tidy1 <- tidypp(coxmod1, "1 adjusting for time")
+tidy2 <- tidypp(coxmod2, "2 adjusting for time + demographics")
+tidy3 <- tidypp(coxmod3, "3 adjusting for time + demographics + clinical")
 
 tidy_summary <- bind_rows(
   tidy0,
@@ -115,8 +115,8 @@ coxmod_forest_data <- tidy_summary %>%
 
 coxmod_forest <-
   ggplot(data = coxmod_forest_data) +
-  geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 0.8))+
-  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 0.8))+
+  geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1))+
+  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1))+
   geom_hline(aes(yintercept=1), colour='grey')+
   #facet_grid(rows=vars(model_name), switch="y")+
   scale_y_log10(
@@ -124,7 +124,7 @@ coxmod_forest <-
     sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
   )+
   scale_x_continuous(breaks=unique(coxmod_forest_data$term_left))+
-  scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+#, guide=guide_legend(reverse = TRUE))+
+  scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
   labs(
     y="Hazard ratio",
     x="Time since first dose",
