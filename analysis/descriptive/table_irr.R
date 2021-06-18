@@ -158,6 +158,8 @@ format_ratio = function(numer,denom, width=7){
   )
 }
 
+format_ratio(, 33)
+
 rrCI_normal <- function(n, pt, ref_n, ref_pt, group, accuracy=0.001){
   rate <- n/pt
   ref_rate <- ref_n/ref_pt
@@ -232,7 +234,6 @@ pt_summary <- function(data, event){
     summarise(
       yearsatrisk=sum(pt*(1-status_event))/365.25,
       n=sum(ind_event),
-      q = format_ratio(n,yearsatrisk),
       rate=n/yearsatrisk
     ) %>%
     ungroup()
@@ -247,7 +248,6 @@ pt_summary <- function(data, event){
     summarise(
       yearsatrisk=sum(pt*(1-status_event))/365.25,
       n=sum(ind_event),
-      q = format_ratio(n,yearsatrisk),
       rate=n/yearsatrisk
     ) %>%
     ungroup()
@@ -267,7 +267,7 @@ pt_summary <- function(data, event){
     pivot_wider(
       id_cols =c(event, timesincevax),
       names_from = vax1_type,
-      values_from = c(yearsatrisk, n, q, rate),
+      values_from = c(yearsatrisk, n, rate),
       names_glue = "{vax1_type}_{.value}"
     ) %>%
     select(
@@ -282,9 +282,10 @@ pt_summary <- function(data, event){
   redacted <- unredacted_wide %>%
     mutate(
       pfizer_rate = redactor2(pfizer_n, 5, pfizer_rate),
-      pfizer_q = redactor2(pfizer_n, 5, pfizer_q),
+      #pfizer_q = redactor2(pfizer_n, 5, pfizer_q),
+
       az_rate = redactor2(az_n, 5, az_rate),
-      az_q = redactor2(az_n, 5, az_q),
+      #az_q = redactor2(az_n, 5, az_q),
 
       rr = redactor2(pmin(az_n, pfizer_n), 5, rr),
       rrE = redactor2(pmin(az_n, pfizer_n), 5, rrE),
@@ -292,6 +293,9 @@ pt_summary <- function(data, event){
 
       pfizer_n = redactor2(pfizer_n, 5),
       az_n = redactor2(az_n, 5),
+
+      pfizer_q = format_ratio(pfizer_n, pfizer_yearsatrisk),
+      az_q = format_ratio(az_n, az_yearsatrisk),
     )
 }
 
