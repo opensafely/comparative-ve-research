@@ -70,7 +70,7 @@ tab_summary_baseline$table_header
 
 tab_csv <- tab_summary_baseline$table_body
 names(tab_csv) <- tab_summary_baseline$table_header$label
-tab_csv <- tab_csv[, !tab_summary_baseline$table_header$hide]
+tab_csv <- tab_csv[, (!tab_summary_baseline$table_header$hide | tab_summary_baseline$table_header$label=="variable")]
 
 ## create output directories ----
 dir.create(here::here("output", "descriptive", "tables"), showWarnings = FALSE, recursive=TRUE)
