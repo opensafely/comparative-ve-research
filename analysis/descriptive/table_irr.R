@@ -158,7 +158,6 @@ format_ratio = function(numer,denom, width=7){
   )
 }
 
-format_ratio(, 33)
 
 rrCI_normal <- function(n, pt, ref_n, ref_pt, group, accuracy=0.001){
   rate <- n/pt
