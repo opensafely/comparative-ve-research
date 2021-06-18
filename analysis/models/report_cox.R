@@ -155,6 +155,7 @@ coxmod_forest <-
 coxmod_forest
 ## save plot
 ggsave(filename=here::here("output", outcome, glue::glue("forest_plot_cox.svg")), coxmod_forest, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", outcome, glue::glue("forest_plot_cox.png")), coxmod_forest, width=20, height=15, units="cm")
 
 
 

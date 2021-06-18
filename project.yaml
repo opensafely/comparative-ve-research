@@ -134,10 +134,11 @@ actions:
 
   report_calendar_test:
     run: r:latest analysis/models/report_cox.R test
-    needs: [design, model_calendar_postest]
+    needs: [design, model_calendar_test]
     outputs:
       moderately_sensitive:
         figure: output/test/forest*.svg
+        figure2: output/test/forest*.png
         table: output/test/estimates*.csv
 
   model_calendar_postest:
@@ -156,6 +157,7 @@ actions:
     outputs:
       moderately_sensitive:
         figure: output/postest/forest*.svg
+        figure2: output/postest/forest*.png
         table: output/postest/estimates*.csv
 
   model_calendar_covidadmitted:
@@ -174,6 +176,7 @@ actions:
     outputs:
       moderately_sensitive:
         figure: output/covidadmitted/forest*.svg
+        figure2: output/covidadmitted/forest*.png
         table: output/covidadmitted/estimates*.csv
 
   model_calendar_covidcc:
@@ -192,6 +195,7 @@ actions:
     outputs:
       moderately_sensitive:
         figure: output/covidcc/forest*.svg
+        figure2: output/covidcc/forest*.png
         table: output/covidcc/estimates*.csv
 
   model_calendar_coviddeath:
@@ -210,5 +214,7 @@ actions:
     outputs:
       moderately_sensitive:
         figure: output/coviddeath/forest*.svg
+        figure2: output/coviddeath/forest*.png
         table: output/coviddeath/estimates*.csv
+
 
