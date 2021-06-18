@@ -75,6 +75,9 @@ data_tte <- data_cohort %>%
     # time to last follow up day or death or deregistration
     tte_censor = tte(vax1_date, censor_date, censor_date),
 
+    tte_vaxany2 =tte(vax1_date, covid_vax_any_2_date, censor_date, na.censor=TRUE),
+    ind_vaxany2 = censor_indicator(covid_vax_any_2_date, censor_date),
+
     tte_test =tte(vax1_date, covid_test_date, censor_date, na.censor=TRUE),
     ind_test = censor_indicator(covid_test_date, censor_date),
 
