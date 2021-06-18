@@ -45,9 +45,9 @@ data_criteria <- data_processed %>%
     ),
   )
 
-data_cohort_allvax <- data_criteria %>% filter(include)
+data_cohort_allvax <- data_criteria %>% filter(include) %>% droplevels()
 write_rds(data_cohort_allvax, here("output", "data", "data_cohort_allvax.rds"), compress="gz")
-data_cohort <- data_criteria %>% filter(include & vax1_4janonwards)
+data_cohort <- data_criteria %>% filter(include & vax1_4janonwards) %>% droplevels()
 write_rds(data_cohort, here("output", "data", "data_cohort.rds"), compress="gz")
 
 data_flowchart <- data_criteria %>%
