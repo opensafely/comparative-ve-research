@@ -69,7 +69,7 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 data_tte <- data_cohort %>%
   mutate(
 
-    # time to last follow up day
+    # time to study end date
     tte_enddate = tte(vax1_date, end_date, end_date),
 
     # time to last follow up day or death or deregistration
@@ -122,8 +122,6 @@ data_cox <- data_tte %>%
     vax1_az = (vax1_type=="az")*1
   ) %>%
   filter(
-    !is.na(vax1_date),
-    vax1_date<=censor_date,
     tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
     tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )

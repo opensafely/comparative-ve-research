@@ -32,16 +32,19 @@ data_criteria <- data_processed %>%
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
     #has_follow_up_previous_year,
-    no_prior_vaccine = is.na(covid_vax_any_0_date) & is.na(covid_vax_moderna_1_date),
     not_cev = !cev,
+    no_prior_vaccine = is.na(covid_vax_any_0_date) & is.na(covid_vax_moderna_1_date),
+    vax_beforeenddate = vax1_date <= end_date,
     vax1_4janonwards = vax1_date>=start_date_az,
+
 
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region &
         #has_follow_up_previous_year &
         #no_unclear_brand &
+        not_cev &
         no_prior_vaccine &
-        not_cev
+        vax_beforeenddate
     ),
   )
 
@@ -57,7 +60,9 @@ data_flowchart <- data_criteria %>%
     c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
     c2_notcev = c1_notmissing & not_cev,
     c3_nopriorvaccine = c2_notcev & (no_prior_vaccine),
-    c4_4jan = c3_nopriorvaccine & vax1_4janonwards
+    c4_enddate = c3_nopriorvaccine & vax_beforeenddate,
+    c5_4jan = c4_enddate & vax1_4janonwards,
+
   ) %>%
   summarise(
     across(.fns=sum)

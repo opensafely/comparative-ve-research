@@ -125,31 +125,31 @@ data_tte <- data_cohort %>%
     tte_vaxaz2 = tte(vax1_date, covid_vax_az_2_date, censor_date),
     tte_vaxmoderna2 = tte(vax1_date, covid_vax_moderna_2_date, censor_date),
 
-    tte_test =tte(vax1_date, covid_test_date, censor_date, na.censor=TRUE),
+    tte_test =tte(vax1_date, covid_test_date, censor_date, na.censor=FALSE),
     ind_test = censor_indicator(covid_test_date, censor_date),
 
-    tte_postest = tte(vax1_date, positive_test_date, censor_date, na.censor=TRUE),
+    tte_postest = tte(vax1_date, positive_test_date, censor_date, na.censor=FALSE),
     ind_postest = censor_indicator(positive_test_date, censor_date),
 
-    tte_emergency = tte(vax1_date, emergency_date, censor_date, na.censor=TRUE),
+    tte_emergency = tte(vax1_date, emergency_date, censor_date, na.censor=FALSE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
 
-    tte_covidadmitted = tte(vax1_date, covidadmitted_date, censor_date, na.censor=TRUE),
+    tte_covidadmitted = tte(vax1_date, covidadmitted_date, censor_date, na.censor=FALSE),
     ind_covidadmitted = censor_indicator(covidadmitted_date, censor_date),
 
-    tte_covidcc = tte(vax1_date, covidcc_date, censor_date, na.censor=TRUE),
+    tte_covidcc = tte(vax1_date, covidcc_date, censor_date, na.censor=FALSE),
     ind_covidcc = censor_indicator(covidcc_date, censor_date),
 
-    tte_coviddeath = tte(vax1_date, coviddeath_date, censor_date, na.censor=TRUE),
+    tte_coviddeath = tte(vax1_date, coviddeath_date, censor_date, na.censor=FALSE),
     ind_coviddeath = censor_indicator(coviddeath_date, censor_date),
 
-    tte_noncoviddeath = tte(vax1_date, noncoviddeath_date, censor_date, na.censor=TRUE),
+    tte_noncoviddeath = tte(vax1_date, noncoviddeath_date, censor_date, na.censor=FALSE),
     ind_noncoviddeath = censor_indicator(noncoviddeath_date, censor_date),
 
-    tte_death = tte(vax1_date, death_date, censor_date, na.censor=TRUE),
+    tte_death = tte(vax1_date, death_date, censor_date, na.censor=FALSE),
     ind_death = censor_indicator(death_date, censor_date),
 
-    tte_dereg = tte(vax1_date, dereg_date, censor_date, na.censor=TRUE),
+    tte_dereg = tte(vax1_date, dereg_date, censor_date, na.censor=FALSE),
     ind_dereg = censor_indicator(dereg_date, censor_date),
 
     all = factor("all")
@@ -231,9 +231,9 @@ get_colour_scales <- function(colour_type = "qual"){
 
 ggplot_surv <- function(.surv_data, colour_var, colour_name, colour_type="qual", ci=FALSE, title=""){
 
-  lines <- list(geom_step(aes(x=time, y=1-surv)))
+  lines <- list(geom_step(aes(x=time, y=surv)))
   if(ci){
-    lines <- append(lines, list(geom_rect(aes(xmin=time, xmax=leadtime, ymin=1-surv.ul, ymax=1-surv.ll), alpha=0.1, colour="transparent")))
+    lines <- append(lines, list(geom_rect(aes(xmin=time, xmax=leadtime, ymin=surv.ll, ymax=surv.ul), alpha=0.1, colour="transparent")))
   }
 
   surv_plot <- .surv_data %>%
@@ -244,7 +244,7 @@ ggplot_surv <- function(.surv_data, colour_var, colour_name, colour_type="qual",
     coord_cartesian(xlim=c(0, 90))+
     labs(
       x="Days since vaccination",
-      y="Cumul. event rate",
+      y="Event-free rate",
       colour=colour_name,
       title=title
     )+
@@ -261,7 +261,7 @@ ggplot_surv <- function(.surv_data, colour_var, colour_name, colour_type="qual",
 
 metadata_variables <- tribble(
   ~variable, ~variable_name, ~colour_type,
-  "vax1_type", "Brand", "qual",
+  "vax1_type", NULL, "qual",
   #"ageband", "Age", "qual",
 )
 
@@ -270,12 +270,12 @@ metadata_outcomes <- tribble(
   ~outcome, ~outcome_name,
   #"seconddose", "Second dose",
   "vaxany2", "Second dose",
-  "test",   "SARS-CoV-2 test",
-  "postest",   "Positive test",
-  "emergency",  "A&E attendance",
-  "covidadmitted",  "COVID-19 admission",
-  "coviddeath","COVID-19 death",
-  "death",     "All-cause death"
+  "test", "SARS-CoV-2 test",
+  "postest", "Positive test",
+  "emergency", "A&E attendance",
+  "covidadmitted", "COVID-19 admission",
+  "coviddeath", "COVID-19 death",
+  "death", "All-cause death"
 )
 
 metadata_crossed <- crossing(metadata_variables, metadata_outcomes)
