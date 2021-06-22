@@ -160,7 +160,7 @@ data_tte <- data_cohort %>%
 
 
 
-survobj <- function(.data, time, indicator, group_vars){
+survobj <- function(.data, time, indicator, group_vars, threshold){
 
   dat_filtered <- .data %>%
     mutate(
@@ -190,11 +190,18 @@ survobj <- function(.data, time, indicator, group_vars){
       }),
       surv_obj_tidy = map(surv_obj, ~tidy_surv(.x, addtimezero = TRUE)),
     ) %>%
+    select(group_vars, n_events, surv_obj_tidy) %>%
     unnest(surv_obj_tidy)
 
-  dat_surv1
+  dat_surv_rounded <- dat_surv1 %>%
+    mutate(
+      surv = pmin(1,plyr::round_any(surv, (threshold+1)/max(n.risk, na.rm=TRUE))),
+      surv.ll = pmin(1, plyr::round_any(surv.ll, (threshold+1)/max(n.risk, na.rm=TRUE))),
+      surv.ul = pmin(1, plyr::round_any(surv.ul, (threshold+1)/max(n.risk, na.rm=TRUE))),
+    )
+  dat_surv_rounded
+  #dat_surv1
 }
-
 
 get_colour_scales <- function(colour_type = "qual"){
 
@@ -292,7 +299,7 @@ plot_combinations <- metadata_crossed %>%
     survobj = pmap(
       list(variable, outcome),
       function(variable, outcome){
-        survobj(data_tte, paste0("tte_", outcome), paste0("ind_", outcome), group_vars=c(variable))
+        survobj(data_tte, paste0("tte_", outcome), paste0("ind_", outcome), group_vars=c(variable), threshold=5)
       }
     ),
     plot_surv = pmap(
@@ -304,6 +311,11 @@ plot_combinations <- metadata_crossed %>%
       ggplot_surv
     ),
   )
+
+
+ plot_combinations$plot_surv_ci[[4]]
+ #plot_combinations$plot_surv[[4]]
+ #plot_combinations$survobj[[4]]
 
 fs::dir_create(here("output", "descriptive", "km"))
 
