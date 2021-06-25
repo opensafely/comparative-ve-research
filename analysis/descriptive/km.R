@@ -282,6 +282,7 @@ metadata_outcomes <- tribble(
   "postest", "Positive test",
   "emergency", "A&E attendance",
   "covidadmitted", "COVID-19 admission",
+  "covidcc", "COVID-19 critical care",
   "coviddeath", "COVID-19 death",
   "death", "All-cause death"
 )
