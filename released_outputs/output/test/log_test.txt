@@ -1,10 +1,10 @@
 ## script info for test ##   
 data_cox data size = 351753
-  data_cox memory usage = 0.231 GB
+  data_cox memory usage = 0.237 GB
 
 
 data_cox_split data size = 1946851
-  data_cox_split memory usage = 0.771 GB
+  data_cox_split memory usage = 0.795 GB
 
 
 model0 data size = 1946851

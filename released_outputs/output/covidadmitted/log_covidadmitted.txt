@@ -1,10 +1,10 @@
 ## script info for covidadmitted ##   
 data_cox data size = 352060
-  data_cox memory usage = 0.231 GB
+  data_cox memory usage = 0.237 GB
 
 
 data_cox_split data size = 2001504
-  data_cox_split memory usage = 0.793 GB
+  data_cox_split memory usage = 0.817 GB
 
 
 model0 data size = 2001504

@@ -1,10 +1,10 @@
 ## script info for postest ##   
 data_cox data size = 351997
-  data_cox memory usage = 0.231 GB
+  data_cox memory usage = 0.237 GB
 
 
 data_cox_split data size = 1979069
-  data_cox_split memory usage = 0.784 GB
+  data_cox_split memory usage = 0.808 GB
 
 
 model0 data size = 1979069
