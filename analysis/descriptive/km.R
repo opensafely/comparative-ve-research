@@ -247,6 +247,7 @@ ggplot_surv <- function(.surv_data, colour_var, colour_name, colour_type="qual",
     ggplot(aes_string(group=colour_var, colour=colour_var, fill=colour_var)) +
     lines+
     get_colour_scales(colour_type)+
+    scale_x_continuous(breaks = seq(0,600,7))+
     scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
     coord_cartesian(xlim=c(0, 90))+
     labs(
