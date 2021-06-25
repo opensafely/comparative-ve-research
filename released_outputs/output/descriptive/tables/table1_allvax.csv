@@ -11,14 +11,13 @@ ageband,categorical,factor,Age,level,60-64,"6,582 (9.9%)","28,127 (7.6%)"
 sex,categorical,factor,Sex,label,Sex,NA,NA
 sex,categorical,factor,Sex,level,F,"47,901 (72%)","291,341 (79%)"
 sex,categorical,factor,Sex,level,M,"18,796 (28%)","78,533 (21%)"
-sex,categorical,factor,Sex,level,I,0 (0%),0 (0%)
 ethnicity_combined,categorical,factor,Ethnicity,label,Ethnicity,NA,NA
 ethnicity_combined,categorical,factor,Ethnicity,level,White,"52,787 (79%)","304,702 (82%)"
 ethnicity_combined,categorical,factor,Ethnicity,level,Black,"1,337 (2.0%)","16,027 (4.3%)"
 ethnicity_combined,categorical,factor,Ethnicity,level,South Asian,"9,126 (14%)","34,284 (9.3%)"
 ethnicity_combined,categorical,factor,Ethnicity,level,Mixed,"1,184 (1.8%)","6,182 (1.7%)"
 ethnicity_combined,categorical,factor,Ethnicity,level,Other,"2,263 (3.4%)","8,679 (2.3%)"
-imd,continuous,integer,IMD,label,IMD,"163 (77, 245)","162 (78, 242)"
+imd,continuous,integer,IMD,label,IMD,"18,800 (10,600, 25,800)","17,600 (9,300, 24,900)"
 region,categorical,factor,Region,label,Region,NA,NA
 region,categorical,factor,Region,level,Yorkshire and The Humber,"5,359 (8.0%)","57,406 (16%)"
 region,categorical,factor,Region,level,East,"9,612 (14%)","86,077 (23%)"
