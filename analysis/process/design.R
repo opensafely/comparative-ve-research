@@ -34,7 +34,7 @@ write_rds(metadata_outcomes, here("output", "data", "metadata_outcomes.rds"))
 
 formula_exposure <- . ~ . + timesincevax_pw
 #formula_demog <- . ~ . + age + I(age * age) + sex + imd + ethnicity
-formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd + ethnicity_combined
+formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd_Q5 + ethnicity_combined
 formula_comorbs <- . ~ . +
   bmi +
   prior_covid_infection +
@@ -103,7 +103,7 @@ var_labels <- list(
   ageband ~ "Age",
   sex ~ "Sex",
   ethnicity_combined ~ "Ethnicity",
-  imd ~ "IMD",
+  imd_Q5 ~ "IMD",
   region ~ "Region",
 
   vax1_day ~ "Day of vaccination",
