@@ -192,7 +192,7 @@ write_rds(data_cox_split, here("output", outcome, "data_cox_split.rds"))
 formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:timesincevax
 #formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
 
-formula_spacetime <- . ~ . + strata(stp)
+formula_spacetime <- . ~ . + strata(region)
 
 opt_control <- coxph.control(iter.max = 30)
 
