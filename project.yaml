@@ -147,6 +147,7 @@ actions:
         models: output/test/model*.rds
       moderately_sensitive:
         logs:  output/test/log*.txt
+        glance: output/test/glance*.csv
 
   report_calendar_test:
     run: r:latest analysis/models/report_cox.R test
@@ -166,6 +167,7 @@ actions:
         models: output/postest/model*.rds
       moderately_sensitive:
         logs:  output/postest/log*.txt
+        glance: output/postest/glance*.csv
 
   report_calendar_postest:
     run: r:latest analysis/models/report_cox.R postest
@@ -186,6 +188,7 @@ actions:
         models: output/emergency/model*.rds
       moderately_sensitive:
         logs:  output/emergency/log*.txt
+        glance: output/emergency/glance*.csv
 
   report_calendar_emergency:
     run: r:latest analysis/models/report_cox.R emergency
@@ -205,6 +208,7 @@ actions:
         models: output/covidadmitted/model*.rds
       moderately_sensitive:
         logs:  output/covidadmitted/log*.txt
+        glance: output/covidadmitted/glance*.csv
 
   report_calendar_covidadmitted:
     run: r:latest analysis/models/report_cox.R covidadmitted
@@ -224,6 +228,7 @@ actions:
         models: output/covidcc/model*.rds
       moderately_sensitive:
         logs:  output/covidcc/log*.txt
+        glance: output/covidcc/glance*.csv
 
   report_calendar_covidcc:
     run: r:latest analysis/models/report_cox.R covidcc
@@ -243,6 +248,7 @@ actions:
         models: output/coviddeath/model*.rds
       moderately_sensitive:
         logs:  output/coviddeath/log*.txt
+        glance: output/coviddeath/glance*.csv
 
   report_calendar_coviddeath:
     run: r:latest analysis/models/report_cox.R coviddeath
@@ -262,6 +268,7 @@ actions:
         models: output/noncoviddeath/model*.rds
       moderately_sensitive:
         logs:  output/noncoviddeath/log*.txt
+        glance: output/noncoviddeath/glance*.csv
 
   report_calendar_noncoviddeath:
     run: r:latest analysis/models/report_cox.R noncoviddeath

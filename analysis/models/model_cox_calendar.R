@@ -212,9 +212,11 @@ coxmod0 <- coxph(
 
 logoutput(
   glue("model0 data size = ", coxmod0$n),
-  glue("model0 memory usage = ", format(object.size(coxmod0), units="GB", standard="SI", digits=3L))
+  glue("model0 memory usage = ", format(object.size(coxmod0), units="GB", standard="SI", digits=3L)),
+  glue("convergence status: ", coxmod0$info[["convergence"]])
 )
 write_rds(coxmod0, here::here("output", outcome, "modelcox0.rds"), compress="gz")
+model_glance <- broom::glance(coxmod0) %>% mutate(model=0, convergence = coxmod0$info[["convergence"]])
 if(removeobs) rm(coxmod0)
 
 
@@ -233,9 +235,11 @@ coxmod1 <- coxph(
 
 logoutput(
   glue("model1 data size = ", coxmod1$n),
-  glue("model1 memory usage = ", format(object.size(coxmod1), units="GB", standard="SI", digits=3L))
+  glue("model1 memory usage = ", format(object.size(coxmod1), units="GB", standard="SI", digits=3L)),
+  glue("convergence status: ", coxmod1$info[["convergence"]])
 )
 write_rds(coxmod1, here::here("output", outcome, "modelcox1.rds"), compress="gz")
+model_glance <- bind_rows(model_glance, broom::glance(coxmod1) %>% mutate(model=1, convergence = coxmod1$info[["convergence"]]))
 if(removeobs) rm(coxmod1)
 
 
@@ -256,9 +260,11 @@ coxmod2 <- coxph(
 
 logoutput(
   glue("model2 data size = ", coxmod2$n),
-  glue("model2 memory usage = ", format(object.size(coxmod2), units="GB", standard="SI", digits=3L))
+  glue("model2 memory usage = ", format(object.size(coxmod2), units="GB", standard="SI", digits=3L)),
+  glue("convergence status: ", coxmod2$info[["convergence"]])
 )
 write_rds(coxmod2, here::here("output", outcome, "modelcox2.rds"), compress="gz")
+model_glance <- bind_rows(model_glance, broom::glance(coxmod2) %>% mutate(model=2, convergence = coxmod2$info[["convergence"]]))
 if(removeobs) rm(coxmod2)
 
 
@@ -278,12 +284,12 @@ coxmod3 <- coxph(
 
 logoutput(
   glue("model3 data size = ", coxmod3$n),
-  glue("model3 memory usage = ", format(object.size(coxmod3), units="GB", standard="SI", digits=3L))
+  glue("model3 memory usage = ", format(object.size(coxmod3), units="GB", standard="SI", digits=3L)),
+  glue("convergence status: ", coxmod3$info[["convergence"]])
 )
 write_rds(coxmod3, here::here("output", outcome, "modelcox3.rds"), compress="gz")
+model_glance <- bind_rows(model_glance, broom::glance(coxmod3) %>% mutate(model=3, convergence = coxmod3$info[["convergence"]]))
 if(removeobs) rm(coxmod3)
-
-
 
 
 ## print warnings
@@ -292,3 +298,10 @@ cat("  \n")
 print(gc(reset=TRUE))
 
 
+model_glance <- model_glance %>%
+  select(
+    model, convergence,
+    everything()
+  )
+
+write_csv(model_glance, here::here("output", outcome, glue("glance_{outcome}.csv")))
