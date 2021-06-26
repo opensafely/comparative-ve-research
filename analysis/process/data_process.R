@@ -127,8 +127,9 @@ data_processed <- data_extract %>%
     ),
 
 
-    imd = na_if(imd, "0"),
+
     imd = as.integer(as.character(imd)), # imd is a factor, so convert to character then integer to get underlying values
+    imd = if_else(imd<=0, NA_integer_, imd),
     imd_Q5 = fct_case_when(
       (imd >=1) & (imd < 32844*1/5) ~ "1 most deprived",
       (imd >= 32844*1/5) & (imd < 32844*2/5) ~ "2",
