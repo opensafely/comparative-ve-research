@@ -22,9 +22,11 @@ if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
   outcome <- "postest"
+  timescale <- "timesincevax"
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
+  timescale <- args[[2]]
 }
 
 
@@ -45,14 +47,6 @@ source(here("analysis", "lib", "redaction_functions.R"))
 source(here("analysis", "lib", "survival_functions.R"))
 
 
-## create special log file ----
-cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", outcome, glue("log_{outcome}.txt")), append = FALSE)
-## function to pass additional log text
-logoutput <- function(...){
-  cat(..., file = here("output", outcome, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", outcome, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-}
-
 ## import metadata ----
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
@@ -64,10 +58,10 @@ list2env(list_formula, globalenv())
 
   # import models ----
 
-coxmod0 <- read_rds(here::here("output", outcome, "modelcox0.rds"))
-coxmod1 <- read_rds(here::here("output", outcome, "modelcox1.rds"))
-coxmod2 <- read_rds(here::here("output", outcome, "modelcox2.rds"))
-coxmod3 <- read_rds(here::here("output", outcome, "modelcox3.rds"))
+coxmod0 <- read_rds(here::here("output", outcome, timescale, "modelcox0.rds"))
+coxmod1 <- read_rds(here::here("output", outcome, timescale, "modelcox1.rds"))
+coxmod2 <- read_rds(here::here("output", outcome, timescale, "modelcox2.rds"))
+coxmod3 <- read_rds(here::here("output", outcome, timescale, "modelcox3.rds"))
 
 ## report models ----
 
@@ -82,7 +76,7 @@ tidypp <- function(model, model_name, ...){
   )
 }
 
-data_cox_split <- read_rds(here("output", outcome, "data_cox_split.rds"))
+data_cox_split <- read_rds(here("output", outcome, timescale, "data_cox_split.rds"))
 
 tidy0 <- tidypp(coxmod0, "0 unadjusted")
 tidy1 <- tidypp(coxmod1, "1 adjusting for time")
@@ -99,7 +93,7 @@ mutate(outcome = outcome)
 
 if(removeobs) rm(coxmod0, coxmod1, coxmod2, coxmod3)
 
-write_csv(tidy_summary, path = here::here("output", outcome, glue::glue("estimates_cox.csv")))
+write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::glue("estimates_cox.csv")))
 
 # create forest plot
 coxmod_forest_data <- tidy_summary %>%
@@ -154,8 +148,8 @@ coxmod_forest <-
  NULL
 coxmod_forest
 ## save plot
-ggsave(filename=here::here("output", outcome, glue::glue("forest_plot_cox.svg")), coxmod_forest, width=20, height=15, units="cm")
-ggsave(filename=here::here("output", outcome, glue::glue("forest_plot_cox.png")), coxmod_forest, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.svg")), coxmod_forest, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.png")), coxmod_forest, width=20, height=15, units="cm")
 
 
 

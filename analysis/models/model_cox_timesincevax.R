@@ -30,7 +30,7 @@ if(length(args)==0){
   outcome <- args[[1]]
 }
 
-timescale <- "calendar"
+timescale <- "timesincevax"
 
 ## Import libraries ----
 library('tidyverse')
@@ -50,11 +50,11 @@ source(here("analysis", "lib", "survival_functions.R"))
 fs::dir_create(here("output", outcome, timescale))
 
 ## create special log file ----
-cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", outcome, timescale, glue("log_{outcome}.txt")), append = FALSE)
+cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", outcome, glue("log_{outcome}.txt")), append = FALSE)
 ## function to pass additional log text
 logoutput <- function(...){
-  cat(..., file = here("output", outcome, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", outcome, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat(..., file = here("output", outcome, timescale, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat("\n", file = here("output", outcome, timescale, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
 }
 
 ## import metadata ----
@@ -144,6 +144,25 @@ postvax_time <- data_cox %>%
   ) %>%
   unnest(c(fup_day, timesincevax))
 
+# one row per patient per follow-up calendar day
+calendar_time <- data_cox %>%
+  select(patient_id, vax1_day, tte_enddate) %>%
+  mutate(
+    calendar_day = map2(vax1_day, tte_enddate, ~.x:.y)
+  ) %>%
+  unnest(c(calendar_day)) %>%
+  mutate(
+    calendar_week = paste0("week ", str_pad(floor(calendar_day/7), 2, pad = "0")),
+    fup_day = calendar_day - vax1_day
+  )
+
+# one row per patient per follow-up calendar week
+calendar_week <- calendar_time %>%
+  group_by(patient_id, calendar_week) %>%
+  filter(first(calendar_day)==calendar_day) %>%
+  ungroup()
+
+
 # create dataset that splits follow-up time by
 # time since vaccination (using postvaxcuts cutoffs)
 data_cox_split <- tmerge(
@@ -160,11 +179,12 @@ data_cox_split <- tmerge(
     id = patient_id,
     timesincevax = tdc(fup_day, timesincevax)
   ) %>%
-  mutate( # convert to calendar timescale
-    tstart= tstart + vax1_day - 1,
-    tstop= tstop + vax1_day - 1,
+  tmerge(
+    data1 = .,
+    data2 = calendar_week,
+    id = patient_id,
+    calendar_week = tdc(fup_day, calendar_week)
   )
-
 
 ### print dataset size ----
 logoutput(
@@ -192,7 +212,7 @@ write_rds(data_cox_split, here("output", outcome, timescale, "data_cox_split.rds
 
 formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
 
-formula_spacetime <- . ~ . + strata(region)
+formula_spacetime <- . ~ . + strata(region) + calendar_week
 
 opt_control <- coxph.control(iter.max = 30)
 
