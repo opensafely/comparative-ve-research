@@ -96,13 +96,14 @@ write_csv(tab_csv, here::here("output", "hcw", "table1.csv"))
 ### vaccination date histogram ----
 
 plot_vax1date <- data_vax_knownbrand %>%
-  filter(vax_index==1) %>%
+  filter(vax_index<=3) %>%
   mutate(
-    date = pmax(date, as.Date("2020-12-01")) # change default "missing" date to Feb 2020 to make histogram easier to read
+    date = pmax(date, as.Date("2020-12-01")) # change default "missing" date to Dec 2020 to make histogram easier to read
   ) %>%
   ggplot() +
   geom_histogram(aes(x=date, fill=vaccine_type), position = "identity",  alpha=0.3, binwidth=7) +
+  facet_grid(rows=vars(vax_index))+
   theme_bw()
 
-ggsave(filename=here::here("output", "hcw", glue::glue("vax1date.svg")), plot_vax1date, width=20, height=15, units="cm")
-ggsave(filename=here::here("output", "hcw", glue::glue("vax1date.png")), plot_vax1date, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", "hcw", glue::glue("vax1date.svg")), plot_vax1date, width=15, height=20, units="cm")
+ggsave(filename=here::here("output", "hcw", glue::glue("vax1date.png")), plot_vax1date, width=15, height=20, units="cm")
