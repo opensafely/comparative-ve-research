@@ -24,7 +24,7 @@ args <- commandArgs(trailingOnly=TRUE)
 if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
-  outcome <- "covidcc"
+  outcome <- "postest"
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
@@ -189,8 +189,7 @@ write_rds(data_cox_split, here("output", outcome, "data_cox_split.rds"))
 #   id = patient_id
 # )
 
-formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:timesincevax
-#formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
+formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
 
 formula_spacetime <- . ~ . + strata(region)
 
@@ -209,7 +208,7 @@ coxmod0 <- coxph(
   control = opt_control
 )
 
-
+print(warnings())
 logoutput(
   glue("model0 data size = ", coxmod0$n),
   glue("model0 memory usage = ", format(object.size(coxmod0), units="GB", standard="SI", digits=3L)),
@@ -233,6 +232,7 @@ coxmod1 <- coxph(
   control = opt_control
 )
 
+print(warnings())
 logoutput(
   glue("model1 data size = ", coxmod1$n),
   glue("model1 memory usage = ", format(object.size(coxmod1), units="GB", standard="SI", digits=3L)),
@@ -258,6 +258,7 @@ coxmod2 <- coxph(
   control = opt_control
 )
 
+print(warnings())
 logoutput(
   glue("model2 data size = ", coxmod2$n),
   glue("model2 memory usage = ", format(object.size(coxmod2), units="GB", standard="SI", digits=3L)),
@@ -282,6 +283,7 @@ coxmod3 <- coxph(
   control = opt_control
 )
 
+print(warnings())
 logoutput(
   glue("model3 data size = ", coxmod3$n),
   glue("model3 memory usage = ", format(object.size(coxmod3), units="GB", standard="SI", digits=3L)),
@@ -305,3 +307,4 @@ model_glance <- model_glance %>%
   )
 
 write_csv(model_glance, here::here("output", outcome, glue("glance_{outcome}.csv")))
+

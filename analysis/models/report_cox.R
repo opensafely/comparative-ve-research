@@ -105,7 +105,7 @@ write_csv(tidy_summary, path = here::here("output", outcome, glue::glue("estimat
 coxmod_forest_data <- tidy_summary %>%
   filter(str_detect(term, fixed("timesincevax")) | str_detect(term, fixed("vax_az"))) %>%
   mutate(
-    term=str_replace(term, pattern=fixed("vax1_az:timesincevax"), ""),
+    term=str_replace(term, pattern=fixed("vax1_az:strata(timesincevax)"), ""),
     term=fct_inorder(term),
     term_left = as.numeric(str_extract(term, "^\\d+")),
     term_right = as.numeric(str_extract(term, "\\d+$")),
