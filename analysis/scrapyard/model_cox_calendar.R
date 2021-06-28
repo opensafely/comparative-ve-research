@@ -159,11 +159,46 @@ data_cox_split <- tmerge(
     data2 = postvax_time,
     id = patient_id,
     timesincevax = tdc(fup_day, timesincevax)
-  ) %>%
-  mutate( # convert to calendar timescale
+  )
+
+if(timescale=="calendar"){
+# convert to calendar timescale
+  data_cox_split <- data_cox_split %>%
+  mutate(
     tstart= tstart + vax1_day - 1,
     tstop= tstop + vax1_day - 1,
   )
+}
+
+if(timescale=="timesincevax"){
+  # one row per patient per follow-up calendar day
+  calendar_time <- data_cox %>%
+    select(patient_id, vax1_day, tte_enddate) %>%
+    mutate(
+      calendar_day = map2(vax1_day, tte_enddate, ~.x:.y)
+    ) %>%
+    unnest(c(calendar_day)) %>%
+    mutate(
+      calendar_week = paste0("week ", str_pad(floor(calendar_day/7), 2, pad = "0")),
+      fup_day = calendar_day - vax1_day
+    )
+
+  # one row per patient per follow-up calendar week
+  calendar_week <- calendar_time %>%
+    group_by(patient_id, calendar_week) %>%
+    filter(first(calendar_day)==calendar_day) %>%
+    ungroup()
+
+  data_cox_split <- data_cox_split %>%
+    tmerge(
+      data1 = .,
+      data2 = calendar_week,
+      id = patient_id,
+      calendar_week = tdc(fup_day, calendar_week)
+    )
+}
+
+
 
 
 ### print dataset size ----
@@ -192,7 +227,12 @@ write_rds(data_cox_split, here("output", outcome, timescale, "data_cox_split.rds
 
 formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
 
-formula_spacetime <- . ~ . + strata(region)
+if(timescale=="calendar"){
+  formula_spacetime <- . ~ . + strata(region)
+}
+if(timescale=="timesincevax"){
+  formula_spacetime <- . ~ . + strata(region) + factor(calendar_week)
+}
 
 opt_control <- coxph.control(iter.max = 30)
 

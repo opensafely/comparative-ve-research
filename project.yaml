@@ -166,18 +166,18 @@ actions:
 
 
   model_calendar_test:
-    run: r:latest analysis/models/model_cox_calendar.R test
+    run: r:latest analysis/models/model_cox.R calendar test
     needs: [design, data_selection]
     outputs:
       highly_sensitive:
-        data: output/test/data_cox_split.rds
-        models: output/test/model*.rds
+        data: output/test/calendar/data_cox_split.rds
+        models: output/test/calendar/model*.rds
       moderately_sensitive:
-        logs:  output/test/log*.txt
-        glance: output/test/glance*.csv
+        logs:  output/test/calendar/log*.txt
+        glance: output/test/calendar/glance*.csv
 
   report_calendar_test:
-    run: r:latest analysis/models/report_cox.R test calendar
+    run: r:latest analysis/models/report_cox.R calendar test
     needs: [design, model_calendar_test]
     outputs:
       moderately_sensitive:
@@ -186,18 +186,18 @@ actions:
         table: output/test/calendar/estimates*.csv
 
   model_calendar_postest:
-    run: r:latest analysis/models/model_cox_calendar.R postest
+    run: r:latest analysis/models/model_cox.R calendar postest
     needs: [design, data_selection]
     outputs:
       highly_sensitive:
-        data: output/postest/data_cox_split.rds
-        models: output/postest/model*.rds
+        data: output/postest/calendar/data_cox_split.rds
+        models: output/postest/calendar/model*.rds
       moderately_sensitive:
-        logs:  output/postest/log*.txt
-        glance: output/postest/glance*.csv
+        logs:  output/postest/calendar/log*.txt
+        glance: output/postest/calendar/glance*.csv
 
   report_calendar_postest:
-    run: r:latest analysis/models/report_cox.R postest calendar
+    run: r:latest analysis/models/report_cox.R calendar postest
     needs: [design, model_calendar_postest]
     outputs:
       moderately_sensitive:
@@ -207,18 +207,18 @@ actions:
 
 
   model_calendar_emergency:
-    run: r:latest analysis/models/model_cox_calendar.R emergency
+    run: r:latest analysis/models/model_cox.R calendar emergency
     needs: [design, data_selection]
     outputs:
       highly_sensitive:
-        data: output/emergency/data_cox_split.rds
-        models: output/emergency/model*.rds
+        data: output/emergency/calendar/data_cox_split.rds
+        models: output/emergency/calendar/model*.rds
       moderately_sensitive:
-        logs:  output/emergency/log*.txt
-        glance: output/emergency/glance*.csv
+        logs:  output/emergency/calendar/log*.txt
+        glance: output/emergency/calendar/glance*.csv
 
   report_calendar_emergency:
-    run: r:latest analysis/models/report_cox.R emergency calendar
+    run: r:latest analysis/models/report_cox.R calendar emergency
     needs: [design, model_calendar_emergency]
     outputs:
       moderately_sensitive:
@@ -227,18 +227,18 @@ actions:
         table: output/emergency/calendar/estimates*.csv
 
   model_calendar_covidadmitted:
-    run: r:latest analysis/models/model_cox_calendar.R covidadmitted
+    run: r:latest analysis/models/model_cox.R calendar covidadmitted
     needs: [design, data_selection]
     outputs:
       highly_sensitive:
-        data: output/covidadmitted/data_cox_split.rds
-        models: output/covidadmitted/model*.rds
+        data: output/covidadmitted/calendar/data_cox_split.rds
+        models: output/covidadmitted/calendar/model*.rds
       moderately_sensitive:
-        logs:  output/covidadmitted/log*.txt
-        glance: output/covidadmitted/glance*.csv
+        logs:  output/covidadmitted/calendar/log*.txt
+        glance: output/covidadmitted/calendar/glance*.csv
 
   report_calendar_covidadmitted:
-    run: r:latest analysis/models/report_cox.R covidadmitted calendar
+    run: r:latest analysis/models/report_cox.R calendar covidadmitted
     needs: [design, model_calendar_covidadmitted]
     outputs:
       moderately_sensitive:
@@ -246,65 +246,65 @@ actions:
         figure2: output/covidadmitted/calendar/forest*.png
         table: output/covidadmitted/calendar/estimates*.csv
 
-  model_calendar_covidcc:
-    run: r:latest analysis/models/model_cox_calendar.R covidcc
-    needs: [design, data_selection]
-    outputs:
-      highly_sensitive:
-        data: output/covidcc/data_cox_split.rds
-        models: output/covidcc/model*.rds
-      moderately_sensitive:
-        logs:  output/covidcc/log*.txt
-        glance: output/covidcc/glance*.csv
-
-  report_calendar_covidcc:
-    run: r:latest analysis/models/report_cox.R covidcc calendar
-    needs: [design, model_calendar_covidcc]
-    outputs:
-      moderately_sensitive:
-        figure: output/covidcc/calendar/forest*.svg
-        figure2: output/covidcc/calendar/forest*.png
-        table: output/covidcc/calendar/estimates*.csv
-
-  model_calendar_coviddeath:
-    run: r:latest analysis/models/model_cox_calendar.R coviddeath
-    needs: [design, data_selection]
-    outputs:
-      highly_sensitive:
-        data: output/coviddeath/data_cox_split.rds
-        models: output/coviddeath/model*.rds
-      moderately_sensitive:
-        logs:  output/coviddeath/log*.txt
-        glance: output/coviddeath/glance*.csv
-
-  report_calendar_coviddeath:
-    run: r:latest analysis/models/report_cox.R coviddeath calendar
-    needs: [design, model_calendar_coviddeath]
-    outputs:
-      moderately_sensitive:
-        figure: output/coviddeath/calendar/forest*.svg
-        figure2: output/coviddeath/calendar/forest*.png
-        table: output/coviddeath/calendar/estimates*.csv
-
-  model_calendar_noncoviddeath:
-    run: r:latest analysis/models/model_cox_calendar.R noncoviddeath
-    needs: [design, data_selection]
-    outputs:
-      highly_sensitive:
-        data: output/noncoviddeath/data_cox_split.rds
-        models: output/noncoviddeath/model*.rds
-      moderately_sensitive:
-        logs:  output/noncoviddeath/log*.txt
-        glance: output/noncoviddeath/glance*.csv
-
-  report_calendar_noncoviddeath:
-    run: r:latest analysis/models/report_cox.R noncoviddeath calendar
-    needs: [design, model_calendar_noncoviddeath]
-    outputs:
-      moderately_sensitive:
-        figure: output/noncoviddeath/calendar/forest*.svg
-        figure2: output/noncoviddeath/calendar/forest*.png
-        table: output/noncoviddeath/calendar/estimates*.csv
+  # model_calendar_covidcc:
+  #   run: r:latest analysis/models/model_cox.R calendar covidcc
+  #   needs: [design, data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       data: output/covidcc/calendar/data_cox_split.rds
+  #       models: output/covidcc/calendar/model*.rds
+  #     moderately_sensitive:
+  #       logs:  output/covidcc/calendar/log*.txt
+  #       glance: output/covidcc/calendar/glance*.csv
+  #
+  # report_calendar_covidcc:
+  #   run: r:latest analysis/models/report_cox.R calendar covidcc
+  #   needs: [design, model_calendar_covidcc]
+  #   outputs:
+  #     moderately_sensitive:
+  #       figure: output/covidcc/calendar/forest*.svg
+  #       figure2: output/covidcc/calendar/forest*.png
+  #       table: output/covidcc/calendar/estimates*.csv
+  #
+  # model_calendar_coviddeath:
+  #   run: r:latest analysis/models/model_cox.R calendar coviddeath
+  #   needs: [design, data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       data: output/coviddeath/calendar/data_cox_split.rds
+  #       models: output/coviddeath/calendar/model*.rds
+  #     moderately_sensitive:
+  #       logs:  output/coviddeath/calendar/log*.txt
+  #       glance: output/coviddeath/calendar/glance*.csv
+  #
+  # report_calendar_coviddeath:
+  #   run: r:latest analysis/models/report_cox.R calendar coviddeath
+  #   needs: [design, model_calendar_coviddeath]
+  #   outputs:
+  #     moderately_sensitive:
+  #       figure: output/coviddeath/calendar/forest*.svg
+  #       figure2: output/coviddeath/calendar/forest*.png
+  #       table: output/coviddeath/calendar/estimates*.csv
+  #
+  # model_calendar_noncoviddeath:
+  #   run: r:latest analysis/models/model_cox.R calendar noncoviddeath
+  #   needs: [design, data_selection]
+  #   outputs:
+  #     highly_sensitive:
+  #       data: output/noncoviddeath/calendar/data_cox_split.rds
+  #       models: output/noncoviddeath/calendar/model*.rds
+  #     moderately_sensitive:
+  #       logs:  output/noncoviddeath/calendar/log*.txt
+  #       glance: output/noncoviddeath/calendar/glance*.csv
+  #
+  # report_calendar_noncoviddeath:
+  #   run: r:latest analysis/models/report_cox.R calendar noncoviddeath
+  #   needs: [design, model_calendar_noncoviddeath]
+  #   outputs:
+  #     moderately_sensitive:
+  #       figure: output/noncoviddeath/calendar/forest*.svg
+  #       figure2: output/noncoviddeath/calendar/forest*.png
+  #       table: output/noncoviddeath/calendar/estimates*.csv
 
 
 
@@ -315,7 +315,7 @@ actions:
 
 
   model_timesincevax_test:
-    run: r:latest analysis/models/model_cox_timesincevax.R test
+    run: r:latest analysis/models/model_cox.R timesincevax test
     needs: [design, data_selection]
     outputs:
       highly_sensitive:
@@ -326,7 +326,7 @@ actions:
         glance: output/test/timesincevax/glance*.csv
 
   report_timesincevax_test:
-    run: r:latest analysis/models/report_cox.R test timesincevax
+    run: r:latest analysis/models/report_cox.R timesincevax test
     needs: [design, model_timesincevax_test]
     outputs:
       moderately_sensitive:
@@ -335,7 +335,7 @@ actions:
         table: output/test/timesincevax/estimates*.csv
 
   model_timesincevax_postest:
-    run: r:latest analysis/models/model_cox_timesincevax.R postest
+    run: r:latest analysis/models/model_cox.R timesincevax postest
     needs: [design, data_selection]
     outputs:
       highly_sensitive:
@@ -346,7 +346,7 @@ actions:
         glance: output/postest/timesincevax/glance*.csv
 
   report_timesincevax_postest:
-    run: r:latest analysis/models/report_cox.R postest timesincevax
+    run: r:latest analysis/models/report_cox.R timesincevax postest
     needs: [design, model_timesincevax_postest]
     outputs:
       moderately_sensitive:

@@ -21,12 +21,13 @@ args <- commandArgs(trailingOnly=TRUE)
 if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
-  outcome <- "postest"
   timescale <- "timesincevax"
+  outcome <- "postest"
 } else {
   removeobs <- TRUE
-  outcome <- args[[1]]
-  timescale <- args[[2]]
+  timescale <- args[[1]]
+  outcome <- args[[2]]
+
 }
 
 
