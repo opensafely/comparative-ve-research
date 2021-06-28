@@ -105,7 +105,7 @@ var_labels <- list(
   ethnicity_combined ~ "Ethnicity",
   imd_Q5 ~ "IMD",
   region ~ "Region",
-
+  stp ~ "STP",
   vax1_day ~ "Day of vaccination",
 
   bmi ~ "Body Mass Index",

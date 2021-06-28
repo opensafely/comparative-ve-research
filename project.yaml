@@ -74,8 +74,8 @@ actions:
     needs: [design, data_selection]
     outputs:
       moderately_sensitive:
-        html: output/descriptive/tables/table1.html
-        csv: output/descriptive/tables/table1.csv
+        html: output/descriptive/tables/table1*.html
+        csv: output/descriptive/tables/table1*.csv
 
   descr_table1_allvax:
     run: r:latest analysis/descriptive/table1_allvax.R
