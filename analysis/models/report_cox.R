@@ -107,23 +107,23 @@ coxmod_forest_data <- tidy_summary %>%
   mutate(
     term=str_replace(term, pattern=fixed("vax1_az:strata(timesincevax)"), ""),
     term=fct_inorder(term),
-    term_left = as.numeric(str_extract(term, "^\\d+")),
-    term_right = as.numeric(str_extract(term, "\\d+$")),
-    term_right = if_else(is.na(term_right), max(term_left)+7, term_right),
-    term_midpoint = term_left + (term_right-term_left)/2
+    term_left = as.numeric(str_extract(term, "^\\d+"))-1,
+    term_right = as.numeric(str_extract(term, "\\d+$"))-1,
+    term_right = if_else(is.na(term_right), max(term_left)+6, term_right),
+    term_midpoint = term_left + (term_right+1-term_left)/2
   )
 
 coxmod_forest <-
   ggplot(data = coxmod_forest_data) +
-  geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1))+
-  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1))+
+  geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
+  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
   geom_hline(aes(yintercept=1), colour='grey')+
   #facet_grid(rows=vars(model_name), switch="y")+
   scale_y_log10(
     breaks=c(0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3),
     sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
   )+
-  scale_x_continuous(breaks=unique(coxmod_forest_data$term_left))+
+  scale_x_continuous(breaks=unique(coxmod_forest_data$term_left), limits=c(min(coxmod_forest_data$term_left), max(coxmod_forest_data$term_right)+1), expand = c(0, 0))+
   scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
   labs(
     y="Hazard ratio",
