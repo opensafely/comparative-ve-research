@@ -5,6 +5,33 @@ expectations:
 
 actions:
 
+## check H&SC worker flag
+
+  hcw_extract:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_hcw --output-format feather
+    outputs:
+      highly_sensitive:
+        cohort: output/input_hcw.feather
+
+  hcw_process:
+    run: r:latest analysis/hcw/process.R
+    needs: [hcw_extract]
+    outputs:
+      highly_sensitive:
+        data: output/data/hcw_data_processed.rds
+        datavax: output/data/hcw_data_vax.rds
+
+  hcw_descr:
+    run: r:latest analysis/hcw/descr.R
+    needs: [hcw_process]
+    outputs:
+      moderately_sensitive:
+        png: output/hcw/*.png
+        svg: output/hcw/*.svg
+        html: output/hcw/*.html
+        csv: output/hcw/*.csv
+
+## analysis proper
 
   design:
     run: r:latest analysis/process/design.R
