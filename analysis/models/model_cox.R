@@ -164,6 +164,11 @@ data_cox_split <- tmerge(
     timesincevax = tdc(fup_day, timesincevax)
   )
 
+
+## if using calendar timescale ----
+# - delayed entry at vaccination date
+# - split time into az week 1, az week 2, .... pfizer week1, pfizer week 2, ... using standard interaction term
+# - no need to adjust for calender time
 if(timescale=="calendar"){
 # convert to calendar timescale
   data_cox_split <- data_cox_split %>%
@@ -171,8 +176,15 @@ if(timescale=="calendar"){
     tstart= tstart + vax1_day - 1,
     tstop= tstop + vax1_day - 1,
   )
+
+  formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az*timesincevax
+  formula_spacetime <- . ~ . + strata(region)
 }
 
+## if using time since vaccination timescale ----
+# - start date is vaccination date
+# - post-vax follow-up is already overlapping, so can use az/pfizer : weekly strata
+# - need to adjust for calendar time
 if(timescale=="timesincevax"){
   # one row per patient per follow-up calendar day
   calendar_time <- data_cox %>%
@@ -199,10 +211,13 @@ if(timescale=="timesincevax"){
       id = patient_id,
       calendar_week = tdc(fup_day, calendar_week)
     )
+
+  formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
+  formula_spacetime <- . ~ . + strata(region) + factor(calendar_week)
 }
 
 
-
+opt_control <- coxph.control(iter.max = 30)
 
 ### print dataset size ----
 logoutput(
@@ -212,32 +227,6 @@ logoutput(
 
 write_rds(data_cox_split, here("output", outcome, timescale, "data_cox_split.rds"))
 
-# Time-dependent Cox models ----
-
-# calculate calendar week (this is the date of vaccination (x) + follow-up time (t), then rounded)
-# tt_week <- function(x, t, ...){
-#   day <- x + t
-#
-# }
-
-# print(table(data_cox_split$timesincevax, outcome = data_cox_sub_split$ind_outcome,  az= data_cox_sub_split$vax_az))
-# # why does this not work? using timesincevax as a timevarying coefficient. Is it just a dummy data thing?
-# coxmod00 <- coxph(
-#   formula = Surv(tstart, tstop, ind_outcome) ~ vax_az + timesincevax,
-#   data = data_cox_sub_split,
-#   id = patient_id
-# )
-
-formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
-
-if(timescale=="calendar"){
-  formula_spacetime <- . ~ . + strata(region)
-}
-if(timescale=="timesincevax"){
-  formula_spacetime <- . ~ . + strata(region) + factor(calendar_week)
-}
-
-opt_control <- coxph.control(iter.max = 30)
 
 ### model 0 - unadjusted vaccination effect model ----
 ## no adjustment variables

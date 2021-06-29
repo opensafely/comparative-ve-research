@@ -72,8 +72,9 @@ tidypp <- function(model, model_name, ...){
     exponentiate=TRUE,
     ...
   ) %>%
-  mutate(
-    model_name = model_name
+  add_column(
+    model_name = model_name,
+    .before=1
   )
 }
 
@@ -90,18 +91,34 @@ tidy_summary <- bind_rows(
   tidy2,
   tidy3
 ) %>%
-mutate(outcome = outcome)
+add_column(outcome = outcome, .before=1)
 
 if(removeobs) rm(coxmod0, coxmod1, coxmod2, coxmod3)
 
 write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::glue("estimates_cox.csv")))
 
-# create forest plot
-coxmod_forest_data <- tidy_summary %>%
-  filter(str_detect(term, fixed("timesincevax")) | str_detect(term, fixed("vax_az"))) %>%
+
+if(timescale == "calendar"){
+  coxmod_forest_data <- tidy_summary %>%
+    filter(str_detect(term, fixed("vax1_az"))) %>%
+    mutate(
+      term=str_replace(term, pattern=fixed("vax1_az:timesincevax"), ""),
+      term=if_else(label=="vax1_az", paste0(postvaxcuts[1]+1,"-", postvaxcuts[2]), term),
+      term=fct_inorder(term),
+    )
+}
+
+if(timescale=="timesincevax"){
+  coxmod_forest_data <- tidy_summary %>%
+    filter(str_detect(term, fixed("timesincevax")) | str_detect(term, fixed("vax1_az"))) %>%
+    mutate(
+      term=str_replace(term, pattern=fixed("vax1_az:strata(timesincevax)"), ""),
+      term=fct_inorder(term),
+    )
+}
+
+coxmod_forest_data <- coxmod_forest_data %>%
   mutate(
-    term=str_replace(term, pattern=fixed("vax1_az:strata(timesincevax)"), ""),
-    term=fct_inorder(term),
     term_left = as.numeric(str_extract(term, "^\\d+"))-1,
     term_right = as.numeric(str_extract(term, "\\d+$"))-1,
     term_right = if_else(is.na(term_right), max(term_left)+6, term_right),
@@ -113,9 +130,8 @@ coxmod_forest <-
   geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
   geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
   geom_hline(aes(yintercept=1), colour='grey')+
-  #facet_grid(rows=vars(model_name), switch="y")+
   scale_y_log10(
-    breaks=c(0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3),
+    breaks=c(0.25, 0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3, 4),
     sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
   )+
   scale_x_continuous(breaks=unique(coxmod_forest_data$term_left), limits=c(min(coxmod_forest_data$term_left), max(coxmod_forest_data$term_right)+1), expand = c(0, 0))+
