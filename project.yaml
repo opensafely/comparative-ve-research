@@ -354,3 +354,46 @@ actions:
         figure2: output/postest/timesincevax/forest*.png
         table: output/postest/timesincevax/estimates*.csv
 
+
+
+
+
+  model_timesincevax_emergency:
+    run: r:latest analysis/models/model_cox.R timesincevax emergency
+    needs: [design, data_selection]
+    outputs:
+      highly_sensitive:
+        data: output/emergency/timesincevax/data_cox_split.rds
+        models: output/emergency/timesincevax/model*.rds
+      moderately_sensitive:
+        logs:  output/emergency/timesincevax/log*.txt
+        glance: output/emergency/timesincevax/glance*.csv
+
+  report_timesincevax_emergency:
+    run: r:latest analysis/models/report_cox.R timesincevax emergency
+    needs: [design, model_timesincevax_emergency]
+    outputs:
+      moderately_sensitive:
+        figure: output/emergency/timesincevax/forest*.svg
+        figure2: output/emergency/timesincevax/forest*.png
+        table: output/emergency/timesincevax/estimates*.csv
+
+  model_timesincevax_covidadmitted:
+    run: r:latest analysis/models/model_cox.R timesincevax covidadmitted
+    needs: [design, data_selection]
+    outputs:
+      highly_sensitive:
+        data: output/covidadmitted/timesincevax/data_cox_split.rds
+        models: output/covidadmitted/timesincevax/model*.rds
+      moderately_sensitive:
+        logs:  output/covidadmitted/timesincevax/log*.txt
+        glance: output/covidadmitted/timesincevax/glance*.csv
+
+  report_timesincevax_covidadmitted:
+    run: r:latest analysis/models/report_cox.R timesincevax covidadmitted
+    needs: [design, model_timesincevax_covidadmitted]
+    outputs:
+      moderately_sensitive:
+        figure: output/covidadmitted/timesincevax/forest*.svg
+        figure2: output/covidadmitted/timesincevax/forest*.png
+        table: output/covidadmitted/timesincevax/estimates*.csv
