@@ -70,7 +70,12 @@ data_hcw <-
 tab_summary_baseline <- data_hcw %>%
   transmute(
     ageband,
-    sex,
+    sex = case_when(
+      sex=="M" ~ "Male",
+      sex=="F" ~ "Female",
+      sex!="" ~ "Other",
+      TRUE ~ NA_character_
+    ),
     imd_Q5,
     ethnicity_combined,
     region,

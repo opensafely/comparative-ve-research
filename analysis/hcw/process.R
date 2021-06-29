@@ -125,7 +125,7 @@ data_processed <- data_extract %>%
 data_vax <- local({
 
   data_vax_disease <- data_processed %>%
-    select(patient_id, matches("covid_vax_disease\\_\\d+_date")) %>%
+    select(patient_id, matches("covid\\_vax\\_disease\\_\\d+\\_date")) %>%
     pivot_longer(
       cols = -patient_id,
       names_to = c(NA, "vax_disease_index"),
