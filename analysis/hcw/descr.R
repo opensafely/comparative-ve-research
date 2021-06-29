@@ -74,15 +74,20 @@ tab_summary_baseline <- data_hcw %>%
     imd_Q5,
     ethnicity_combined,
     region,
-    vax_doses,
+    vax_doses = cut(vax_doses, c(0,1,2,3, Inf), include.lowest=TRUE, labels = c("0", "1", "2", "3+")),
     vax1_type,
-    any_vax_record = !is.na(covid_vax_any_1_date)
+    vax_any_record = !is.na(covid_vax_any_1_date),
+    vax_disease_record = !is.na(covid_vax_disease_1_date),
+    vax_date1_mismatch = case_when(
+      (covid_vax_any_1_date != covid_vax_disease_1_date) ~ TRUE,
+      (is.na(covid_vax_any_1_date) != is.na(covid_vax_disease_1_date)) ~ TRUE,
+      TRUE ~ FALSE
+    )
   ) %>%
   tbl_summary() %>%
   modify_footnote(starts_with("stat_") ~ NA)
 
 tab_summary_baseline$inputs$data <- NULL
-tab_summary_baseline$table_header
 
 tab_csv <- tab_summary_baseline$table_body
 names(tab_csv) <- tab_summary_baseline$table_header$label
@@ -101,8 +106,8 @@ plot_vax1date <- data_vax_knownbrand %>%
     date = pmax(date, as.Date("2020-12-01")) # change default "missing" date to Dec 2020 to make histogram easier to read
   ) %>%
   ggplot() +
-  geom_histogram(aes(x=date, fill=vaccine_type), position = "identity",  alpha=0.3, binwidth=7) +
-  facet_grid(rows=vars(vax_index))+
+  geom_histogram(aes(x=date, fill=vaccine_type, alpha=is.na(vax_disease_index)), position = "identity", binwidth=7) +
+  facet_grid(cols=vars(vax_index), rows=vars(vaccine_type), space="free_y", scales="free_y")+
   theme_bw()
 
 ggsave(filename=here::here("output", "hcw", glue::glue("vax1date.svg")), plot_vax1date, width=15, height=20, units="cm")
