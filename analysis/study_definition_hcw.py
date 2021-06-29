@@ -216,7 +216,7 @@ study = StudyDefinition(
     ## COVID VACCINATION TYPE = any based on disease target
     #################################################################
     
-    # any prior covid vaccination
+    # any covid vaccination identified by target disease/virus
     covid_vax_disease_1_date=patients.with_tpp_vaccination_record(
         target_disease_matches="SARS-2 CORONAVIRUS",
         on_or_before = today,
