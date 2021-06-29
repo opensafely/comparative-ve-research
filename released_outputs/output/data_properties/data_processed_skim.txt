@@ -1,0 +1,113 @@
+-- Data Summary ------------------------
+                           Values
+Name                       data  
+Number of rows             491442
+Number of columns          84    
+_______________________          
+Column type frequency:           
+  Date                     34    
+  character                1     
+  factor                   13    
+  logical                  29    
+  numeric                  7     
+________________________         
+Group variables            None  
+
+-- Variable type: Date ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   skim_variable                      n_missing complete_rate min        max        median     n_unique
+ 1 covid_vax_pfizer_0_date               491431    0.0000224  1900-01-01 2020-12-01 2020-01-31        8
+ 2 covid_vax_pfizer_1_date               110946    0.774      2020-12-08 2021-06-16 2021-01-13      191
+ 3 covid_vax_pfizer_2_date               131552    0.732      2020-12-28 2021-06-16 2021-03-26      171
+ 4 covid_vax_az_0_date                   491071    0.000755   2020-02-02 2021-01-03 2021-01-01       34
+ 5 covid_vax_az_1_date                   380799    0.225      2021-01-04 2021-06-16 2021-02-06      164
+ 6 covid_vax_az_2_date                   394609    0.197      2021-01-29 2021-06-16 2021-04-18      137
+ 7 covid_vax_moderna_0_date              491438    0.00000814 2021-01-13 2021-02-24 2021-01-23        4
+ 8 covid_vax_moderna_1_date              490153    0.00262    2021-03-05 2021-06-16 2021-05-15       71
+ 9 covid_vax_moderna_2_date              491426    0.0000326  2021-05-21 2021-06-16 2021-06-07       14
+10 covid_vax_disease_0_date              491385    0.000116   1900-01-01 2020-12-01 2020-06-05       32
+11 covid_vax_disease_1_date                   0    1          2020-12-08 2021-06-16 2021-01-16      191
+12 covid_vax_disease_2_date               33977    0.931      2020-12-28 2021-06-16 2021-03-30      171
+13 covid_vax_any_0_date                  491056    0.000785   1900-01-01 2021-02-24 2021-01-01       46
+14 covid_vax_any_1_date                       0    1          2020-12-08 2021-06-16 2021-01-16      191
+15 covid_vax_any_2_date                   34706    0.929      2020-12-28 2021-06-16 2021-03-30      171
+16 dereg_date                            487688    0.00764    2020-12-14 2021-06-16 2021-04-07      174
+17 prior_positive_test_date              437240    0.110      2020-02-08 2021-05-14 2020-11-18      412
+18 prior_primary_care_covid_case_date    469599    0.0444     1900-01-01 2021-05-19 2020-10-28      405
+19 prior_covidadmitted_date              489086    0.00479    2018-06-21 2021-04-17 2020-09-30      319
+20 prior_covid_test_date                 220875    0.551      2020-01-04 2021-06-10 2020-09-17      507
+21 covid_test_date                       442539    0.0995     2020-12-08 2021-06-10 2021-03-01      185
+22 positive_test_date                    481198    0.0208     2020-12-08 2021-06-10 2021-01-23      184
+23 emergency_date                        454589    0.0750     2020-12-09 2021-06-09 2021-04-01      183
+24 covidadmitted_date                    491224    0.000444   2020-12-12 2021-04-22 2021-01-25       74
+25 coviddeath_date                       491436    0.0000122  2021-02-03 2021-04-13 2021-02-14        6
+26 death_date                            491364    0.000159   2021-01-29 2021-05-30 2021-04-01       57
+27 start_date                                 0    1          2020-12-08 2020-12-08 2020-12-08        1
+28 start_date_pfizer                          0    1          2020-12-08 2020-12-08 2020-12-08        1
+29 start_date_az                              0    1          2021-01-04 2021-01-04 2021-01-04        1
+30 end_date                                   0    1          2021-03-31 2021-03-31 2021-03-31        1
+31 censor_date                                0    1          2020-12-14 2021-03-31 2021-03-31       99
+32 vax1_date                                  0    1          2020-12-08 2021-06-16 2021-01-16      191
+33 noncoviddeath_date                    491370    0.000147   2021-01-29 2021-05-30 2021-04-03       54
+34 covidcc_date                          491418    0.0000488  2020-12-27 2021-03-17 2021-01-24       18
+
+-- Variable type: character ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  skim_variable n_missing complete_rate   min   max empty n_unique whitespace
+1 vax1_type             0             1     2     6     0        2          0
+
+-- Variable type: factor -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   skim_variable      n_missing complete_rate ordered n_unique top_counts                                       
+ 1 sex                        0      1        FALSE          3 F: 380382, M: 111059, I: 1                       
+ 2 bmi                        0      1        FALSE          4 Not: 387069, Obe: 59314, Obe: 27271, Obe: 17788  
+ 3 ethnicity             100521      0.795    FALSE          5 1: 314132, 3: 41939, 4: 17797, 5: 10017          
+ 4 ethnicity_6_sus       155045      0.685    FALSE          5 1: 282537, 3: 26637, 4: 12470, 5: 9600           
+ 5 msoa                    3860      0.992    FALSE       4735 E02: 864, E02: 822, E02: 812, E02: 795           
+ 6 stp                      175      1.00     FALSE         31 E54: 49007, E54: 42633, E54: 29437, E54: 22598   
+ 7 region                   175      1.00     FALSE          9 Eas: 107661, Eas: 90219, Yor: 71605, Sou: 67435  
+ 8 rural_urban             3763      0.992    FALSE          9 3: 263927, 1: 86095, 5: 50318, 2: 38055          
+ 9 ageband                    0      1        FALSE          5 50s: 130546, 40s: 122715, 30s: 115923, 18-: 82073
+10 ethnicity_combined     32806      0.933    FALSE          5 Whi: 374507, Sou: 45675, Bla: 19157, Oth: 11428  
+11 imd_Q5                 15725      0.968    FALSE          5 4: 107008, 5 l: 103754, 3: 103683, 2: 89320      
+12 multimorb                  0      1        FALSE          4 0: 387291, 1: 82714, 2: 18287, 3+: 3150          
+13 cause_of_death        491364      0.000159 FALSE          2 not: 72, cov: 6                                  
+
+-- Variable type: logical ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   skim_variable               n_missing complete_rate      mean count                  
+ 1 has_follow_up_previous_year         0             1 0.926     TRU: 454997, FAL: 36445
+ 2 chronic_cardiac_disease             0             1 0.0212    FAL: 481037, TRU: 10405
+ 3 heart_failure                       0             1 0.00299   FAL: 489974, TRU: 1468 
+ 4 other_heart_disease                 0             1 0.0197    FAL: 481762, TRU: 9680 
+ 5 diabetes                            0             1 0.0593    FAL: 462307, TRU: 29135
+ 6 dialysis                            0             1 0.000629  FAL: 491133, TRU: 309  
+ 7 chronic_liver_disease               0             1 0.00330   FAL: 489821, TRU: 1621 
+ 8 current_copd                        0             1 0.00702   FAL: 487991, TRU: 3451 
+ 9 LD_incl_DS_and_CP                   0             1 0.00143   FAL: 490737, TRU: 705  
+10 cystic_fibrosis                     0             1 0.000226  FAL: 491331, TRU: 111  
+11 other_resp_conditions               0             1 0.00480   FAL: 489082, TRU: 2360 
+12 lung_cancer                         0             1 0.000324  FAL: 491283, TRU: 159  
+13 haematological_cancer               0             1 0.00326   FAL: 489841, TRU: 1601 
+14 cancer_excl_lung_and_haem           0             1 0.0272    FAL: 478055, TRU: 13387
+15 chemo_or_radio                      0             1 0.00989   FAL: 486580, TRU: 4862 
+16 solid_organ_transplantation         0             1 0.00101   FAL: 490944, TRU: 498  
+17 bone_marrow_transplant              0             1 0.0000102 FAL: 491437, TRU: 5    
+18 sickle_cell_disease                 0             1 0.000346  FAL: 491272, TRU: 170  
+19 permanant_immunosuppression         0             1 0.000960  FAL: 490970, TRU: 472  
+20 temporary_immunosuppression         0             1 0.00241   FAL: 490257, TRU: 1185 
+21 asplenia                            0             1 0.00113   FAL: 490888, TRU: 554  
+22 dmards                              0             1 0.0185    FAL: 482326, TRU: 9116 
+23 dementia                            0             1 0.000553  FAL: 491170, TRU: 272  
+24 other_neuro_conditions              0             1 0.00519   FAL: 488891, TRU: 2551 
+25 psychosis_schiz_bipolar             0             1 0.00650   FAL: 488250, TRU: 3192 
+26 cev_ever                            0             1 0.0381    FAL: 472703, TRU: 18739
+27 cev                                 0             1 0.0333    FAL: 475079, TRU: 16363
+28 any_immunosuppression               0             1 0.0316    FAL: 475906, TRU: 15536
+29 prior_covid_infection               0             1 0.116     FAL: 434329, TRU: 57113
+
+-- Variable type: numeric ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  skim_variable        n_missing complete_rate        mean          sd    p0      p25      p50       p75     p100
+1 patient_id                   0      1        21627133.   14759102.   10017 9145824. 19296666 31864834. 55179800
+2 age                          0      1              43.0        11.9     18      33        44       53        64
+3 practice_id                  0      1          286698.      53518.      16  297013    298077   301202    587505
+4 imd                      15725      0.968       17586.       9055.     100   10100     18100    25300     32800
+5 covidadmitted_ccdays    491224      0.000444        1.72        7.47     0       0         0        0        64
+6 vax1_day                     0      1              47.9        30.9      1      32        40       52       191
+7 vax1_week                    0      1               7.32        4.41     1       5         6        8        28

@@ -1,25 +1,28 @@
-## script info for postest ##   
-data_cox data size = 351997
-  data_cox memory usage = 0.237 GB
+data_cox data size = 343411
+  data_cox memory usage = 0.231 GB
 
 
-data_cox_split data size = 1979069
-  data_cox_split memory usage = 0.808 GB
+data_cox_split data size = 1931003
+  data_cox_split memory usage = 0.788 GB
 
 
-model0 data size = 1979069
-  model0 memory usage = 0.333 GB
+model0 data size = 1931003
+  model0 memory usage = 0.324 GB
+  convergence status: 0
 
 
-model1 data size = 1979069
-  model1 memory usage = 0.333 GB
+model1 data size = 1931003
+  model1 memory usage = 0.324 GB
+  convergence status: 0
 
 
-model2 data size = 1979069
-  model2 memory usage = 0.333 GB
+model2 data size = 1931003
+  model2 memory usage = 0.324 GB
+  convergence status: 0
 
 
-model3 data size = 1979069
-  model3 memory usage = 0.333 GB
+model3 data size = 1931003
+  model3 memory usage = 0.324 GB
+  convergence status: 0
 
 

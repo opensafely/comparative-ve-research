@@ -1,0 +1,252 @@
+$patient_id
+[1] "integer"
+
+$covid_vax_pfizer_0_date
+[1] "Date"
+
+$covid_vax_pfizer_1_date
+[1] "Date"
+
+$covid_vax_pfizer_2_date
+[1] "Date"
+
+$covid_vax_az_0_date
+[1] "Date"
+
+$covid_vax_az_1_date
+[1] "Date"
+
+$covid_vax_az_2_date
+[1] "Date"
+
+$covid_vax_moderna_0_date
+[1] "Date"
+
+$covid_vax_moderna_1_date
+[1] "Date"
+
+$covid_vax_moderna_2_date
+[1] "Date"
+
+$covid_vax_disease_0_date
+[1] "Date"
+
+$covid_vax_disease_1_date
+[1] "Date"
+
+$covid_vax_disease_2_date
+[1] "Date"
+
+$covid_vax_any_0_date
+[1] "Date"
+
+$covid_vax_any_1_date
+[1] "Date"
+
+$covid_vax_any_2_date
+[1] "Date"
+
+$has_follow_up_previous_year
+[1] "logical"
+
+$dereg_date
+[1] "Date"
+
+$age
+[1] "integer"
+
+$sex
+[1] "factor"
+
+$bmi
+[1] "factor"
+
+$ethnicity
+[1] "factor"
+
+$ethnicity_6_sus
+[1] "factor"
+
+$practice_id
+[1] "integer"
+
+$msoa
+[1] "factor"
+
+$stp
+[1] "factor"
+
+$region
+[1] "factor"
+
+$imd
+[1] "integer"
+
+$rural_urban
+[1] "factor"
+
+$prior_positive_test_date
+[1] "Date"
+
+$prior_primary_care_covid_case_date
+[1] "Date"
+
+$prior_covidadmitted_date
+[1] "Date"
+
+$prior_covid_test_date
+[1] "Date"
+
+$covid_test_date
+[1] "Date"
+
+$positive_test_date
+[1] "Date"
+
+$emergency_date
+[1] "Date"
+
+$covidadmitted_date
+[1] "Date"
+
+$covidadmitted_ccdays
+[1] "integer"
+
+$coviddeath_date
+[1] "Date"
+
+$death_date
+[1] "Date"
+
+$chronic_cardiac_disease
+[1] "logical"
+
+$heart_failure
+[1] "logical"
+
+$other_heart_disease
+[1] "logical"
+
+$diabetes
+[1] "logical"
+
+$dialysis
+[1] "logical"
+
+$chronic_liver_disease
+[1] "logical"
+
+$current_copd
+[1] "logical"
+
+$LD_incl_DS_and_CP
+[1] "logical"
+
+$cystic_fibrosis
+[1] "logical"
+
+$other_resp_conditions
+[1] "logical"
+
+$lung_cancer
+[1] "logical"
+
+$haematological_cancer
+[1] "logical"
+
+$cancer_excl_lung_and_haem
+[1] "logical"
+
+$chemo_or_radio
+[1] "logical"
+
+$solid_organ_transplantation
+[1] "logical"
+
+$bone_marrow_transplant
+[1] "logical"
+
+$sickle_cell_disease
+[1] "logical"
+
+$permanant_immunosuppression
+[1] "logical"
+
+$temporary_immunosuppression
+[1] "logical"
+
+$asplenia
+[1] "logical"
+
+$dmards
+[1] "logical"
+
+$dementia
+[1] "logical"
+
+$other_neuro_conditions
+[1] "logical"
+
+$psychosis_schiz_bipolar
+[1] "logical"
+
+$cev_ever
+[1] "logical"
+
+$cev
+[1] "logical"
+
+$start_date
+[1] "Date"
+
+$start_date_pfizer
+[1] "Date"
+
+$start_date_az
+[1] "Date"
+
+$end_date
+[1] "Date"
+
+$censor_date
+[1] "Date"
+
+$ageband
+[1] "factor"
+
+$ethnicity_combined
+[1] "factor"
+
+$imd_Q5
+[1] "factor"
+
+$any_immunosuppression
+[1] "logical"
+
+$multimorb
+[1] "factor"
+
+$prior_covid_infection
+[1] "logical"
+
+$vax1_type
+[1] "character"
+
+$vax1_date
+[1] "Date"
+
+$vax1_day
+[1] "integer"
+
+$vax1_week
+[1] "integer"
+
+$cause_of_death
+[1] "factor"
+
+$noncoviddeath_date
+[1] "Date"
+
+$covidcc_date
+[1] "Date"
+

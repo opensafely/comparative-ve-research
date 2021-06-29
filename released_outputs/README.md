@@ -2,10 +2,22 @@
 
 * output
   * output/covidadmitted
+    * output/covidadmitted/calendar
+      * [output/covidadmitted/calendar/estimates_cox.csv](output/covidadmitted/calendar/estimates_cox.csv)
+      * [output/covidadmitted/calendar/forest_plot_cox.png](output/covidadmitted/calendar/forest_plot_cox.png)
+      * [output/covidadmitted/calendar/forest_plot_cox.svg](output/covidadmitted/calendar/forest_plot_cox.svg)
+      * [output/covidadmitted/calendar/glance_covidadmitted.csv](output/covidadmitted/calendar/glance_covidadmitted.csv)
+      * [output/covidadmitted/calendar/log_covidadmitted.txt](output/covidadmitted/calendar/log_covidadmitted.txt)
     * [output/covidadmitted/estimates_cox.csv](output/covidadmitted/estimates_cox.csv)
     * [output/covidadmitted/forest_plot_cox.png](output/covidadmitted/forest_plot_cox.png)
     * [output/covidadmitted/forest_plot_cox.svg](output/covidadmitted/forest_plot_cox.svg)
     * [output/covidadmitted/log_covidadmitted.txt](output/covidadmitted/log_covidadmitted.txt)
+    * output/covidadmitted/timesincevax
+      * [output/covidadmitted/timesincevax/estimates_cox.csv](output/covidadmitted/timesincevax/estimates_cox.csv)
+      * [output/covidadmitted/timesincevax/forest_plot_cox.png](output/covidadmitted/timesincevax/forest_plot_cox.png)
+      * [output/covidadmitted/timesincevax/forest_plot_cox.svg](output/covidadmitted/timesincevax/forest_plot_cox.svg)
+      * [output/covidadmitted/timesincevax/glance_covidadmitted.csv](output/covidadmitted/timesincevax/glance_covidadmitted.csv)
+      * [output/covidadmitted/timesincevax/log_covidadmitted.txt](output/covidadmitted/timesincevax/log_covidadmitted.txt)
   * output/covidcc
     * [output/covidcc/estimates_cox.csv](output/covidcc/estimates_cox.csv)
     * [output/covidcc/forest_plot_cox.png](output/covidcc/forest_plot_cox.png)
@@ -18,10 +30,16 @@
     * [output/coviddeath/log_coviddeath.txt](output/coviddeath/log_coviddeath.txt)
   * output/data
     * [output/data/flowchart.csv](output/data/flowchart.csv)
+  * output/data_properties
+    * [output/data_properties/data_processed_coltypes.txt](output/data_properties/data_processed_coltypes.txt)
+    * [output/data_properties/data_processed_skim.txt](output/data_properties/data_processed_skim.txt)
+    * [output/data_properties/data_processed_tabulate.txt](output/data_properties/data_processed_tabulate.txt)
   * output/descriptive
     * output/descriptive/km
       * [output/descriptive/km/plot_survival_ci_covidadmitted.png](output/descriptive/km/plot_survival_ci_covidadmitted.png)
       * [output/descriptive/km/plot_survival_ci_covidadmitted.svg](output/descriptive/km/plot_survival_ci_covidadmitted.svg)
+      * [output/descriptive/km/plot_survival_ci_covidcc.png](output/descriptive/km/plot_survival_ci_covidcc.png)
+      * [output/descriptive/km/plot_survival_ci_covidcc.svg](output/descriptive/km/plot_survival_ci_covidcc.svg)
       * [output/descriptive/km/plot_survival_ci_coviddeath.png](output/descriptive/km/plot_survival_ci_coviddeath.png)
       * [output/descriptive/km/plot_survival_ci_coviddeath.svg](output/descriptive/km/plot_survival_ci_coviddeath.svg)
       * [output/descriptive/km/plot_survival_ci_death.png](output/descriptive/km/plot_survival_ci_death.png)
@@ -36,6 +54,8 @@
       * [output/descriptive/km/plot_survival_ci_vaxany2.svg](output/descriptive/km/plot_survival_ci_vaxany2.svg)
       * [output/descriptive/km/plot_survival_covidadmitted.png](output/descriptive/km/plot_survival_covidadmitted.png)
       * [output/descriptive/km/plot_survival_covidadmitted.svg](output/descriptive/km/plot_survival_covidadmitted.svg)
+      * [output/descriptive/km/plot_survival_covidcc.png](output/descriptive/km/plot_survival_covidcc.png)
+      * [output/descriptive/km/plot_survival_covidcc.svg](output/descriptive/km/plot_survival_covidcc.svg)
       * [output/descriptive/km/plot_survival_coviddeath.png](output/descriptive/km/plot_survival_coviddeath.png)
       * [output/descriptive/km/plot_survival_coviddeath.svg](output/descriptive/km/plot_survival_coviddeath.svg)
       * [output/descriptive/km/plot_survival_death.png](output/descriptive/km/plot_survival_death.png)
@@ -53,20 +73,64 @@
       * [output/descriptive/tables/table1.html](output/descriptive/tables/table1.html)
       * [output/descriptive/tables/table1_allvax.csv](output/descriptive/tables/table1_allvax.csv)
       * [output/descriptive/tables/table1_allvax.html](output/descriptive/tables/table1_allvax.html)
+      * [output/descriptive/tables/table1_regions.csv](output/descriptive/tables/table1_regions.csv)
+      * [output/descriptive/tables/table1_regions.html](output/descriptive/tables/table1_regions.html)
       * [output/descriptive/tables/table_irr.csv](output/descriptive/tables/table_irr.csv)
       * [output/descriptive/tables/table_irr.html](output/descriptive/tables/table_irr.html)
+  * output/emergency
+    * output/emergency/calendar
+      * [output/emergency/calendar/estimates_cox.csv](output/emergency/calendar/estimates_cox.csv)
+      * [output/emergency/calendar/forest_plot_cox.png](output/emergency/calendar/forest_plot_cox.png)
+      * [output/emergency/calendar/forest_plot_cox.svg](output/emergency/calendar/forest_plot_cox.svg)
+      * [output/emergency/calendar/glance_emergency.csv](output/emergency/calendar/glance_emergency.csv)
+      * [output/emergency/calendar/log_emergency.txt](output/emergency/calendar/log_emergency.txt)
+    * output/emergency/timesincevax
+      * [output/emergency/timesincevax/estimates_cox.csv](output/emergency/timesincevax/estimates_cox.csv)
+      * [output/emergency/timesincevax/forest_plot_cox.png](output/emergency/timesincevax/forest_plot_cox.png)
+      * [output/emergency/timesincevax/forest_plot_cox.svg](output/emergency/timesincevax/forest_plot_cox.svg)
+      * [output/emergency/timesincevax/glance_emergency.csv](output/emergency/timesincevax/glance_emergency.csv)
+      * [output/emergency/timesincevax/log_emergency.txt](output/emergency/timesincevax/log_emergency.txt)
+  * output/hcw
+    * [output/hcw/table1.csv](output/hcw/table1.csv)
+    * [output/hcw/table1.html](output/hcw/table1.html)
+    * [output/hcw/vax1date.png](output/hcw/vax1date.png)
+    * [output/hcw/vax1date.svg](output/hcw/vax1date.svg)
   * output/noncoviddeath
     * [output/noncoviddeath/estimates_cox.csv](output/noncoviddeath/estimates_cox.csv)
     * [output/noncoviddeath/forest_plot_cox.png](output/noncoviddeath/forest_plot_cox.png)
     * [output/noncoviddeath/forest_plot_cox.svg](output/noncoviddeath/forest_plot_cox.svg)
     * [output/noncoviddeath/log_noncoviddeath.txt](output/noncoviddeath/log_noncoviddeath.txt)
   * output/postest
+    * output/postest/calendar
+      * [output/postest/calendar/estimates_cox.csv](output/postest/calendar/estimates_cox.csv)
+      * [output/postest/calendar/forest_plot_cox.png](output/postest/calendar/forest_plot_cox.png)
+      * [output/postest/calendar/forest_plot_cox.svg](output/postest/calendar/forest_plot_cox.svg)
+      * [output/postest/calendar/glance_postest.csv](output/postest/calendar/glance_postest.csv)
+      * [output/postest/calendar/log_postest.txt](output/postest/calendar/log_postest.txt)
     * [output/postest/estimates_cox.csv](output/postest/estimates_cox.csv)
     * [output/postest/forest_plot_cox.png](output/postest/forest_plot_cox.png)
     * [output/postest/forest_plot_cox.svg](output/postest/forest_plot_cox.svg)
     * [output/postest/log_postest.txt](output/postest/log_postest.txt)
+    * output/postest/timesincevax
+      * [output/postest/timesincevax/estimates_cox.csv](output/postest/timesincevax/estimates_cox.csv)
+      * [output/postest/timesincevax/forest_plot_cox.png](output/postest/timesincevax/forest_plot_cox.png)
+      * [output/postest/timesincevax/forest_plot_cox.svg](output/postest/timesincevax/forest_plot_cox.svg)
+      * [output/postest/timesincevax/glance_postest.csv](output/postest/timesincevax/glance_postest.csv)
+      * [output/postest/timesincevax/log_postest.txt](output/postest/timesincevax/log_postest.txt)
   * output/test
+    * output/test/calendar
+      * [output/test/calendar/estimates_cox.csv](output/test/calendar/estimates_cox.csv)
+      * [output/test/calendar/forest_plot_cox.png](output/test/calendar/forest_plot_cox.png)
+      * [output/test/calendar/forest_plot_cox.svg](output/test/calendar/forest_plot_cox.svg)
+      * [output/test/calendar/glance_test.csv](output/test/calendar/glance_test.csv)
+      * [output/test/calendar/log_test.txt](output/test/calendar/log_test.txt)
     * [output/test/estimates_cox.csv](output/test/estimates_cox.csv)
     * [output/test/forest_plot_cox.png](output/test/forest_plot_cox.png)
     * [output/test/forest_plot_cox.svg](output/test/forest_plot_cox.svg)
     * [output/test/log_test.txt](output/test/log_test.txt)
+    * output/test/timesincevax
+      * [output/test/timesincevax/estimates_cox.csv](output/test/timesincevax/estimates_cox.csv)
+      * [output/test/timesincevax/forest_plot_cox.png](output/test/timesincevax/forest_plot_cox.png)
+      * [output/test/timesincevax/forest_plot_cox.svg](output/test/timesincevax/forest_plot_cox.svg)
+      * [output/test/timesincevax/glance_test.csv](output/test/timesincevax/glance_test.csv)
+      * [output/test/timesincevax/log_test.txt](output/test/timesincevax/log_test.txt)

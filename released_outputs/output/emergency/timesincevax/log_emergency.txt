@@ -1,0 +1,29 @@
+## script info for emergency ##   
+data_cox data size = 343253
+  data_cox memory usage = 0.231 GB
+
+
+data_cox_split data size = 3307008
+  data_cox_split memory usage = 1.363 GB
+
+
+model0 data size = 3307008
+  model0 memory usage = 0.556 GB
+  convergence status: 0
+
+
+model1 data size = 3307008
+  model1 memory usage = 0.556 GB
+  convergence status: 0
+
+
+model2 data size = 3307008
+  model2 memory usage = 0.556 GB
+  convergence status: 0
+
+
+model3 data size = 3307008
+  model3 memory usage = 0.556 GB
+  convergence status: 0
+
+
