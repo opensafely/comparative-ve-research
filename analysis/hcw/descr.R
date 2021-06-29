@@ -79,7 +79,7 @@ tab_summary_baseline <- data_hcw %>%
     imd_Q5,
     ethnicity_combined,
     region,
-    vax_doses = cut(vax_doses, c(0,1,2,3, Inf), include.lowest=TRUE, labels = c("0", "1", "2", "3+")),
+    vax_doses = cut(vax_doses, c(0,1,2,3, Inf), include.lowest=TRUE, right=FALSE, labels = c("0", "1", "2", "3+")),
     vax1_type,
     vax_any_record = !is.na(covid_vax_any_1_date),
     vax_disease_record = !is.na(covid_vax_disease_1_date),
