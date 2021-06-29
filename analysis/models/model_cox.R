@@ -24,7 +24,7 @@ args <- commandArgs(trailingOnly=TRUE)
 if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
-  timescale <- "calendar"
+  timescale <- "timesincevax"
   outcome <- "postest"
 } else {
   removeobs <- TRUE
@@ -56,8 +56,8 @@ fs::dir_create(here("output", outcome, timescale))
 cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", outcome, timescale, glue("log_{outcome}.txt")), append = FALSE)
 ## function to pass additional log text
 logoutput <- function(...){
-  cat(..., file = here("output", outcome, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", outcome, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat(..., file = here("output", outcome, timescale, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat("\n", file = here("output", outcome, timescale, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
 }
 
 ## import metadata ----
@@ -166,6 +166,7 @@ data_cox_split <- tmerge(
 
 
 ## if using calendar timescale ----
+# - az versus pfizer is examined as an interaction term with time since vaccination, which is a time-dependent covariate
 # - delayed entry at vaccination date
 # - split time into az week 1, az week 2, .... pfizer week1, pfizer week 2, ... using standard interaction term
 # - no need to adjust for calender time
@@ -182,6 +183,7 @@ if(timescale=="calendar"){
 }
 
 ## if using time since vaccination timescale ----
+# - az versus pfizer is examined as a time-dependent effect
 # - start date is vaccination date
 # - post-vax follow-up is already overlapping, so can use az/pfizer : weekly strata
 # - need to adjust for calendar time
@@ -190,12 +192,14 @@ if(timescale=="timesincevax"){
   calendar_time <- data_cox %>%
     select(patient_id, vax1_day, tte_enddate) %>%
     mutate(
-      calendar_day = map2(vax1_day, tte_enddate, ~.x:.y)
+      calendar_day = map2(vax1_day, tte_enddate, ~.x:(.y+.x))
     ) %>%
     unnest(c(calendar_day)) %>%
     mutate(
-      calendar_week = paste0("week ", str_pad(floor(calendar_day/7), 2, pad = "0")),
-      fup_day = calendar_day - vax1_day
+      #calendar_week = paste0("week ", str_pad(floor(calendar_day/7), 2, pad = "0")),
+      calendar_week = floor(calendar_day/7),
+      treatment_day = calendar_day - vax1_day,
+      treatment_week = floor(treatment_day/7)
     )
 
   # one row per patient per follow-up calendar week
@@ -204,16 +208,22 @@ if(timescale=="timesincevax"){
     filter(first(calendar_day)==calendar_day) %>%
     ungroup()
 
+  # one row per patient per follow-up post-vax week
+  treatment_week <- calendar_time %>%
+    group_by(patient_id, treatment_week) %>%
+    filter(first(treatment_day)==treatment_day) %>%
+    ungroup()
+
   data_cox_split <- data_cox_split %>%
     tmerge(
       data1 = .,
-      data2 = calendar_week,
+      data2 = treatment_week,
       id = patient_id,
-      calendar_week = tdc(fup_day, calendar_week)
+      calendar_day = tdc(treatment_day, calendar_day)
     )
 
   formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
-  formula_spacetime <- . ~ . + strata(region) + factor(calendar_week)
+  formula_spacetime <- . ~ . + strata(region) + ns(calendar_day, 4)
 }
 
 
