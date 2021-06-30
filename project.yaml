@@ -23,7 +23,7 @@ actions:
     - hcw_process
     outputs:
       highly_sensitive:
-        cohort: output/data_properties/hcw_data_processed.txt
+        cohort: output/data_properties/hcw_data_processed*.txt
   hcw_descr:
     run: 'r:latest analysis/hcw/descr.R '
     needs:
@@ -59,7 +59,7 @@ actions:
     - data_process
     outputs:
       highly_sensitive:
-        cohort: output/data_properties/data_processed.txt
+        cohort: output/data_properties/data_processed*.txt
   data_selection:
     run: 'r:latest analysis/process/data_selection.R '
     needs:

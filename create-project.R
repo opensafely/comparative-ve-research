@@ -35,14 +35,14 @@ action <- function(
 }
 
 
-comment <- function(
-  x = "#"
-){
-  comment <- list(NULL)
-  names(comment) = paste0("# ", x)
-  comment
-}
-comment("blah")
+# comment <- function(
+#   x = "#"
+# ){
+#   comment <- list(NULL)
+#   names(comment) = paste0("# ", x)
+#   comment
+# }
+#comment("blah")
 
 ## model action function ----
 action_model <- function(
@@ -119,7 +119,7 @@ actions_list <- splice(
     arguments = c("output/data/hcw_data_processed.rds", "output/data_properties"),
     needs = list("hcw_process"),
     highly_sensitive = list(
-      cohort = "output/data_properties/hcw_data_processed.txt"
+      cohort = "output/data_properties/hcw_data_processed*.txt"
     )
   ),
 
@@ -167,7 +167,7 @@ actions_list <- splice(
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("data_process"),
     highly_sensitive = list(
-      cohort = "output/data_properties/data_processed.txt"
+      cohort = "output/data_properties/data_processed*.txt"
     )
   ),
 
