@@ -16,6 +16,14 @@ actions:
       highly_sensitive:
         data: output/data/hcw_data_processed.rds
         datavax: output/data/hcw_data_vax.rds
+  hcw_properties:
+    run: r:latest analysis/process/data_properties.R output/data/hcw_data_processed.rds
+      output/data_properties
+    needs:
+    - hcw_process
+    outputs:
+      highly_sensitive:
+        cohort: output/data_properties/hcw_data_processed.txt
   hcw_descr:
     run: 'r:latest analysis/hcw/descr.R '
     needs:
@@ -51,7 +59,7 @@ actions:
     - data_process
     outputs:
       highly_sensitive:
-        cohort: output/data_properties/data*.txt
+        cohort: output/data_properties/data_processed.txt
   data_selection:
     run: 'r:latest analysis/process/data_selection.R '
     needs:

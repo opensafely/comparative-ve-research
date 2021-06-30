@@ -114,6 +114,16 @@ actions_list <- splice(
   ),
 
   action(
+    name = "hcw_properties",
+    run = "r:latest analysis/process/data_properties.R",
+    arguments = c("output/data/hcw_data_processed.rds", "output/data_properties"),
+    needs = list("hcw_process"),
+    highly_sensitive = list(
+      cohort = "output/data_properties/hcw_data_processed.txt"
+    )
+  ),
+
+  action(
     name = "hcw_descr",
     run = "r:latest analysis/hcw/descr.R",
     needs = list("hcw_process"),
@@ -157,7 +167,7 @@ actions_list <- splice(
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("data_process"),
     highly_sensitive = list(
-      cohort = "output/data_properties/data*.txt"
+      cohort = "output/data_properties/data_processed.txt"
     )
   ),
 
