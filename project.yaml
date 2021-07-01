@@ -22,7 +22,7 @@ actions:
     needs:
     - hcw_process
     outputs:
-      highly_sensitive:
+      moderately_sensitive:
         cohort: output/data_properties/hcw_data_processed*.txt
   hcw_descr:
     run: 'r:latest analysis/hcw/descr.R '

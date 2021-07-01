@@ -118,7 +118,7 @@ actions_list <- splice(
     run = "r:latest analysis/process/data_properties.R",
     arguments = c("output/data/hcw_data_processed.rds", "output/data_properties"),
     needs = list("hcw_process"),
-    highly_sensitive = list(
+    moderately_sensitive = list(
       cohort = "output/data_properties/hcw_data_processed*.txt"
     )
   ),
