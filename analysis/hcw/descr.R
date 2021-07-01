@@ -37,10 +37,8 @@ gbl_vars <- jsonlite::fromJSON(
 )
 #list2env(gbl_vars, globalenv())
 
-# output directory
-
+# create output directory
 fs::dir_create(here("output", "hcw"))
-
 
 ## Import processed data ----
 data_hcw <- read_rds(here("output", "data", "hcw_data_processed.rds"))
@@ -67,7 +65,7 @@ data_hcw <-
     by='patient_id'
   )
 
-tab_summary_baseline <- data_hcw %>%
+data_summary <- data_hcw %>%
   transmute(
     ageband,
     sex = case_when(
@@ -88,20 +86,41 @@ tab_summary_baseline <- data_hcw %>%
       (is.na(covid_vax_any_1_date) != is.na(covid_vax_disease_1_date)) ~ TRUE,
       TRUE ~ FALSE
     )
-  ) %>%
+  )
+
+
+tab_summary <- data_summary %>%
   tbl_summary() %>%
   modify_footnote(starts_with("stat_") ~ NA)
 
-tab_summary_baseline$inputs$data <- NULL
+tab_summary$inputs$data <- NULL
 
-tab_csv <- tab_summary_baseline$table_body
-names(tab_csv) <- tab_summary_baseline$table_header$label
-tab_csv <- tab_csv[, (!tab_summary_baseline$table_header$hide | tab_summary_baseline$table_header$label=="variable")]
+tab_csv <- tab_summary$table_body
+names(tab_csv) <- tab_summary$table_header$label
+tab_csv <- tab_csv[, (!tab_summary$table_header$hide | tab_summary$table_header$label=="variable")]
 
-## create output directories ----
-gtsave(as_gt(tab_summary_baseline), here::here("output", "hcw", "table1.html"))
+## save output ----
+gtsave(as_gt(tab_summary), here::here("output", "hcw", "table1.html"))
 write_csv(tab_csv, here::here("output", "hcw", "table1.csv"))
 
+
+
+
+tab_summary_vax <- data_summary %>%
+  tbl_summary(
+    by=vax_any_record
+  ) %>%
+  modify_footnote(starts_with("stat_") ~ NA)
+
+tab_summary_vax$inputs$data <- NULL
+
+tab_vax_csv <- tab_summary_vax$table_body
+names(tab_vax_csv) <- tab_summary_vax$table_header$label
+tab_vax_csv <- tab_vax_csv[, (!tab_summary_vax$table_header$hide | tab_summary_vax$table_header$label=="variable")]
+
+## save output ----
+gtsave(as_gt(tab_summary_vax), here::here("output", "hcw", "table1_vax.html"))
+write_csv(tab_vax_csv, here::here("output", "hcw", "table1_vax.csv"))
 
 ### vaccination date histogram ----
 
@@ -112,7 +131,7 @@ plot_vax1date <- data_vax_knownbrand %>%
   ) %>%
   ggplot() +
   geom_histogram(aes(x=date, fill=vaccine_type, alpha=is.na(vax_disease_index)), position = "identity", binwidth=7) +
-  facet_grid(cols=vars(vax_index), rows=vars(vaccine_type), space="free_y", scales="free_y")+
+  facet_grid(cols=vars(vax_index), rows=vars(vaccine_type), scales="free_y")+
   theme_bw()
 
 ggsave(filename=here::here("output", "hcw", glue::glue("vax1date.svg")), plot_vax1date, width=15, height=20, units="cm")
