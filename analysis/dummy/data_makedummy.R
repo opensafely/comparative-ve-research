@@ -262,7 +262,7 @@ dummydata_processed <- dummydata %>%
   mutate(
     # remove vaccination dates occurring after an earlier vaccination of a different brand
     covid_vax_pfizer_1_day = if_else(covid_vax_pfizer_1_day<=pmin(Inf, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_pfizer_1_day, NA_integer_),
-    covid_vax_pfizer_2_day = if_else(covid_vax_pfizer_1_day<=pmin(Inf, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_pfizer_1_day, NA_integer_),
+    covid_vax_pfizer_2_day = if_else(covid_vax_pfizer_1_day<=pmin(Inf, covid_vax_az_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_pfizer_2_day, NA_integer_),
 
     covid_vax_az_1_day = if_else(covid_vax_az_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_az_1_day, NA_integer_),
     covid_vax_az_2_day = if_else(covid_vax_az_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_moderna_1_day, na.rm=TRUE), covid_vax_az_2_day, NA_integer_),
@@ -271,9 +271,9 @@ dummydata_processed <- dummydata %>%
     covid_vax_moderna_2_day = if_else(covid_vax_moderna_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_az_1_day, na.rm=TRUE), covid_vax_moderna_2_day, NA_integer_),
   ) %>%
   #convert logical to integer as study defs output 0/1 not TRUE/FALSE
-  mutate(across(where(is.logical), ~ as.integer(.))) %>%
+  #mutate(across(where(is.logical), ~ as.integer(.))) %>%
   #convert integer days to dates since index date and rename vars
-  mutate(across(ends_with("_day"), ~ as.character(index_date + .))) %>%
+  mutate(across(ends_with("_day"), ~ as.Date(as.character(index_date + .)))) %>%
   rename_with(~str_replace(., "_day", "_date"), ends_with("_day"))
 
 
