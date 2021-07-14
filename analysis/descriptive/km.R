@@ -43,6 +43,12 @@ fs::dir_create(here("output", "descriptive", "tables"))
 
 ## custom functions ----
 
+ceiling_any <- function(x, to=1){
+  ceiling(x/to)*to
+}
+
+ceiling_any(seq(0,1,0.01), to=1/floor(N/threshold))
+
 
 # # function to extract total plot height minus panel height
 # plotHeight <- function(plot, unit){
@@ -195,9 +201,11 @@ survobj <- function(.data, time, indicator, group_vars, threshold){
 
   dat_surv_rounded <- dat_surv1 %>%
     mutate(
-      surv = pmin(1,plyr::round_any(surv, (threshold+1)/max(n.risk, na.rm=TRUE))),
-      surv.ll = pmin(1, plyr::round_any(surv.ll, (threshold+1)/max(n.risk, na.rm=TRUE))),
-      surv.ul = pmin(1, plyr::round_any(surv.ul, (threshold+1)/max(n.risk, na.rm=TRUE))),
+      # Use ceiling not round. This is slightly biased upwards,
+      # but means there's no disclosure risk at the boundaries (0 and 1) where masking would otherwise be threshold/2
+      surv = ceiling_any(surv, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
+      surv.ll = ceiling_any(surv.ll, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
+      surv.ul = ceiling_any(surv.ul, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
     )
   dat_surv_rounded
   #dat_surv1
