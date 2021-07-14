@@ -1,21 +1,27 @@
 version: '3.0'
+
 expectations:
+
   population_size: 100000
+
 actions:
+
   hcw_extract:
-    run: 'cohortextractor:latest generate_cohort --study-definition study_definition_hcw
-      --output-format feather '
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_hcw
+      --output-format feather
     outputs:
       highly_sensitive:
         cohort: output/input_hcw.feather
+
   hcw_process:
-    run: 'r:latest analysis/hcw/process.R '
+    run: r:latest analysis/hcw/process.R
     needs:
     - hcw_extract
     outputs:
       highly_sensitive:
         data: output/data/hcw_data_processed.rds
         datavax: output/data/hcw_data_vax.rds
+
   hcw_properties:
     run: r:latest analysis/process/data_properties.R output/data/hcw_data_processed.rds
       output/data_properties
@@ -24,8 +30,9 @@ actions:
     outputs:
       moderately_sensitive:
         cohort: output/data_properties/hcw_data_processed*.txt
+
   hcw_descr:
-    run: 'r:latest analysis/hcw/descr.R '
+    run: r:latest analysis/hcw/descr.R
     needs:
     - hcw_process
     outputs:
@@ -34,24 +41,28 @@ actions:
         svg: output/hcw/*.svg
         html: output/hcw/*.html
         csv: output/hcw/*.csv
+
   design:
-    run: 'r:latest analysis/process/design.R '
+    run: r:latest analysis/process/design.R
     outputs:
       moderately_sensitive:
         metadata: output/data/metadata*
+
   extract:
-    run: 'cohortextractor:latest generate_cohort --study-definition study_definition
-      --output-format feather '
+    run: cohortextractor:latest generate_cohort --study-definition study_definition
+      --output-format feather
     outputs:
       highly_sensitive:
         cohort: output/input.feather
+
   data_process:
-    run: 'r:latest analysis/process/data_process.R '
+    run: r:latest analysis/process/data_process.R
     needs:
     - extract
     outputs:
       highly_sensitive:
         cohort: output/data/data_processed.rds
+
   data_properties:
     run: r:latest analysis/process/data_properties.R output/data/data_processed.rds
       output/data_properties
@@ -60,8 +71,9 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/data_properties/data_processed*.txt
+
   data_selection:
-    run: 'r:latest analysis/process/data_selection.R '
+    run: r:latest analysis/process/data_selection.R
     needs:
     - data_process
     outputs:
@@ -70,8 +82,9 @@ actions:
         data: output/data/data_cohort.rds
       moderately_sensitive:
         flow: output/data/flowchart.csv
+
   descr_table1:
-    run: 'r:latest analysis/descriptive/table1.R '
+    run: r:latest analysis/descriptive/table1.R
     needs:
     - design
     - data_selection
@@ -79,8 +92,9 @@ actions:
       moderately_sensitive:
         html: output/descriptive/tables/table1*.html
         csv: output/descriptive/tables/table1*.csv
+
   descr_table1_allvax:
-    run: 'r:latest analysis/descriptive/table1_allvax.R '
+    run: r:latest analysis/descriptive/table1_allvax.R
     needs:
     - design
     - data_selection
@@ -88,6 +102,7 @@ actions:
       moderately_sensitive:
         html: output/descriptive/tables/table1_allvax.html
         csv: output/descriptive/tables/table1_allvax.csv
+
   descr_irr:
     run: r:latest analysis/descriptive/table_irr.R output/data/data_processed.rds
       output/data_properties
@@ -98,6 +113,7 @@ actions:
       moderately_sensitive:
         html: output/descriptive/tables/table_irr.html
         csv: output/descriptive/tables/table_irr.csv
+
   descr_km:
     run: r:latest analysis/descriptive/km.R output/data/data_processed.rds output/data_properties
     needs:
@@ -107,6 +123,7 @@ actions:
       moderately_sensitive:
         png: output/descriptive/km/plot_survival*.png
         svg: output/descriptive/km/plot_survival*.svg
+
   model_test_timesincevax:
     run: r:latest analysis/models/model_cox.R test timesincevax
     needs:
@@ -119,6 +136,7 @@ actions:
       moderately_sensitive:
         logs: output/test/timesincevax/log*.txt
         glance: output/test/timesincevax/glance*.csv
+
   report_test_timesincevax:
     run: r:latest analysis/models/report_cox.R test timesincevax
     needs:
@@ -129,6 +147,7 @@ actions:
         svg: output/test/timesincevax/forest*.svg
         png: output/test/timesincevax/forest*.png
         csv: output/test/timesincevax/estimates*.csv
+
   model_test_calendar:
     run: r:latest analysis/models/model_cox.R test calendar
     needs:
@@ -141,6 +160,7 @@ actions:
       moderately_sensitive:
         logs: output/test/calendar/log*.txt
         glance: output/test/calendar/glance*.csv
+
   report_test_calendar:
     run: r:latest analysis/models/report_cox.R test calendar
     needs:
@@ -151,6 +171,7 @@ actions:
         svg: output/test/calendar/forest*.svg
         png: output/test/calendar/forest*.png
         csv: output/test/calendar/estimates*.csv
+
   model_postest_timesincevax:
     run: r:latest analysis/models/model_cox.R postest timesincevax
     needs:
@@ -163,6 +184,7 @@ actions:
       moderately_sensitive:
         logs: output/postest/timesincevax/log*.txt
         glance: output/postest/timesincevax/glance*.csv
+
   report_postest_timesincevax:
     run: r:latest analysis/models/report_cox.R postest timesincevax
     needs:
@@ -173,6 +195,7 @@ actions:
         svg: output/postest/timesincevax/forest*.svg
         png: output/postest/timesincevax/forest*.png
         csv: output/postest/timesincevax/estimates*.csv
+
   model_postest_calendar:
     run: r:latest analysis/models/model_cox.R postest calendar
     needs:
@@ -185,6 +208,7 @@ actions:
       moderately_sensitive:
         logs: output/postest/calendar/log*.txt
         glance: output/postest/calendar/glance*.csv
+
   report_postest_calendar:
     run: r:latest analysis/models/report_cox.R postest calendar
     needs:
@@ -195,6 +219,7 @@ actions:
         svg: output/postest/calendar/forest*.svg
         png: output/postest/calendar/forest*.png
         csv: output/postest/calendar/estimates*.csv
+
   model_emergency_timesincevax:
     run: r:latest analysis/models/model_cox.R emergency timesincevax
     needs:
@@ -207,6 +232,7 @@ actions:
       moderately_sensitive:
         logs: output/emergency/timesincevax/log*.txt
         glance: output/emergency/timesincevax/glance*.csv
+
   report_emergency_timesincevax:
     run: r:latest analysis/models/report_cox.R emergency timesincevax
     needs:
@@ -217,6 +243,7 @@ actions:
         svg: output/emergency/timesincevax/forest*.svg
         png: output/emergency/timesincevax/forest*.png
         csv: output/emergency/timesincevax/estimates*.csv
+
   model_emergency_calendar:
     run: r:latest analysis/models/model_cox.R emergency calendar
     needs:
@@ -229,6 +256,7 @@ actions:
       moderately_sensitive:
         logs: output/emergency/calendar/log*.txt
         glance: output/emergency/calendar/glance*.csv
+
   report_emergency_calendar:
     run: r:latest analysis/models/report_cox.R emergency calendar
     needs:
@@ -239,6 +267,7 @@ actions:
         svg: output/emergency/calendar/forest*.svg
         png: output/emergency/calendar/forest*.png
         csv: output/emergency/calendar/estimates*.csv
+
   model_covidadmitted_timesincevax:
     run: r:latest analysis/models/model_cox.R covidadmitted timesincevax
     needs:
@@ -251,6 +280,7 @@ actions:
       moderately_sensitive:
         logs: output/covidadmitted/timesincevax/log*.txt
         glance: output/covidadmitted/timesincevax/glance*.csv
+
   report_covidadmitted_timesincevax:
     run: r:latest analysis/models/report_cox.R covidadmitted timesincevax
     needs:
@@ -261,6 +291,7 @@ actions:
         svg: output/covidadmitted/timesincevax/forest*.svg
         png: output/covidadmitted/timesincevax/forest*.png
         csv: output/covidadmitted/timesincevax/estimates*.csv
+
   model_covidadmitted_calendar:
     run: r:latest analysis/models/model_cox.R covidadmitted calendar
     needs:
@@ -273,6 +304,7 @@ actions:
       moderately_sensitive:
         logs: output/covidadmitted/calendar/log*.txt
         glance: output/covidadmitted/calendar/glance*.csv
+
   report_covidadmitted_calendar:
     run: r:latest analysis/models/report_cox.R covidadmitted calendar
     needs:
@@ -283,3 +315,4 @@ actions:
         svg: output/covidadmitted/calendar/forest*.svg
         png: output/covidadmitted/calendar/forest*.png
         csv: output/covidadmitted/calendar/estimates*.csv
+

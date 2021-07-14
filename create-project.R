@@ -5,6 +5,26 @@ library('glue')
 
 # create action functions ----
 
+## create comment function ----
+comment <- function(...){
+  list_comments <- list(...)
+  comments <- map(list_comments, ~paste0("## ", ., " ##"))
+  comments
+}
+
+
+## create function to convert comment "actions" in a yaml string into proper comments
+convert_comment_actions <-function(yaml.txt){
+  yaml.txt %>%
+    str_replace_all("\\\n(\\s*)\\'\\'\\:(\\s*)\\'", "\n\\1")  %>%
+    #str_replace_all("\\\n(\\s*)\\'", "\n\\1") %>%
+    str_replace_all("([^\\'])\\\n(\\s*)\\#\\#", "\\1\n\n\\2\\#\\#") %>%
+    str_replace_all("\\#\\#\\'\\\n", "\n")
+}
+as.yaml(splice(a="c", b="'c'", comment("fff")))
+convert_comment_actions(as.yaml(splice(a="c", b="'c'", comment("fff"))))
+
+
 ## generic action function ----
 action <- function(
   name,
@@ -22,7 +42,7 @@ action <- function(
   outputs[sapply(outputs, is.null)] <- NULL
 
   action <- list(
-    run = paste0(run, " ", paste(arguments, collapse=" ")),
+    run = paste(c(run, arguments), collapse=" "),
     needs = needs,
     outputs = outputs
   )
@@ -256,4 +276,13 @@ project_list <- splice(
 )
 
 
-yaml::write_yaml(project_list, file =here("project.yaml"))
+## convert list to yaml, reformat comments and whitespace,and output ----
+as.yaml(project_list, indent=2) %>%
+  # convert comment actions to comments
+  convert_comment_actions() %>%
+  # add one blank line before level 1 and level 2 keys
+  str_replace_all("\\\n(\\w)", "\n\n\\1") %>%
+  str_replace_all("\\\n\\s\\s(\\w)", "\n\n  \\1") %>%
+  writeLines(here("project.yaml"))
+
+#yaml::write_yaml(project_list, file =here("project.yaml"))
