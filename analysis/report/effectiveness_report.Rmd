@@ -23,8 +23,9 @@ library('patchwork')
 
 output_dir <- here("output")
 
-pct <- scales::label_percent(accuracy=0.1)
-
+gbl_vars <- jsonlite::fromJSON(
+  txt=here("analysis", "global-variables.json")
+)
 
 ```
 
@@ -32,7 +33,7 @@ pct <- scales::label_percent(accuracy=0.1)
 # Introduction
 
 This study compares the effectiveness of the *BNT162b2* mRNA (Pfizer-BioNTech) and *ChAdOx1* (Oxford-AstraZeneca) vaccines amongst health and social care workers (HCWs). 
-This group was chosen as they were prioritised for vaccination due to high occupational exposure and during the period where both vaccines were available (4 January onwards) it is expected that the actual vaccine brand received will not be strongly influenced by other determinants of COVID-19-related outcomes (i.e., approximately random treatment allocation and therefore reduced confounding).
+This group was chosen as they were prioritised for vaccination due to high occupational exposure and during the period where both vaccines were available (`r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")` onwards) it is expected that the actual vaccine brand received will not be strongly influenced by other determinants of COVID-19-related outcomes (i.e., approximately random treatment allocation and therefore reduced confounding).
 
 
 The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research). 
@@ -47,7 +48,7 @@ People meeting the following criteria are included:
 * HCWs who have received at least one dose of BNT162b2 or ChAdOx1. 
 * Registered at a GP practice using TPP's SystmOne clinical information system on the day of vaccination.
 * Aged 18-65.
-* Vaccinated on or after 4 January 2021, when both vaccine brands were being administered. 
+* Vaccinated on or after `r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")`, when both vaccine brands were being administered. 
 * Not Clinically Extremely Vulnerable (CEV), as set out by government guidance, at the time of vaccination.
 
 Study participants are followed up from vaccination date until the first of:
@@ -55,7 +56,7 @@ Study participants are followed up from vaccination date until the first of:
 * The outcome of interest
 * Death or deregistration
 * Second vaccine dose
-* 31 May 2021
+* The study end date, `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`
 
 ### Identifying vaccinated HCWs
 
@@ -90,7 +91,7 @@ Comparative effectiveness will be estimated at weekly post-vaccination intervals
 
 Two time-scales are used for triagulation:
 
-* On the *calendar time-scale*, time zero is 4 January 2021, and people only contribute follow-up time once they have been vaccinated (i.e., delayed study entry). 
+* On the *calendar time-scale*, time zero is `r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")`, and people only contribute follow-up time once they have been vaccinated (i.e., delayed study entry). 
 
 * On the *treatment time-scale*, time zero is the date of vaccination. Calendar-time is included as an additional covariate, modelled as a restricted cubic spline.
 
