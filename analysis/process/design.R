@@ -10,7 +10,7 @@
 library('tidyverse')
 library('here')
 ## create output directories ----
-dir.create(here("output", "data"), showWarnings = FALSE, recursive=TRUE)
+fs::dir_create(here("output", "data"))
 
 ## Import processed data ----
 
