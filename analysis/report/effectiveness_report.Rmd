@@ -145,36 +145,49 @@ read_rds(here("output", "descriptive", "tables", "table1.rds"))
 read_rds(here("output", "descriptive", "tables", "table_irr.rds"))
 ```
 
-## Unadjusted survival curves
+## Comparative effectiveness
 
-```{r, curves, echo=FALSE, message=FALSE, out.width='90%'}
+The plots below show unadjusted Kaplan-Meier curves, and the *ChAdOx1* versus *BNT162b2* hazard ratios for each model.
+
+
+```{r, curves, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%'}
 
 print_plots <- function(outcome, outcome_descr){
   km_image <- here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.png"))
-  calendar_image <- here("output", outcome, "calendar", glue("forest_plot_cox.png"))
-  timesincevax_image <- here("output", outcome, "timesincevax", glue("forest_plot_cox.png"))
+  calendar_image <- here("output", outcome, "calendar", glue("effect_plot_cox.png"))
+  timesincevax_image <- here("output", outcome, "timesincevax", glue("effect_plot_cox.png"))
   
   km_plot <- read_rds(here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.rds")))
-  calendar_plot <- read_rds(here("output", outcome, "calendar", glue("forest_plot_cox.rds")))
-  timesincevax_plot <- read_rds(here("output", outcome, "timesincevax", glue("forest_plot_cox.rds")))
+  km_plot <- km_plot + theme(legend.position = c(0.1,0.1), legend.justification = c(0,0))
+  
+  calendar_plot <- read_rds(here("output", outcome, "calendar", glue("effect_plot_cox.rds"))) + 
+    labs(title=NULL)+
+    coord_cartesian(ylim=c(0.25,4))+
+    theme(text = element_text(size=10))
+  
+  timesincevax_plot <- read_rds(here("output", outcome, "timesincevax", glue("effect_plot_cox.rds"))) + 
+    labs(title=NULL)+
+    coord_cartesian(ylim=c(0.25,4))+
+    theme(text = element_text(size=10))
   
   #cat(glue("### {outcome_descr}"), "  \n")
   
-  effects_plot <- wrap_plots(calendar_plot, timesincevax_plot, nrow=1, guides='collect')
+  effects_plot <- wrap_plots(calendar_plot, timesincevax_plot, nrow=1)#, guides='collect')
+
   
-  wrap_plot(
-    km_plot+theme(legend.position = c(0.1,0.1), legend.justification = c(0,0)), 
-    effects_plot, 
-    ncol=1,
-  ) + 
-  plot_annotation(title = '{outcome_descr}')
+  wrap_plots(
+   km_plot,
+   effects_plot,
+   ncol=1
+  ) +
+  plot_annotation(title = outcome_descr)
   
 }
 
 print_plots("test", "SARS-CoV-2 test")
 print_plots("postest", "SARS-CoV-2 positive test")
-print_plots("emergency", "A&E attendances")
+print_plots("emergency", "A&E attendance")
 print_plots("covidadmitted", "COVID-19 hospital admission")
-print_plots("covidcc", "COVID-19 critical care admission")
+#print_plots("covidcc", "COVID-19 critical care admission")
 
 ```
