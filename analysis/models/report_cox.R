@@ -166,7 +166,7 @@ coxmod_effect <-
 coxmod_effect
 ## save plot
 
-write_rds(coxmod_effect, file=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.rds")))
+write_rds(coxmod_effect, path=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.rds")))
 ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.svg")), coxmod_effect, width=20, height=15, units="cm")
 ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.png")), coxmod_effect, width=20, height=15, units="cm")
 
