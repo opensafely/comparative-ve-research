@@ -116,6 +116,8 @@ data_tte <- data_cohort %>%
       TRUE ~ NA_character_
     ),
 
+    vax1_date = vax1_date-1, # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
+
     # time to last follow up day
     tte_enddate = tte(vax1_date, end_date, end_date),
 
@@ -214,7 +216,7 @@ get_colour_scales <- function(colour_type = "qual"){
   if(colour_type == "qual"){
     list(
       scale_color_brewer(type="qual", palette="Set1", na.value="grey"),
-      scale_fill_brewer(type="qual", palette="Set1", guide=FALSE, na.value="grey")
+      scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")
       #ggthemes::scale_color_colorblind(),
       #ggthemes::scale_fill_colorblind(guide=FALSE),
       #rcartocolor::scale_color_carto_d(palette = "Safe"),
@@ -260,7 +262,7 @@ ggplot_surv <- function(.surv_data, colour_var, colour_name, colour_type="qual",
       x="Days since vaccination",
       y="Event-free rate",
       colour=colour_name,
-      title=title
+      title=NULL
     )+
     theme_minimal(base_size=9)+
     theme(
@@ -340,7 +342,13 @@ plot_combinations %>%
   ) %>%
   pwalk(ggsave) %>%
   mutate(filename = str_replace(filename, ".png", ".svg")) %>%
-  pwalk(ggsave)
+  pwalk(ggsave) %>%
+  transmute(
+    x = plot,
+    path = file.path(path, str_replace(filename, ".svg", ".rds")),
+    compress="gz"
+  ) %>%
+  pwalk(write_rds)
 
 
 plot_combinations %>%
@@ -355,5 +363,11 @@ plot_combinations %>%
   ) %>%
   pwalk(ggsave) %>%
   mutate(filename = str_replace(filename, ".png", ".svg")) %>%
-  pwalk(ggsave)
+  pwalk(ggsave) %>%
+  transmute(
+    x = plot,
+    path = file.path(path, str_replace(filename, ".svg", ".rds")),
+    compress="gz"
+  ) %>%
+  pwalk(write_rds)
 

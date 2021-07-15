@@ -99,6 +99,7 @@ write_rds(list_formula, here("output", "data", "metadata_formulas.rds"))
 ## variable labels
 var_labels <- list(
   vax1_type ~ "Vaccine type",
+  vax1_type_descr ~ "Vaccine type",
   age ~ "Age",
   ageband ~ "Age",
   sex ~ "Sex",

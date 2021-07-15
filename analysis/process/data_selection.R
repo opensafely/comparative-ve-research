@@ -13,11 +13,13 @@ library('tidyverse')
 library('here')
 library('glue')
 
+source(here("analysis", "lib", "utility_functions.R"))
+
 ## import command-line arguments ----
 args <- commandArgs(trailingOnly=TRUE)
 
 ## create output directories ----
-dir.create(here("output", "data"), showWarnings = FALSE, recursive=TRUE)
+fs::dir_create(here("output", "data"))
 
 ## Import processed data ----
 
@@ -62,7 +64,6 @@ data_flowchart <- data_criteria %>%
     c3_nopriorvaccine = c2_notcev & (no_prior_vaccine),
     c4_enddate = c3_nopriorvaccine & vax_beforeenddate,
     c5_4jan = c4_enddate & vax1_4janonwards,
-
   ) %>%
   summarise(
     across(.fns=sum)
@@ -77,5 +78,15 @@ data_flowchart <- data_criteria %>%
     pct_exclude = n_exclude/lag(n),
     pct_all = n / first(n),
     pct_step = n / lag(n),
+    crit = str_extract(criteria, "^c\\d+"),
+    criteria = fct_case_when(
+      crit == "c0" ~ "All HCWs aged 16-65",
+      crit == "c1" ~ "  with no missing info for age, IMD, ethnicity, region",
+      crit == "c2" ~ "  who are not clinically extremely vulnerable",
+      crit == "c3" ~ "  with no vaccination record prior to the national roll-out",
+      crit == "c4" ~ "  with vaccination on or before the study end date",
+      crit == "c5" ~ "  with vaccination on or after 4 January 2021",
+      TRUE ~ NA_character_
+    )
   )
 write_csv(data_flowchart, here("output", "data", "flowchart.csv"))

@@ -3,7 +3,7 @@
 # This script:
 # imports fitted MSMs
 # calculates robust CIs taking into account patient-level clustering
-# outputs forest plots for the primary vaccine-outcome relationship
+# outputs effect plots for the primary vaccine-outcome relationship
 # outputs plots showing model-estimated spatio-temporal trends
 #
 # The script should only be run via an action in the project.yaml only
@@ -99,7 +99,7 @@ write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::gl
 
 
 if(timescale == "calendar"){
-  coxmod_forest_data <- tidy_summary %>%
+  coxmod_effect_data <- tidy_summary %>%
     filter(str_detect(term, fixed("vax1_az"))) %>%
     mutate(
       term=str_replace(term, pattern=fixed("vax1_az:timesincevax"), ""),
@@ -109,7 +109,7 @@ if(timescale == "calendar"){
 }
 
 if(timescale=="timesincevax"){
-  coxmod_forest_data <- tidy_summary %>%
+  coxmod_effect_data <- tidy_summary %>%
     filter(str_detect(term, fixed("timesincevax")) | str_detect(term, fixed("vax1_az"))) %>%
     mutate(
       term=str_replace(term, pattern=fixed("vax1_az:strata(timesincevax)"), ""),
@@ -117,7 +117,7 @@ if(timescale=="timesincevax"){
     )
 }
 
-coxmod_forest_data <- coxmod_forest_data %>%
+coxmod_effect_data <- coxmod_effect_data %>%
   mutate(
     term_left = as.numeric(str_extract(term, "^\\d+"))-1,
     term_right = as.numeric(str_extract(term, "\\d+$"))-1,
@@ -125,8 +125,8 @@ coxmod_forest_data <- coxmod_forest_data %>%
     term_midpoint = term_left + (term_right+1-term_left)/2
   )
 
-coxmod_forest <-
-  ggplot(data = coxmod_forest_data) +
+coxmod_effect <-
+  ggplot(data = coxmod_effect_data) +
   geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
   geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
   geom_hline(aes(yintercept=1), colour='grey')+
@@ -134,7 +134,7 @@ coxmod_forest <-
     breaks=c(0.25, 0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3, 4),
     sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
   )+
-  scale_x_continuous(breaks=unique(coxmod_forest_data$term_left), limits=c(min(coxmod_forest_data$term_left), max(coxmod_forest_data$term_right)+1), expand = c(0, 0))+
+  scale_x_continuous(breaks=unique(coxmod_effect_data$term_left), limits=c(min(coxmod_effect_data$term_left), max(coxmod_effect_data$term_right)+1), expand = c(0, 0))+
   scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
   labs(
     y="Hazard ratio",
@@ -163,10 +163,12 @@ coxmod_forest <-
     legend.position = "bottom"
    ) +
  NULL
-coxmod_forest
+coxmod_effect
 ## save plot
-ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.svg")), coxmod_forest, width=20, height=15, units="cm")
-ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.png")), coxmod_forest, width=20, height=15, units="cm")
+
+write_rds(coxmod_effect, file=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.rds")))
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.svg")), coxmod_effect, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.png")), coxmod_effect, width=20, height=15, units="cm")
 
 
 

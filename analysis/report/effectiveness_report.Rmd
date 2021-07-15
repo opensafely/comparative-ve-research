@@ -1,0 +1,180 @@
+---
+title: "Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers"
+output:
+  html_document:
+    code_folding: hide
+    keep_md: yes
+  pdf_document: default
+  md_document:
+    variant: gfm
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library('tidyverse')
+library('here')
+library('glue')
+library('lubridate')
+library('gt')
+library('patchwork')
+
+
+output_dir <- here("output")
+
+pct <- scales::label_percent(accuracy=0.1)
+
+
+```
+
+
+# Introduction
+
+This study compares the effectiveness of the *BNT162b2* mRNA (Pfizer-BioNTech) and *ChAdOx1* (Oxford-AstraZeneca) vaccines amongst health and social care workers (HCWs). 
+This group was chosen as they were prioritised for vaccination due to high occupational exposure and during the period where both vaccines were available (4 January onwards) it is expected that the actual vaccine brand received will not be strongly influenced by other determinants of COVID-19-related outcomes (i.e., approximately random treatment allocation and therefore reduced confounding).
+
+
+The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research). 
+
+
+# Methods
+
+## Study population
+
+People meeting the following criteria are included:
+
+* HCWs who have received at least one dose of BNT162b2 or ChAdOx1. 
+* Registered at a GP practice using TPP's SystmOne clinical information system on the day of vaccination.
+* Aged 18-65.
+* Vaccinated on or after 4 January 2021, when both vaccine brands were being administered. 
+* Not Clinically Extremely Vulnerable (CEV), as set out by government guidance, at the time of vaccination.
+
+Study participants are followed up from vaccination date until the first of:
+
+* The outcome of interest
+* Death or deregistration
+* Second vaccine dose
+* 31 May 2021
+
+### Identifying vaccinated HCWs
+
+Those vaccinated as part of England's national vaccination programme (for example not including vaccine trial participants) are asked whether they work in health or social care. This information is sent to OpenSAFELY-TPP from NHS Digital's COVID-19 data store.
+
+Note -- many of those flagged as HCWs do not have a vaccination record, which shouldn't be the case if the question was asked as part of the vaccination process.
+
+## Study measures
+
+### Exposure
+
+The vaccination brand, BNT162b2 or ChAdOx1. This is available in the GP record directly, via the National Immunisation Management System (NIMS).
+
+### Outcomes
+
+* SARS-CoV-2 infection, as identified via SGSS records. Both PCR and LFT tests are included.
+* Unplanned COVID-19-related hospitalisation via HES records. ICD-10 codes are used to identify COVID-19-related admissions. 
+* Unplanned COVID-19-related ICU admission via HES records. ICD-10 codes are used to identify COVID-19-related admissions. 
+* COVID-19-related death via death registration records. With COVID-19 ICD-10 codes anywhere on the death certificate (i.e., as an underlying or contributing cause of death)
+
+### Covariates
+
+Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, region, clinically “at risk” (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All variables are ascertained as at the time of vaccination. 
+
+## Statistical Analysis
+
+Time-dependent Cox models are used to estimate the relative hazard of each outcome for ChAdOx1 versus BNT162b2 vaccine recipients.
+Modelled covariates include age, sex, ethnicity, deprivation, evidence of prior covid infection, asthma, clinically “at risk”, number of recorded comorbidities and severe mental illness.
+NUTS1 regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest (primarily driven by changes in local infection rates). 
+
+Comparative effectiveness will be estimated at weekly post-vaccination intervals to account for the potential differences in vaccine protection over time between the two brands.
+
+Two time-scales are used for triagulation:
+
+* On the *calendar time-scale*, time zero is 4 January 2021, and people only contribute follow-up time once they have been vaccinated (i.e., delayed study entry). 
+
+* On the *treatment time-scale*, time zero is the date of vaccination. Calendar-time is included as an additional covariate, modelled as a restricted cubic spline.
+
+
+# Results
+
+Note all counts below 6 are redacted.
+
+
+## Flowchart
+
+
+```{r flowchart, echo=FALSE}
+
+flowchart <- read_csv(here("output", "data", "flowchart.csv"))
+
+flowchart %>%
+  select(
+    Criteria = criteria,
+    N = n,
+    `N excluded` = n_exclude,
+    `% excluded` = pct_exclude,
+    `% remaining` = pct_all
+  ) %>%
+  gt() %>%
+  fmt_percent(
+    columns = starts_with(c("%")),
+    decimals = 1
+  ) %>%
+  fmt_number(
+    columns = starts_with(c("N")),
+    decimals= 0
+  ) %>%
+  fmt_missing(
+    everything(),
+    missing_text="-"
+  )
+  
+```
+
+
+## Baseline demographics
+
+```{r table1, echo=FALSE}
+read_rds(here("output", "descriptive", "tables", "table1.rds"))
+```
+
+
+## Event rates
+
+```{r table_irr, echo=FALSE}
+read_rds(here("output", "descriptive", "tables", "table_irr.rds"))
+```
+
+## Unadjusted survival curves
+
+```{r, curves, echo=FALSE, message=FALSE, out.width='90%'}
+
+print_plots <- function(outcome, outcome_descr){
+  km_image <- here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.png"))
+  calendar_image <- here("output", outcome, "calendar", glue("forest_plot_cox.png"))
+  timesincevax_image <- here("output", outcome, "timesincevax", glue("forest_plot_cox.png"))
+  
+  km_plot <- read_rds(here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.rds")))
+  calendar_plot <- read_rds(here("output", outcome, "calendar", glue("forest_plot_cox.rds")))
+  timesincevax_plot <- read_rds(here("output", outcome, "timesincevax", glue("forest_plot_cox.rds")))
+  
+  #cat(glue("### {outcome_descr}"), "  \n")
+  
+  effects_plot <- wrap_plots(calendar_plot, timesincevax_plot, nrow=1, guides='collect')
+  
+  wrap_plot(
+    km_plot+theme(legend.position = c(0.1,0.1), legend.justification = c(0,0)), 
+    effects_plot, 
+    ncol=1,
+  ) + 
+  plot_annotation(title = '{outcome_descr}')
+  
+}
+
+print_plots("test", "SARS-CoV-2 test")
+print_plots("postest", "SARS-CoV-2 positive test")
+print_plots("emergency", "A&E attendances")
+print_plots("covidadmitted", "COVID-19 hospital admission")
+print_plots("covidcc", "COVID-19 critical care admission")
+
+```

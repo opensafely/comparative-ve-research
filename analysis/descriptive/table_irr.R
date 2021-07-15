@@ -363,6 +363,7 @@ tab_summary <- data_summary %>%
     columns = "timesincevax"
   )
 
+write_rds(tab_summary, here("output", "descriptive", "tables", "table_irr.rds"))
 gtsave(tab_summary, here("output", "descriptive", "tables", "table_irr.html"))
 
 

@@ -29,7 +29,7 @@ gbl_vars <- jsonlite::fromJSON(
 
 # output processed data to rds ----
 
-dir.create(here("output", "data"), showWarnings = FALSE, recursive=TRUE)
+fs::dir_create(here("output", "data"))
 
 
 # process ----
@@ -107,6 +107,14 @@ data_processed <- data_extract %>%
       right=FALSE
     ),
 
+    sex = fct_case_when(
+      sex == "F" ~ "Female",
+      sex == "M" ~ "Male",
+      #sex == "I" ~ "Inter-sex",
+      #sex == "U" ~ "Unknown",
+      TRUE ~ NA_character_
+    ),
+
     ethnicity_combined = if_else(is.na(ethnicity), ethnicity_6_sus, ethnicity),
 
     ethnicity_combined = fct_case_when(
@@ -154,6 +162,12 @@ data_processed <- data_extract %>%
     vax1_type = case_when(
       pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
       pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) > pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "pfizer",
+      TRUE ~ NA_character_
+    ),
+
+    vax1_type_descr = fct_case_when(
+      vax1_type == "pfizer" ~ "BNT162b2",
+      vax1_type == "az" ~ "ChAdOx1",
       TRUE ~ NA_character_
     ),
 

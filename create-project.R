@@ -93,6 +93,9 @@ action_report <- function(
     run = glue("r:latest analysis/models/report_cox.R"),
     arguments = c(outcome, timescale),
     needs = list("design", glue("model_{outcome}_{timescale}")),
+    highly_sensitive = list(
+      rds = glue("output/{outcome}/{timescale}/estimates*.rds")
+    ),
     moderately_sensitive = list(
       svg = glue("output/{outcome}/{timescale}/forest*.svg"),
       png = glue("output/{outcome}/{timescale}/forest*.png"),
@@ -209,6 +212,9 @@ actions_list <- splice(
     name = "descr_table1",
     run = "r:latest analysis/descriptive/table1.R",
     needs = list("design", "data_selection"),
+    highly_sensitive = list(
+      rds = "output/descriptive/tables/table1*.rds"
+    ),
     moderately_sensitive = list(
       html = "output/descriptive/tables/table1*.html",
       csv = "output/descriptive/tables/table1*.csv"
@@ -230,6 +236,9 @@ actions_list <- splice(
     run = "r:latest analysis/descriptive/table_irr.R",
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("design", "data_selection"),
+    highly_sensitive = list(
+      rds = "output/descriptive/tables/table_irr.rds"
+    ),
     moderately_sensitive = list(
       html = "output/descriptive/tables/table_irr.html",
       csv = "output/descriptive/tables/table_irr.csv"
@@ -241,6 +250,9 @@ actions_list <- splice(
     run = "r:latest analysis/descriptive/km.R",
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("design", "data_selection"),
+    highly_sensitive = list(
+      rds = "output/descriptive/km/plot_survival*.rds"
+    ),
     moderately_sensitive = list(
       png = "output/descriptive/km/plot_survival*.png",
       svg = "output/descriptive/km/plot_survival*.svg"
@@ -266,8 +278,29 @@ actions_list <- splice(
   action_model("covidadmitted", "timesincevax"),
   action_report("covidadmitted", "timesincevax"),
   action_model("covidadmitted", "calendar"),
-  action_report("covidadmitted", "calendar")
+  action_report("covidadmitted", "calendar"),
+
+  # action_model("covidcc", "timesincevax"),
+  # action_report("covidcc", "timesincevax"),
+  # action_model("covidcc", "calendar"),
+  # action_report("covidcc", "calendar"),
+
+
+  action(
+    name = "rmd_report",
+    run = glue("r:latest -e {q}", q = single_quote('rmarkdown::render("analysis/report/effectiveness_report.Rmd", knit_root_dir = "/workspace", output_dir="/workspace/output")') ),
+    needs = splice(
+      "design", "data_selection",
+      "descr_table1", "descr_irr",
+      "descr_km",
+      as.list(glue("report_{outcome}_{timescale}", outcome=rep(c("test", "postest", "emergency", "covidadmitted"),each=2), timescale = rep(c("timesincevax", "calendar"), 4)))
+    ),
+    moderately_sensitive = list(
+      html = "output/effectiveness_report.html"
+    )
+  )
 )
+
 
 
 project_list <- splice(
@@ -286,3 +319,18 @@ as.yaml(project_list, indent=2) %>%
   writeLines(here("project.yaml"))
 
 #yaml::write_yaml(project_list, file =here("project.yaml"))
+
+
+## grab all action names and send to a txt file
+
+names(actions_list) %>% tibble(action=.) %>%
+  mutate(
+    model = str_detect(action, "model"),
+    model_number = cumsum(model)
+  ) %>%
+  group_by(model_number) %>%
+  summarise(
+    sets = paste(action, collapse=" ")
+  ) %>% pull(sets) %>%
+  paste(collapse="\n") %>%
+  writeLines(here("actions.txt"))

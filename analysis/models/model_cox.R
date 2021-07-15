@@ -72,6 +72,7 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 # redo tte variables to indclude censoring date (ie use na.censor=FALSE)
 data_tte <- data_cohort %>%
   mutate(
+    vax1_date = vax1_date-1, # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
 
     # time to study end date
     tte_enddate = tte(vax1_date, end_date, end_date),

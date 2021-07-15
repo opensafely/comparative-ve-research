@@ -38,13 +38,13 @@ gbl_vars <- jsonlite::fromJSON(
 #list2env(gbl_vars, globalenv())
 
 ## create output directories ----
-fs::dir_create(here::here("output", "descriptive", "tables"))
+fs::dir_create(here("output", "descriptive", "tables"))
 
 
 ## import metadata ----
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
-list_formula <- read_rds(here::here("output", "data", "metadata_formulas.rds"))
+list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
 
@@ -56,10 +56,10 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 tab_summary_baseline <- data_cohort %>%
   select(
     all_of(names(var_labels)),
-    -age, -region, -stp
+    -age, -region, -stp, -vax1_type
   ) %>%
   tbl_summary(
-    by = vax1_type,
+    by = vax1_type_descr,
     label=unname(var_labels[names(.)])
   )  %>%
   modify_footnote(starts_with("stat_") ~ NA)
@@ -70,8 +70,9 @@ tab_csv <- tab_summary_baseline$table_body
 names(tab_csv) <- tab_summary_baseline$table_header$label
 tab_csv <- tab_csv[, (!tab_summary_baseline$table_header$hide | tab_summary_baseline$table_header$label=="variable")]
 
-gtsave(as_gt(tab_summary_baseline), here::here("output", "descriptive", "tables", "table1.html"))
-write_csv(tab_csv, here::here("output", "descriptive", "tables", "table1.csv"))
+write_rds(tab_summary_baseline, here("output", "descriptive", "tables", "table1.rds"))
+gtsave(as_gt(tab_summary_baseline), here("output", "descriptive", "tables", "table1.html"))
+write_csv(tab_csv, here("output", "descriptive", "tables", "table1.csv"))
 
 
 
@@ -92,6 +93,6 @@ tab_region_csv <- tab_summary_region$table_body
 names(tab_region_csv) <- tab_summary_region$table_header$label
 tab_region_csv <- tab_region_csv[, (!tab_summary_region$table_header$hide | tab_summary_region$table_header$label=="variable")]
 
-gtsave(as_gt(tab_summary_region), here::here("output", "descriptive", "tables", "table1_regions.html"))
-write_csv(tab_csv, here::here("output", "descriptive", "tables", "table1_regions.csv"))
+gtsave(as_gt(tab_summary_region), here("output", "descriptive", "tables", "table1_regions.html"))
+write_csv(tab_csv, here("output", "descriptive", "tables", "table1_regions.csv"))
 

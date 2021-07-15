@@ -89,6 +89,8 @@ actions:
     - design
     - data_selection
     outputs:
+      highly_sensitive:
+        rds: output/descriptive/tables/table1*.rds
       moderately_sensitive:
         html: output/descriptive/tables/table1*.html
         csv: output/descriptive/tables/table1*.csv
@@ -110,6 +112,8 @@ actions:
     - design
     - data_selection
     outputs:
+      highly_sensitive:
+        rds: output/descriptive/tables/table_irr.rds
       moderately_sensitive:
         html: output/descriptive/tables/table_irr.html
         csv: output/descriptive/tables/table_irr.csv
@@ -120,6 +124,8 @@ actions:
     - design
     - data_selection
     outputs:
+      highly_sensitive:
+        rds: output/descriptive/km/plot_survival*.rds
       moderately_sensitive:
         png: output/descriptive/km/plot_survival*.png
         svg: output/descriptive/km/plot_survival*.svg
@@ -143,6 +149,8 @@ actions:
     - design
     - model_test_timesincevax
     outputs:
+      highly_sensitive:
+        rds: output/test/timesincevax/estimates*.rds
       moderately_sensitive:
         svg: output/test/timesincevax/forest*.svg
         png: output/test/timesincevax/forest*.png
@@ -167,6 +175,8 @@ actions:
     - design
     - model_test_calendar
     outputs:
+      highly_sensitive:
+        rds: output/test/calendar/estimates*.rds
       moderately_sensitive:
         svg: output/test/calendar/forest*.svg
         png: output/test/calendar/forest*.png
@@ -191,6 +201,8 @@ actions:
     - design
     - model_postest_timesincevax
     outputs:
+      highly_sensitive:
+        rds: output/postest/timesincevax/estimates*.rds
       moderately_sensitive:
         svg: output/postest/timesincevax/forest*.svg
         png: output/postest/timesincevax/forest*.png
@@ -215,6 +227,8 @@ actions:
     - design
     - model_postest_calendar
     outputs:
+      highly_sensitive:
+        rds: output/postest/calendar/estimates*.rds
       moderately_sensitive:
         svg: output/postest/calendar/forest*.svg
         png: output/postest/calendar/forest*.png
@@ -239,6 +253,8 @@ actions:
     - design
     - model_emergency_timesincevax
     outputs:
+      highly_sensitive:
+        rds: output/emergency/timesincevax/estimates*.rds
       moderately_sensitive:
         svg: output/emergency/timesincevax/forest*.svg
         png: output/emergency/timesincevax/forest*.png
@@ -263,6 +279,8 @@ actions:
     - design
     - model_emergency_calendar
     outputs:
+      highly_sensitive:
+        rds: output/emergency/calendar/estimates*.rds
       moderately_sensitive:
         svg: output/emergency/calendar/forest*.svg
         png: output/emergency/calendar/forest*.png
@@ -287,6 +305,8 @@ actions:
     - design
     - model_covidadmitted_timesincevax
     outputs:
+      highly_sensitive:
+        rds: output/covidadmitted/timesincevax/estimates*.rds
       moderately_sensitive:
         svg: output/covidadmitted/timesincevax/forest*.svg
         png: output/covidadmitted/timesincevax/forest*.png
@@ -311,8 +331,31 @@ actions:
     - design
     - model_covidadmitted_calendar
     outputs:
+      highly_sensitive:
+        rds: output/covidadmitted/calendar/estimates*.rds
       moderately_sensitive:
         svg: output/covidadmitted/calendar/forest*.svg
         png: output/covidadmitted/calendar/forest*.png
         csv: output/covidadmitted/calendar/estimates*.csv
+
+  rmd_report:
+    run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",
+      knit_root_dir = "/workspace", output_dir="/workspace/output")'
+    needs:
+    - design
+    - data_selection
+    - descr_table1
+    - descr_irr
+    - descr_km
+    - report_test_timesincevax
+    - report_test_calendar
+    - report_postest_timesincevax
+    - report_postest_calendar
+    - report_emergency_timesincevax
+    - report_emergency_calendar
+    - report_covidadmitted_timesincevax
+    - report_covidadmitted_calendar
+    outputs:
+      moderately_sensitive:
+        html: output/effectiveness_report.html
 
