@@ -94,12 +94,12 @@ action_report <- function(
     arguments = c(outcome, timescale),
     needs = list("design", glue("model_{outcome}_{timescale}")),
     highly_sensitive = list(
-      rds = glue("output/{outcome}/{timescale}/estimates*.rds")
+      rds = glue("output/{outcome}/{timescale}/effect*.rds")
     ),
     moderately_sensitive = list(
-      svg = glue("output/{outcome}/{timescale}/forest*.svg"),
-      png = glue("output/{outcome}/{timescale}/forest*.png"),
-      csv = glue("output/{outcome}/{timescale}/estimates*.csv")
+      svg = glue("output/{outcome}/{timescale}/effect*.svg"),
+      png = glue("output/{outcome}/{timescale}/effect*.png"),
+      csv = glue("output/{outcome}/{timescale}/effect*.csv")
     )
   )
 }

@@ -95,7 +95,7 @@ add_column(outcome = outcome, .before=1)
 
 if(removeobs) rm(coxmod0, coxmod1, coxmod2, coxmod3)
 
-write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::glue("estimates_cox.csv")))
+write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::glue("effect_estimates_cox.csv")))
 
 
 if(timescale == "calendar"){
@@ -166,9 +166,9 @@ coxmod_effect <-
 coxmod_effect
 ## save plot
 
-write_rds(coxmod_effect, path=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.rds")))
-ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.svg")), coxmod_effect, width=20, height=15, units="cm")
-ggsave(filename=here::here("output", outcome, timescale, glue::glue("forest_plot_cox.png")), coxmod_effect, width=20, height=15, units="cm")
+write_rds(coxmod_effect, path=here::here("output", outcome, timescale, glue::glue("effect_plot_cox.rds")))
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("effect_plot_cox.svg")), coxmod_effect, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("effect_plot_cox.png")), coxmod_effect, width=20, height=15, units="cm")
 
 
 

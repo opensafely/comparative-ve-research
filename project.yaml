@@ -150,11 +150,11 @@ actions:
     - model_test_timesincevax
     outputs:
       highly_sensitive:
-        rds: output/test/timesincevax/estimates*.rds
+        rds: output/test/timesincevax/effect*.rds
       moderately_sensitive:
-        svg: output/test/timesincevax/forest*.svg
-        png: output/test/timesincevax/forest*.png
-        csv: output/test/timesincevax/estimates*.csv
+        svg: output/test/timesincevax/effect*.svg
+        png: output/test/timesincevax/effect*.png
+        csv: output/test/timesincevax/effect*.csv
 
   model_test_calendar:
     run: r:latest analysis/models/model_cox.R test calendar
@@ -176,11 +176,11 @@ actions:
     - model_test_calendar
     outputs:
       highly_sensitive:
-        rds: output/test/calendar/estimates*.rds
+        rds: output/test/calendar/effect*.rds
       moderately_sensitive:
-        svg: output/test/calendar/forest*.svg
-        png: output/test/calendar/forest*.png
-        csv: output/test/calendar/estimates*.csv
+        svg: output/test/calendar/effect*.svg
+        png: output/test/calendar/effect*.png
+        csv: output/test/calendar/effect*.csv
 
   model_postest_timesincevax:
     run: r:latest analysis/models/model_cox.R postest timesincevax
@@ -202,11 +202,11 @@ actions:
     - model_postest_timesincevax
     outputs:
       highly_sensitive:
-        rds: output/postest/timesincevax/estimates*.rds
+        rds: output/postest/timesincevax/effect*.rds
       moderately_sensitive:
-        svg: output/postest/timesincevax/forest*.svg
-        png: output/postest/timesincevax/forest*.png
-        csv: output/postest/timesincevax/estimates*.csv
+        svg: output/postest/timesincevax/effect*.svg
+        png: output/postest/timesincevax/effect*.png
+        csv: output/postest/timesincevax/effect*.csv
 
   model_postest_calendar:
     run: r:latest analysis/models/model_cox.R postest calendar
@@ -228,11 +228,11 @@ actions:
     - model_postest_calendar
     outputs:
       highly_sensitive:
-        rds: output/postest/calendar/estimates*.rds
+        rds: output/postest/calendar/effect*.rds
       moderately_sensitive:
-        svg: output/postest/calendar/forest*.svg
-        png: output/postest/calendar/forest*.png
-        csv: output/postest/calendar/estimates*.csv
+        svg: output/postest/calendar/effect*.svg
+        png: output/postest/calendar/effect*.png
+        csv: output/postest/calendar/effect*.csv
 
   model_emergency_timesincevax:
     run: r:latest analysis/models/model_cox.R emergency timesincevax
@@ -254,11 +254,11 @@ actions:
     - model_emergency_timesincevax
     outputs:
       highly_sensitive:
-        rds: output/emergency/timesincevax/estimates*.rds
+        rds: output/emergency/timesincevax/effect*.rds
       moderately_sensitive:
-        svg: output/emergency/timesincevax/forest*.svg
-        png: output/emergency/timesincevax/forest*.png
-        csv: output/emergency/timesincevax/estimates*.csv
+        svg: output/emergency/timesincevax/effect*.svg
+        png: output/emergency/timesincevax/effect*.png
+        csv: output/emergency/timesincevax/effect*.csv
 
   model_emergency_calendar:
     run: r:latest analysis/models/model_cox.R emergency calendar
@@ -280,11 +280,11 @@ actions:
     - model_emergency_calendar
     outputs:
       highly_sensitive:
-        rds: output/emergency/calendar/estimates*.rds
+        rds: output/emergency/calendar/effect*.rds
       moderately_sensitive:
-        svg: output/emergency/calendar/forest*.svg
-        png: output/emergency/calendar/forest*.png
-        csv: output/emergency/calendar/estimates*.csv
+        svg: output/emergency/calendar/effect*.svg
+        png: output/emergency/calendar/effect*.png
+        csv: output/emergency/calendar/effect*.csv
 
   model_covidadmitted_timesincevax:
     run: r:latest analysis/models/model_cox.R covidadmitted timesincevax
@@ -306,11 +306,11 @@ actions:
     - model_covidadmitted_timesincevax
     outputs:
       highly_sensitive:
-        rds: output/covidadmitted/timesincevax/estimates*.rds
+        rds: output/covidadmitted/timesincevax/effect*.rds
       moderately_sensitive:
-        svg: output/covidadmitted/timesincevax/forest*.svg
-        png: output/covidadmitted/timesincevax/forest*.png
-        csv: output/covidadmitted/timesincevax/estimates*.csv
+        svg: output/covidadmitted/timesincevax/effect*.svg
+        png: output/covidadmitted/timesincevax/effect*.png
+        csv: output/covidadmitted/timesincevax/effect*.csv
 
   model_covidadmitted_calendar:
     run: r:latest analysis/models/model_cox.R covidadmitted calendar
@@ -332,11 +332,11 @@ actions:
     - model_covidadmitted_calendar
     outputs:
       highly_sensitive:
-        rds: output/covidadmitted/calendar/estimates*.rds
+        rds: output/covidadmitted/calendar/effect*.rds
       moderately_sensitive:
-        svg: output/covidadmitted/calendar/forest*.svg
-        png: output/covidadmitted/calendar/forest*.png
-        csv: output/covidadmitted/calendar/estimates*.csv
+        svg: output/covidadmitted/calendar/effect*.svg
+        png: output/covidadmitted/calendar/effect*.png
+        csv: output/covidadmitted/calendar/effect*.csv
 
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",
