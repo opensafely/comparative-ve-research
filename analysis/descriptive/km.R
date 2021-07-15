@@ -47,8 +47,6 @@ ceiling_any <- function(x, to=1){
   ceiling(x/to)*to
 }
 
-ceiling_any(seq(0,1,0.01), to=1/floor(N/threshold))
-
 
 # # function to extract total plot height minus panel height
 # plotHeight <- function(plot, unit){
