@@ -155,25 +155,75 @@ The plots below show unadjusted Kaplan-Meier curves, and the *ChAdOx1* versus *B
 
 print_plots <- function(outcome, outcome_descr){
   km_image <- here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.png"))
-  calendar_image <- here("output", outcome, "calendar", glue("effect_plot_cox.png"))
-  timesincevax_image <- here("output", outcome, "timesincevax", glue("effect_plot_cox.png"))
+  calendar_image <- here("output", outcome, "calendar", glue("effect_plot.png"))
+  timesincevax_image <- here("output", outcome, "timesincevax", glue("effect_plot.png"))
+  
+  
   
   km_plot <- read_rds(here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.rds")))
   km_plot <- km_plot + theme(legend.position = c(0.1,0.1), legend.justification = c(0,0))
   
-  calendar_plot <- read_rds(here("output", outcome, "calendar", glue("effect_plot_cox.rds"))) + 
-    labs(title=NULL)+
-    coord_cartesian(ylim=c(0.25,4))+
-    theme(text = element_text(size=10))
+  calendar_effects <- read_rds(here("output", outcome, "calendar", glue("effect_estimates.rds"))) %>%
+    mutate(timescale = "Calendar time")
+  timesincevax_effects <- read_rds(here("output", outcome, "timesincevax", glue("effect_estimates.rds"))) %>%
+    mutate(timescale = "Vaccinated time")
   
-  timesincevax_plot <- read_rds(here("output", outcome, "timesincevax", glue("effect_plot_cox.rds"))) + 
-    labs(title=NULL)+
-    coord_cartesian(ylim=c(0.25,4))+
-    theme(text = element_text(size=10))
+  effects <- bind_rows(calendar_effects, timesincevax_effects)
   
-  #cat(glue("### {outcome_descr}"), "  \n")
   
-  effects_plot <- wrap_plots(calendar_plot, timesincevax_plot, nrow=1)#, guides='collect')
+  effects_plot <-
+    ggplot(data = effects) +
+    geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
+    geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
+    geom_hline(aes(yintercept=1), colour='grey')+
+    facet_grid(cols=vars(timescale))+
+    scale_x_continuous(breaks=unique(effects$term_left), limits=c(min(effects$term_left), max(effects$term_right)+1), expand = c(0, 0))+
+    scale_y_log10(
+    breaks=c(0.1, 0.25, 0.33, 0.5, 0.75, 1, 1.33, 2, 3, 4, 10)
+    #sec.axis = dup_axis(name="favours\n<- BNT162b2 / ChAdOx1 ->", breaks = NULL)
+  )+
+    scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=2))+
+    labs(
+      y="Hazard ratio\nChAdOx1 / BNT162b2",
+      x="Days since vaccination",
+      colour=NULL
+     ) +
+    theme_bw()+
+    theme(
+      panel.border = element_blank(),
+      axis.line.y = element_line(colour = "black"),
+  
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+      strip.placement = "outside",
+      strip.text.y.left = element_text(angle = 0),
+  
+      panel.spacing = unit(0.8, "lines"),
+  
+      plot.title = element_text(hjust = 0),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0, face= "italic"),
+  
+      legend.position = "bottom"
+     ) +
+   NULL
+  
+  # 
+  # calendar_plot <- read_rds(here("output", outcome, "calendar", glue("effect_plot.rds"))) + 
+  #   labs(title=NULL)+
+  #   coord_cartesian(ylim=c(0.25,4))+
+  #   theme(text = element_text(size=10))
+  # 
+  # timesincevax_plot <- read_rds(here("output", outcome, "timesincevax", glue("effect_plot.rds"))) + 
+  #   labs(title=NULL)+
+  #   coord_cartesian(ylim=c(0.25,4))+
+  #   theme(text = element_text(size=10))
+  # 
+  cat(glue("### {outcome_descr}"), "  \n")
+  
+  #effects_plot <- wrap_plots(calendar_plot, timesincevax_plot, nrow=1)#, guides='collect')
 
   
   wrap_plots(

@@ -95,7 +95,7 @@ add_column(outcome = outcome, .before=1)
 
 if(removeobs) rm(coxmod0, coxmod1, coxmod2, coxmod3)
 
-write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::glue("effect_estimates_cox.csv")))
+write_csv(tidy_summary, path = here::here("output", outcome, timescale, glue::glue("effect_estimates.csv")))
 
 
 if(timescale == "calendar"){
@@ -124,6 +124,8 @@ coxmod_effect_data <- coxmod_effect_data %>%
     term_right = if_else(is.na(term_right), max(term_left)+6, term_right),
     term_midpoint = term_left + (term_right+1-term_left)/2
   )
+
+write_rds(coxmod_effect_data, path = here::here("output", outcome, timescale, glue::glue("effect_estimates.rds")))
 
 coxmod_effect <-
   ggplot(data = coxmod_effect_data) +
@@ -166,9 +168,9 @@ coxmod_effect <-
 coxmod_effect
 ## save plot
 
-write_rds(coxmod_effect, path=here::here("output", outcome, timescale, glue::glue("effect_plot_cox.rds")))
-ggsave(filename=here::here("output", outcome, timescale, glue::glue("effect_plot_cox.svg")), coxmod_effect, width=20, height=15, units="cm")
-ggsave(filename=here::here("output", outcome, timescale, glue::glue("effect_plot_cox.png")), coxmod_effect, width=20, height=15, units="cm")
+write_rds(coxmod_effect, path=here::here("output", outcome, timescale, glue::glue("effect_plot.rds")))
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("effect_plot.svg")), coxmod_effect, width=20, height=15, units="cm")
+ggsave(filename=here::here("output", outcome, timescale, glue::glue("effect_plot.png")), coxmod_effect, width=20, height=15, units="cm")
 
 
 
