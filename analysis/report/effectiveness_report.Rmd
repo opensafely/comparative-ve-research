@@ -87,18 +87,18 @@ Time-dependent Cox models are used to estimate the relative hazard of each outco
 Modelled covariates include age, sex, ethnicity, deprivation, evidence of prior covid infection, asthma, clinically “at risk”, number of recorded comorbidities and severe mental illness.
 NUTS1 regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest (primarily driven by changes in local infection rates). 
 
-Comparative effectiveness will be estimated at weekly post-vaccination intervals to account for the potential differences in vaccine protection over time between the two brands.
+Comparative effectiveness is estimated at weekly post-vaccination intervals to account for the potential differences in vaccine protection over time between the two brands.
 
-Two time-scales are used for triagulation:
+Two time-scales are used for triangulation:
 
 * On the *calendar time-scale*, time zero is `r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")`, and people only contribute follow-up time once they have been vaccinated (i.e., delayed study entry). 
 
-* On the *treatment time-scale*, time zero is the date of vaccination. Calendar-time is included as an additional covariate, modelled as a restricted cubic spline.
+* On the *treatment time-scale*, time zero is the date of vaccination. Calendar-time is included as an additional covariate using restricted cubic spline with knots at the first and second tertile, plus boundary knots.
 
 
 # Results
 
-Note all counts below 6 are redacted.
+Note all counts below 6 are redacted and Kaplan-Meier survival estimates are rounded for disclosure control.
 
 
 ## Flowchart
