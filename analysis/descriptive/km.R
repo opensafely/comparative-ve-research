@@ -48,39 +48,6 @@ ceiling_any <- function(x, to=1){
 }
 
 
-# # function to extract total plot height minus panel height
-# plotHeight <- function(plot, unit){
-#   grob <- ggplot2::ggplotGrob(plot)
-#   grid::convertHeight(gtable::gtable_height(grob), unitTo=unit, valueOnly=TRUE)
-# }
-#
-# # function to extract total plot width minus panel height
-# plotWidth <- function(plot, unit){
-#   grob <- ggplot2::ggplotGrob(plot)
-#   grid::convertWidth(gtable::gtable_width(grob), unitTo=unit, valueOnly=TRUE)
-# }
-#
-# # function to extract total number of bars plot (strictly this is the number of rows in the build of the plot data)
-# plotNbars <- function(plot){
-#   length(unique(ggplot2::ggplot_build(plot)$data[[1]]$x))
-# }
-#
-# # function to extract total number of bars plot (strictly this is the number of rows in the build of the plot data)
-# plotNfacetrows <- function(plot){
-#   length(levels(ggplot2::ggplot_build(plot)$data[[1]]$PANEL))
-# }
-#
-# plotNyscales <- function(plot){
-#   length(ggplot2::ggplot_build(plot)$layout$panel_scales_y[[1]]$range$range)
-# }
-#
-#
-# # function to extract total number of panels
-# plotNpanelrows <- function(plot){
-#   length(unique(ggplot2::ggplot_build(plot)$layout$layout$ROW))
-# }
-
-
 ## define theme ----
 
 plot_theme <-

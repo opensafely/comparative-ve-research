@@ -151,7 +151,7 @@ read_rds(here("output", "descriptive", "tables", "table_irr.rds"))
 The plots below show unadjusted Kaplan-Meier curves, and the *ChAdOx1* versus *BNT162b2* hazard ratios for each model.
 
 
-```{r, curves, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%'}
+```{r, curves, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', results='asis'}
 
 print_plots <- function(outcome, outcome_descr){
   km_image <- here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.png"))
@@ -179,12 +179,12 @@ print_plots <- function(outcome, outcome_descr){
     facet_grid(cols=vars(timescale))+
     scale_x_continuous(breaks=unique(effects$term_left), limits=c(min(effects$term_left), max(effects$term_right)+1), expand = c(0, 0))+
     scale_y_log10(
-    breaks=c(0.1, 0.25, 0.33, 0.5, 0.75, 1, 1.33, 2, 3, 4, 10)
-    #sec.axis = dup_axis(name="favours\n<- BNT162b2 / ChAdOx1 ->", breaks = NULL)
+    breaks=c(0.1, 0.125, 0.25, 0.33, 0.5, 0.75, 1, 1.33, 2, 3, 4, 8,10),
+    sec.axis = dup_axis(name="favours\n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
   )+
     scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=2))+
     labs(
-      y="Hazard ratio\nChAdOx1 / BNT162b2",
+      y="Hazard ratio",#\nChAdOx1 / BNT162b2",
       x="Days since vaccination",
       colour=NULL
      ) +
@@ -221,17 +221,20 @@ print_plots <- function(outcome, outcome_descr){
   #   coord_cartesian(ylim=c(0.25,4))+
   #   theme(text = element_text(size=10))
   # 
-  cat(glue("### {outcome_descr}"), "  \n")
+  #cat(glue("### {outcome_descr}"), "  \n")
   
   #effects_plot <- wrap_plots(calendar_plot, timesincevax_plot, nrow=1)#, guides='collect')
-
-  
-  wrap_plots(
-   km_plot,
-   effects_plot,
-   ncol=1
-  ) +
-  plot_annotation(title = outcome_descr)
+  cat("  \n\n")
+  print(glue("### {outcome_descr}"), "  \n")
+  print(km_plot)
+  print(effects_plot)
+  cat("  \n\n")
+  # wrap_plots(
+  #  km_plot + labs(title=outcome_descr),
+  #  effects_plot,
+  #  ncol=1
+  # ) +
+  # plot_annotation(title = outcome_descr)
   
 }
 
