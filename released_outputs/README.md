@@ -83,6 +83,7 @@
       * [output/descriptive/tables/table1_regions.html](output/descriptive/tables/table1_regions.html)
       * [output/descriptive/tables/table_irr.csv](output/descriptive/tables/table_irr.csv)
       * [output/descriptive/tables/table_irr.html](output/descriptive/tables/table_irr.html)
+  * [output/effectiveness_report.html](output/effectiveness_report.html)
   * output/emergency
     * output/emergency/calendar
       * [output/emergency/calendar/effect_estimates.csv](output/emergency/calendar/effect_estimates.csv)
