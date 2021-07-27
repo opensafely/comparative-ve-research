@@ -44,7 +44,8 @@ fs::dir_create(here("output", "descriptive", "tables"))
 ## custom functions ----
 
 ceiling_any <- function(x, to=1){
-  ceiling(x/to)*to
+  # round to nearest 100 millionth to avoid floating point errors
+  ceiling(plyr::round_any(x/to, 1/100000000))*to
 }
 
 
