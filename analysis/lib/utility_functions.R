@@ -237,3 +237,65 @@ tidy_custom.glm  <- function(model, conf.int=TRUE, conf.level=0.95, exponentiate
 
   output
 }
+
+
+
+## functions for IRR confidence intervals ----
+
+
+rrCI_normal <- function(n, pt, ref_n, ref_pt, group, accuracy=0.001){
+  rate <- n/pt
+  ref_rate <- ref_n/ref_pt
+  rr <- rate/ref_rate
+  log_rr <- log(rr)
+  selog_rr <- sqrt((1/n)+(1/ref_n))
+  log_ll <- log_rr - qnorm(0.975)*selog_rr
+  log_ul <- log_rr + qnorm(0.975)*selog_rr
+  ll <- exp(log_ll)
+  ul <- exp(log_ul)
+
+  if_else(
+    group==levels(group)[1],
+    NA_character_,
+    paste0("(", scales::number_format(accuracy=accuracy)(ll), "-", scales::number_format(accuracy=accuracy)(ul), ")")
+  )
+}
+
+rrCI_exact <- function(n, pt, ref_n, ref_pt, accuracy=0.001){
+
+  # use exact methods if incidence is very low for immediate post-vaccine outcomes
+
+  rate <- n/pt
+  ref_rate <- ref_n/ref_pt
+  rr <- rate/ref_rate
+
+  ll = ref_pt/pt * (n/(ref_n+1)) * 1/qf(2*(ref_n+1), 2*n, p = 0.05/2, lower.tail = FALSE)
+  ul = ref_pt/pt * ((n+1)/ref_n) * qf(2*(n+1), 2*ref_n, p = 0.05/2, lower.tail = FALSE)
+
+  paste0("(", scales::number_format(accuracy=accuracy)(ll), "-", scales::number_format(accuracy=accuracy)(ul), ")")
+
+}
+
+# get confidence intervals for rate ratio using unadjusted poisson GLM
+# uses gtsummary not broom::tidy to make it easier to paste onto original data
+
+rrCI_glm <- function(n, pt, x, accuracy=0.001){
+
+  dat<-tibble(n=n, pt=pt, x=x)
+
+  poismod <- glm(
+    formula = n ~ x + offset(log(pt*365.25)),
+    family=poisson,
+    data=dat
+  )
+
+  gtmodel <- tbl_regression(poismod, exponentiate=TRUE)$table_body %>%
+    filter(reference_row %in% FALSE) %>%
+    select(label, conf.low, conf.high)
+
+  dat2 <- left_join(dat, gtmodel, by=c("x"="label"))
+
+  paste0("(", scales::number_format(accuracy=accuracy)(dat2$conf.low), "-", scales::number_format(accuracy=accuracy)(dat2$conf.high), ")")
+
+}
+
