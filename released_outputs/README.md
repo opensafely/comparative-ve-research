@@ -106,6 +106,8 @@
   * output/hcw
     * [output/hcw/table1.csv](output/hcw/table1.csv)
     * [output/hcw/table1.html](output/hcw/table1.html)
+    * [output/hcw/table1_vax.csv](output/hcw/table1_vax.csv)
+    * [output/hcw/table1_vax.html](output/hcw/table1_vax.html)
     * [output/hcw/vax1date.png](output/hcw/vax1date.png)
     * [output/hcw/vax1date.svg](output/hcw/vax1date.svg)
   * output/noncoviddeath
