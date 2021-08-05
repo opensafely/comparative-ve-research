@@ -165,38 +165,54 @@ tidy_parglm <- function(x, conf.int = FALSE, conf.level = .95,
   # nicked from https://github.com/tidymodels/broom/blob/443ebd995760c6674f122d75ceb2e6b82f055439/R/stats-glm-tidiers.R#L12
   # and adapted for parglm glm objects
 
-  ret <- as_tibble(summary(x)$coefficients, rownames = "term")
+  ret <- tibble::as_tibble(summary(x)$coefficients, rownames = "term")
   colnames(ret) <- c("term", "estimate", "std.error", "statistic", "p.value")
 
   # summary(x)$coefficients misses rank deficient rows (i.e. coefs that summary.lm() sets to NA)
   # catch them here and add them back
 
   coefs <- tibble::enframe(stats::coef(x), name = "term", value = "estimate")
-  ret <- left_join(coefs, ret, by = c("term", "estimate"))
+  ret <-  dplyr::left_join(coefs, ret, by = c("term", "estimate"))
 
   if (conf.int) {
     ci <- confint.default(x, level = conf.level) # not ideal -- change for more robust conf intervals! - see tidy_plr below
-    ci <- as_tibble(ci, rownames = "term")
+    ci <- tibble::as_tibble(ci, rownames = "term")
     names(ci) <- c("term", "conf.low", "conf.high")
 
     ret <- dplyr::left_join(ret, ci, by = "term")
   }
 
   if (exponentiate) {
-    ret <- exponentiate(ret)
+    stop("cannot use exponentiate=TRUE yet")
   }
 
   ret
 }
 
 
+tidy_wald <- function(x, conf.int = TRUE, conf.level = .95, exponentiate = TRUE, ...) {
+
+  # to use Wald CIs instead of profile CIs.
+  ret <- broom::tidy(x, conf.int = FALSE, conf.level = conf.level, exponentiate = exponentiate)
+
+  if(conf.int){
+    ci <- confint.default(x, level = conf.level)
+    if(exponentiate){ci = exp(ci)}
+    ci <- tibble::as_tibble(ci, rownames = "term")
+    names(ci) <- c("term", "conf.low", "conf.high")
+
+    ret <- dplyr::left_join(ret, ci, by = "term")
+  }
+  ret
+}
 
 tidy_plr <- function(model, conf.int=TRUE, conf.level=0.95, exponentiate=FALSE, cluster){
+
   # create tidy dataframe for coefficients of pooled logistic regression
-  mod_tidy <- tidy_parglm(model, conf.int=conf.int, conf.level=conf.level, exponentiate=exponentiate)
-  robustSEs <- coeftest(model, vcov. = vcovCL(model, cluster = cluster, type = "HC0")) %>% broom::tidy()
-  robustCIs <- coefci(model, vcov. = vcovCL(model, cluster = cluster, type = "HC0")) %>% as_tibble(rownames="term")
-  robust <- inner_join(robustSEs, robustCIs, by="term")
+  # using robust standard errors
+  robustSEs <- lmtest::coeftest(model, vcov. = sandwich::vcovCL(model, cluster = cluster, type = "HC0")) %>% broom::tidy(conf.int=FALSE, exponentiate=exponentiate)
+  robustCIs <- lmtest::coefci(model, vcov. = sandwich::vcovCL(model, cluster = cluster, type = "HC0"), level = conf.level) %>% tibble::as_tibble(rownames="term")
+  robust <- dplyr::inner_join(robustSEs, robustCIs, by="term")
 
   robust %>%
     rename(
@@ -209,6 +225,32 @@ tidy_plr <- function(model, conf.int=TRUE, conf.level=0.95, exponentiate=FALSE, 
       or.ul = exp(conf.high),
     )
 
+}
+
+
+glance_plr <- function(model){
+  tibble(
+    AIC=model$aic,
+    df.null=model$df.null,
+    df.residual=model$df.residual,
+    deviance=model$deviance,
+    null.deviance=model$null.deviance,
+    nobs=length(model$y)
+  )
+}
+
+tidypp_plr <- function(model, model_name, cluster, ...){
+  broom.helpers::tidy_plus_plus(
+    model,
+    tidy_fun = tidy_plr,
+    exponentiate=FALSE,
+    cluster = cluster,
+    ...
+  ) %>%
+    add_column(
+      model_name = model_name,
+      .before=1
+    )
 }
 
 
@@ -238,7 +280,20 @@ tidy_custom.glm  <- function(model, conf.int=TRUE, conf.level=0.95, exponentiate
   output
 }
 
+plr_cov <- function(){}
 
+
+plr.predict <- function(x, clcov, newdata){
+  # from https://stackoverflow.com/questions/3790116/using-clustered-covariance-matrix-in-predict-lm
+  if(missing(newdata)){ newdata <- x$model }
+  tt <- terms(x)
+  Terms <- delete.response(tt)
+  m.mat <- model.matrix(Terms, data=newdata)
+  m.coef <- x$coef
+  fit <- as.vector(m.mat %*% x$coef)
+  se.fit <- sqrt( rowSums(m.mat * (m.mat %*% clcov)) )
+  return(list(fit=fit, se.fit=se.fit))
+}
 
 ## functions for IRR confidence intervals ----
 

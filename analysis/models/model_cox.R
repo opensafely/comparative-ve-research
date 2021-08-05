@@ -50,19 +50,22 @@ source(here("analysis", "lib", "survival_functions.R"))
 
 
 # create output directories ----
-fs::dir_create(here("output", outcome, timescale))
+fs::dir_create(here("output", "models", outcome, timescale))
 
 ## create special log file ----
-cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", outcome, timescale, glue("log_{outcome}.txt")), append = FALSE)
+cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, glue("modelcox_log.txt")), append = FALSE)
 ## function to pass additional log text
 logoutput <- function(...){
-  cat(..., file = here("output", outcome, timescale, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", outcome, timescale, glue("log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat(..., file = here("output", "models", outcome, timescale, glue("modelcox_log.txt")), sep = "\n  ", append = TRUE)
+  cat("\n", file = here("output", "models", outcome, timescale, glue("modelcox_log.txt")), sep = "\n  ", append = TRUE)
 }
 
 ## import metadata ----
-var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
+metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
+outcome_var <- metadata_outcomes$outcome_var[metadata_outcomes$outcome==outcome]
 
+
+var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here::here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
@@ -72,87 +75,61 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 # redo tte variables to indclude censoring date (ie use na.censor=FALSE)
 data_tte <- data_cohort %>%
   mutate(
+
+    outcome_date = .[[glue("{outcome_var}")]],
+    censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+
     vax1_date = vax1_date-1, # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
 
-    # time to study end date
-    tte_enddate = tte(vax1_date, end_date, end_date),
+    tte_censor = tte(vax1_date, censor_date, censor_date, na.censor=TRUE),
+    ind_censor = censor_indicator(censor_date, censor_date),
 
-    # time to last follow up day or death or deregistration
-    tte_censor = tte(vax1_date, censor_date, censor_date),
+    tte_outcome = tte(vax1_date, outcome_date, censor_date, na.censor=TRUE),
+    ind_outcome = censor_indicator(outcome_date, censor_date),
 
-    tte_vaxany2 =tte(vax1_date, covid_vax_any_2_date, censor_date, na.censor=TRUE),
-    ind_vaxany2 = censor_indicator(covid_vax_any_2_date, censor_date),
-
-    tte_test =tte(vax1_date, covid_test_date, censor_date, na.censor=TRUE),
-    ind_test = censor_indicator(covid_test_date, censor_date),
-
-    tte_postest = tte(vax1_date, positive_test_date, censor_date, na.censor=TRUE),
-    ind_postest = censor_indicator(positive_test_date, censor_date),
-
-    tte_emergency = tte(vax1_date, emergency_date, censor_date, na.censor=TRUE),
-    ind_emergency = censor_indicator(emergency_date, censor_date),
-
-    tte_covidadmitted = tte(vax1_date, covidadmitted_date, censor_date, na.censor=TRUE),
-    ind_covidadmitted = censor_indicator(covidadmitted_date, censor_date),
-
-    tte_covidcc = tte(vax1_date, covidcc_date, censor_date, na.censor=TRUE),
-    ind_covidcc = censor_indicator(covidcc_date, censor_date),
-
-    tte_coviddeath = tte(vax1_date, coviddeath_date, censor_date, na.censor=TRUE),
-    ind_coviddeath = censor_indicator(coviddeath_date, censor_date),
-
-    tte_noncoviddeath = tte(vax1_date, noncoviddeath_date, censor_date, na.censor=TRUE),
-    ind_noncoviddeath = censor_indicator(noncoviddeath_date, censor_date),
-
-    tte_death = tte(vax1_date, death_date, censor_date, na.censor=TRUE),
-    ind_death = censor_indicator(death_date, censor_date),
-
-    all = factor("all",levels=c("all")),
+    tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE)
 
   )
 
-data_cox <- data_tte %>%
-  mutate(
-    tte_outcome = .[[glue::glue("tte_",outcome)]],
-    ind_outcome = .[[glue::glue("ind_",outcome)]],
-  ) %>%
+data_cox0 <- data_tte %>%
   mutate( # this step converts logical to integer so that model coefficients print nicely in gtsummary methods
-    across(
-      where(is.logical),
-      ~.x*1L
-    )
+    across(where(is.logical), ~.x*1L)
   ) %>%
   mutate(
     week_region = paste0(vax1_week, "__", region),
     vax1_az = (vax1_type=="az")*1
   ) %>%
   filter(
+    ## TODO check if still necessary once cohort extractor categorical bug fixed
     tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
     tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )
 
-stopifnot("there is some unvaccinated person-time" = !any(is.na(data_cox$vax1_type)))
+
+stopifnot("there is some unvaccinated person-time" = !any(is.na(data_cox0$vax1_type)))
 
 ### print dataset size ----
 logoutput(
-  glue("data_cox data size = ", nrow(data_cox)),
-  glue("data_cox memory usage = ", format(object.size(data_cox), units="GB", standard="SI", digits=3L))
+  glue("data_cox0 data size = ", nrow(data_cox0)),
+  glue("data_cox0 memory usage = ", format(object.size(data_cox0), units="GB", standard="SI", digits=3L))
 )
 
 # one row per patient per post-vaccination week
-postvax_time <- data_cox %>%
+postvax_time <- data_cox0 %>%
   select(patient_id) %>%
+  uncount(weights = length(postvaxcuts), .id="id_postvax") %>%
   mutate(
-    fup_day = list(postvaxcuts),
-    timesincevax = map(fup_day, ~droplevels(timesince_cut(.x+0.5, postvaxcuts, "blah")))
+    fup_day = postvaxcuts[id_postvax],
+    timesincevax_pw = timesince_cut(fup_day+0.5, postvaxcuts, "blah")
   ) %>%
-  unnest(c(fup_day, timesincevax))
+  select(patient_id, fup_day, timesincevax_pw)
+
 
 # create dataset that splits follow-up time by
 # time since vaccination (using postvaxcuts cutoffs)
-data_cox_split <- tmerge(
-  data1 = data_cox %>% select(-starts_with("ind_"), -ends_with("_date")),
-  data2 = data_cox,
+data_cox <- tmerge(
+  data1 = data_cox0 %>% select(-starts_with("ind_"), -ends_with("_date")),
+  data2 = data_cox0,
   id = patient_id,
   tstart = 0L,
   tstop = pmin(tte_censor, tte_outcome, na.rm=TRUE),
@@ -162,8 +139,17 @@ data_cox_split <- tmerge(
     data1 = .,
     data2 = postvax_time,
     id = patient_id,
-    timesincevax = tdc(fup_day, timesincevax)
+    timesincevax_pw = tdc(fup_day, timesincevax_pw)
   )
+
+### print dataset size and save ----
+logoutput(
+  glue("data_cox data size = ", nrow(data_cox)),
+  glue("data_cox memory usage = ", format(object.size(data_cox), units="GB", standard="SI", digits=3L))
+)
+
+write_rds(data_cox, here("output", "models", outcome, timescale, "modelcox_data.rds"), compress="gz")
+
 
 
 ## if using calendar timescale ----
@@ -173,13 +159,13 @@ data_cox_split <- tmerge(
 # - no need to adjust for calender time
 if(timescale=="calendar"){
 # convert to calendar timescale
-  data_cox_split <- data_cox_split %>%
+  data_cox <- data_cox %>%
   mutate(
     tstart= tstart + vax1_day - 1,
     tstop= tstop + vax1_day - 1,
   )
 
-  formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az*timesincevax
+  formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az*timesincevax_pw
   formula_spacetime <- . ~ . + strata(region)
 }
 
@@ -191,9 +177,9 @@ if(timescale=="calendar"){
 if(timescale=="timesincevax"){
   # one row per patient per follow-up calendar day
   calendar_time <- data_cox %>%
-    select(patient_id, vax1_day, tte_enddate) %>%
+    select(patient_id, vax1_day, tte_stop) %>%
     mutate(
-      calendar_day = map2(vax1_day, tte_enddate, ~.x:(.y+.x))
+      calendar_day = map2(vax1_day, tte_stop, ~.x:(.y+.x))
     ) %>%
     unnest(c(calendar_day)) %>%
     mutate(
@@ -215,7 +201,7 @@ if(timescale=="timesincevax"){
     filter(first(treatment_day)==treatment_day) %>%
     ungroup()
 
-  data_cox_split <- data_cox_split %>%
+  data_cox <- data_cox %>%
     tmerge(
       data1 = .,
       data2 = treatment_week,
@@ -223,132 +209,92 @@ if(timescale=="timesincevax"){
       calendar_day = tdc(treatment_day, calendar_day)
     )
 
-  formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
-  formula_spacetime <- . ~ . + strata(region) + ns(calendar_day, 4)
+  formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax_pw) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
+  formula_spacetime <- . ~ . + strata(region) * ns(calendar_day, 4)
 }
 
+### model 0 - vaccination + timescale only, no adjustment variables
+### model 1 - minimally adjusted vaccination effect model, stratification by region only
+### model 2 - minimally adjusted vaccination effect model, baseline demographics only
+### model 3 - fully adjusted vaccination effect model, baseline demographics + clinical characteristics
+
+model_names = c(
+  "Unadjusted" = "0",
+  "Adjusting for time" = "1",
+  "Adjusting for time + demographics" = "2",
+  "Adjusting for time + demographics + clinical" = "3"
+)
+
+formula0_pw <- formula_vaxonly
+formula1_pw <- formula_vaxonly %>% update(formula_spacetime)
+formula2_pw <- formula_vaxonly %>% update(formula_spacetime) %>% update(formula_demog)
+formula3_pw <- formula_vaxonly %>% update(formula_spacetime) %>% update(formula_demog) %>% update(formula_comorbs)
 
 opt_control <- coxph.control(iter.max = 30)
 
-### print dataset size ----
-logoutput(
-  glue("data_cox_split data size = ", nrow(data_cox_split)),
-  glue("data_cox_split memory usage = ", format(object.size(data_cox_split), units="GB", standard="SI", digits=3L))
-)
-
-write_rds(data_cox_split, here("output", outcome, timescale, "data_cox_split.rds"))
-
-
-### model 0 - unadjusted vaccination effect model ----
-## no adjustment variables
-cat("  \n")
-cat("model0 \n")
-coxmod0 <- coxph(
-  formula = formula_vaxonly,
-  data = data_cox_split,
-  robust = TRUE,
-  id = patient_id,
-  na.action = "na.fail",
-  control = opt_control
-)
-
-print(warnings())
-logoutput(
-  glue("model0 data size = ", coxmod0$n),
-  glue("model0 memory usage = ", format(object.size(coxmod0), units="GB", standard="SI", digits=3L)),
-  glue("convergence status: ", coxmod0$info[["convergence"]])
-)
-write_rds(coxmod0, here::here("output", outcome, timescale, "modelcox0.rds"), compress="gz")
-model_glance <- broom::glance(coxmod0) %>% mutate(model=0, convergence = coxmod0$info[["convergence"]])
-if(removeobs) rm(coxmod0)
-
-
-### model 1 - minimally adjusted vaccination effect model, stratification by stp only ----
-cat("  \n")
-cat("model1 \n")
-
-coxmod1 <- coxph(
-  formula = formula_vaxonly %>% update(formula_spacetime),
-  data = data_cox_split,
-  robust = TRUE,
-  id = patient_id,
-  na.action = "na.fail",
-  control = opt_control
-)
-
-print(warnings())
-logoutput(
-  glue("model1 data size = ", coxmod1$n),
-  glue("model1 memory usage = ", format(object.size(coxmod1), units="GB", standard="SI", digits=3L)),
-  glue("convergence status: ", coxmod1$info[["convergence"]])
-)
-write_rds(coxmod1, here::here("output", outcome, timescale, "modelcox1.rds"), compress="gz")
-model_glance <- bind_rows(model_glance, broom::glance(coxmod1) %>% mutate(model=1, convergence = coxmod1$info[["convergence"]]))
-if(removeobs) rm(coxmod1)
-
-
-
-
-### model 2 - minimally adjusted vaccination effect model, baseline demographics only ----
-cat("  \n")
-cat("model2 \n")
-
-coxmod2 <- coxph(
-  formula = formula_vaxonly %>% update(formula_spacetime) %>% update(formula_demog),
-  data = data_cox_split,
-  robust = TRUE,
-  id = patient_id,
-  na.action = "na.fail",
-  control = opt_control
-)
-
-print(warnings())
-logoutput(
-  glue("model2 data size = ", coxmod2$n),
-  glue("model2 memory usage = ", format(object.size(coxmod2), units="GB", standard="SI", digits=3L)),
-  glue("convergence status: ", coxmod2$info[["convergence"]])
-)
-write_rds(coxmod2, here::here("output", outcome, timescale, "modelcox2.rds"), compress="gz")
-model_glance <- bind_rows(model_glance, broom::glance(coxmod2) %>% mutate(model=2, convergence = coxmod2$info[["convergence"]]))
-if(removeobs) rm(coxmod2)
-
-
-
-### model 3 - fully adjusted vaccination effect model, baseline demographics + clinical characteristics ----
-cat("  \n")
-cat("model3 \n")
-
-coxmod3 <- coxph(
-  formula = formula_vaxonly %>% update(formula_spacetime) %>% update(formula_demog) %>% update(formula_comorbs),
-  data = data_cox_split,
-  robust = TRUE,
-  id = patient_id,
-  na.action = "na.fail",
-  control = opt_control
-)
-
-print(warnings())
-logoutput(
-  glue("model3 data size = ", coxmod3$n),
-  glue("model3 memory usage = ", format(object.size(coxmod3), units="GB", standard="SI", digits=3L)),
-  glue("convergence status: ", coxmod3$info[["convergence"]])
-)
-write_rds(coxmod3, here::here("output", outcome, timescale, "modelcox3.rds"), compress="gz")
-model_glance <- bind_rows(model_glance, broom::glance(coxmod3) %>% mutate(model=3, convergence = coxmod3$info[["convergence"]]))
-if(removeobs) rm(coxmod3)
-
-
-## print warnings
-print(warnings())
-cat("  \n")
-print(gc(reset=TRUE))
-
-
-model_glance <- model_glance %>%
-  select(
-    model, convergence,
-    everything()
+cox_model <- function(number, formula_cox){
+  coxmod <- coxph(
+    formula = formula_cox,
+    data = data_cox,
+    robust = TRUE,
+    id = patient_id,
+    na.action = "na.fail",
+    control = opt_control
   )
 
-write_csv(model_glance, here::here("output", outcome, timescale, glue("glance_{outcome}.csv")))
+  print(warnings())
+  logoutput(
+    glue("model{number} data size = ", coxmod$n),
+    glue("model{number} memory usage = ", format(object.size(coxmod), units="GB", standard="SI", digits=3L)),
+    glue("convergence status: ", coxmod$info[["convergence"]])
+  )
+
+  tidy <-
+    broom.helpers::tidy_plus_plus(
+      coxmod,
+      exponentiate = FALSE
+    ) %>%
+    add_column(
+      model = number,
+      .before=1
+    )
+
+  glance <-
+    glance(coxmod) %>%
+    add_column(
+    model = number,
+    convergence = coxmod$info[["convergence"]],
+    ram = format(object.size(coxmod), units="GB", standard="SI", digits=3L),
+    .before = 1
+  )
+
+  coxmod$data <- NULL
+  write_rds(coxmod, here("output", "models", outcome, timescale, glue("modelcox_model{number}.rds")), compress="gz")
+
+
+  lst(glance, tidy)
+}
+
+
+summary0 <- cox_model(0, formula0_pw)
+summary1 <- cox_model(1, formula1_pw)
+summary2 <- cox_model(2, formula2_pw)
+summary3 <- cox_model(3, formula3_pw)
+
+
+# combine results
+model_glance <-
+  bind_rows(summary0$glance, summary1$glance, summary2$glance, summary3$glance) %>%
+  mutate(
+    model_name = fct_recode(as.character(model), !!!model_names),
+    outcome = outcome
+  )
+write_csv(model_glance, here::here("output", "models", outcome, timescale, glue("modelcox_glance.csv")))
+
+model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$tidy) %>%
+  mutate(
+    model_name = fct_recode(as.character(model), !!!model_names),
+    outcome = outcome
+  )
+write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelcox_tidy.csv")))
 

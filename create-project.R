@@ -65,41 +65,41 @@ action <- function(
 #comment("blah")
 
 ## model action function ----
-action_model <- function(
-  outcome, timescale
+action_model<- function(
+  outcome, timescale, modeltype
 ){
   action(
-    name = glue("model_{outcome}_{timescale}"),
-    run = glue("r:latest analysis/models/model_cox.R"),
+    name = glue("model_{outcome}_{timescale}_{modeltype}"),
+    run = glue("r:latest analysis/models/model_{modeltype}.R"),
     arguments = c(outcome, timescale),
     needs = list("design", "data_selection"),
     highly_sensitive = list(
-      data = glue("output/{outcome}/{timescale}/data_cox_split.rds"),
-      models = glue("output/{outcome}/{timescale}/model*.rds")
+      rds = glue("output/models/{outcome}/{timescale}/model{modeltype}*.rds")
     ),
     moderately_sensitive = list(
-      logs = glue("output/{outcome}/{timescale}/log*.txt"),
-      glance = glue("output/{outcome}/{timescale}/glance*.csv")
+      txt = glue("output/models/{outcome}/{timescale}/model{modeltype}*.txt"),
+      csv = glue("output/models/{outcome}/{timescale}/model{modeltype}*.csv")
     )
   )
 }
 
+
 ## report action function ----
 action_report <- function(
-  outcome, timescale
+  outcome, timescale, modeltype
 ){
   action(
-    name = glue("report_{outcome}_{timescale}"),
-    run = glue("r:latest analysis/models/report_cox.R"),
+    name = glue("report_{outcome}_{timescale}_{modeltype}"),
+    run = glue("r:latest analysis/models/report_{modeltype}.R"),
     arguments = c(outcome, timescale),
-    needs = list("design", glue("model_{outcome}_{timescale}")),
+    needs = list("design", glue("model_{outcome}_{timescale}_{modeltype}")),
     highly_sensitive = list(
-      rds = glue("output/{outcome}/{timescale}/effect*.rds")
+      rds = glue("output/models/{outcome}/{timescale}/report{modeltype}_*.rds")
     ),
     moderately_sensitive = list(
-      svg = glue("output/{outcome}/{timescale}/effect*.svg"),
-      png = glue("output/{outcome}/{timescale}/effect*.png"),
-      csv = glue("output/{outcome}/{timescale}/effect*.csv")
+      csv = glue("output/models/{outcome}/{timescale}/report{modeltype}_*.csv"),
+      svg = glue("output/models/{outcome}/{timescale}/report{modeltype}_*.svg"),
+      png = glue("output/models/{outcome}/{timescale}/report{modeltype}_*.png")
     )
   )
 }
@@ -260,30 +260,55 @@ actions_list <- splice(
   ),
 
 
-  action_model("test", "timesincevax"),
-  action_report("test", "timesincevax"),
-  action_model("test", "calendar"),
-  action_report("test", "calendar"),
+  action_model("test", "timesincevax", "cox"),
+  action_report("test", "timesincevax", "cox"),
+  action_model("test", "calendar", "cox"),
+  action_report("test", "calendar", "cox"),
 
-  action_model("postest", "timesincevax"),
-  action_report("postest", "timesincevax"),
-  action_model("postest", "calendar"),
-  action_report("postest", "calendar"),
+  action_model("postest", "timesincevax", "cox"),
+  action_report("postest", "timesincevax", "cox"),
+  action_model("postest", "calendar", "cox"),
+  action_report("postest", "calendar", "cox"),
 
-  action_model("emergency", "timesincevax"),
-  action_report("emergency", "timesincevax"),
-  action_model("emergency", "calendar"),
-  action_report("emergency", "calendar"),
+  action_model("emergency", "timesincevax", "cox"),
+  action_report("emergency", "timesincevax", "cox"),
+  action_model("emergency", "calendar", "cox"),
+  action_report("emergency", "calendar", "cox"),
 
-  action_model("covidadmitted", "timesincevax"),
-  action_report("covidadmitted", "timesincevax"),
-  action_model("covidadmitted", "calendar"),
-  action_report("covidadmitted", "calendar"),
+  action_model("covidadmitted", "timesincevax", "cox"),
+  action_report("covidadmitted", "timesincevax", "cox"),
+  action_model("covidadmitted", "calendar", "cox"),
+  action_report("covidadmitted", "calendar", "cox"),
 
-  # action_model("covidcc", "timesincevax"),
-  # action_report("covidcc", "timesincevax"),
-  # action_model("covidcc", "calendar"),
-  # action_report("covidcc", "calendar"),
+  # action_model("covidcc", "timesincevax", "cox"),
+  # action_report("covidcc", "timesincevax", "cox"),
+  # action_model("covidcc", "calendar", "cox"),
+  # action_report("covidcc", "calendar", "cox"),
+
+  action_model("test", "timesincevax", "plr"),
+  action_report("test", "timesincevax", "plr"),
+  action_model("test", "calendar", "plr"),
+  action_report("test", "calendar", "plr"),
+
+  action_model("postest", "timesincevax", "plr"),
+  action_report("postest", "timesincevax", "plr"),
+  action_model("postest", "calendar", "plr"),
+  action_report("postest", "calendar", "plr"),
+
+  action_model("emergency", "timesincevax", "plr"),
+  action_report("emergency", "timesincevax", "plr"),
+  action_model("emergency", "calendar", "plr"),
+  action_report("emergency", "calendar", "plr"),
+
+  action_model("covidadmitted", "timesincevax", "plr"),
+  action_report("covidadmitted", "timesincevax", "plr"),
+  action_model("covidadmitted", "calendar", "plr"),
+  action_report("covidadmitted", "calendar", "plr"),
+
+  # action_model("covidcc", "timesincevax", "plr"),
+  # action_report("covidcc", "timesincevax", "plr"),
+  # action_model("covidcc", "calendar", "plr"),
+  # action_report("covidcc", "calendar", "plr"),
 
 
   action(
@@ -293,7 +318,7 @@ actions_list <- splice(
       "design", "data_selection",
       "descr_table1", "descr_irr",
       "descr_km",
-      as.list(glue("report_{outcome}_{timescale}", outcome=rep(c("test", "postest", "emergency", "covidadmitted"),each=2), timescale = rep(c("timesincevax", "calendar"), 4)))
+      as.list(glue("report_{outcome}_{timescale}_{modeltype}", outcome=rep(c("test", "postest", "emergency", "covidadmitted"),each=2), timescale = rep(c("timesincevax", "calendar"), 4), modeltype="cox"))
     ),
     moderately_sensitive = list(
       html = "output/effectiveness_report.html"

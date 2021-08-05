@@ -130,213 +130,405 @@ actions:
         png: output/descriptive/km/plot_survival*.png
         svg: output/descriptive/km/plot_survival*.svg
 
-  model_test_timesincevax:
+  model_test_timesincevax_cox:
     run: r:latest analysis/models/model_cox.R test timesincevax
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/test/timesincevax/data_cox_split.rds
-        models: output/test/timesincevax/model*.rds
+        rds: output/models/test/timesincevax/modelcox*.rds
       moderately_sensitive:
-        logs: output/test/timesincevax/log*.txt
-        glance: output/test/timesincevax/glance*.csv
+        txt: output/models/test/timesincevax/modelcox*.txt
+        csv: output/models/test/timesincevax/modelcox*.csv
 
-  report_test_timesincevax:
+  report_test_timesincevax_cox:
     run: r:latest analysis/models/report_cox.R test timesincevax
     needs:
     - design
-    - model_test_timesincevax
+    - model_test_timesincevax_cox
     outputs:
       highly_sensitive:
-        rds: output/test/timesincevax/effect*.rds
+        rds: output/models/test/timesincevax/reportcox_*.rds
       moderately_sensitive:
-        svg: output/test/timesincevax/effect*.svg
-        png: output/test/timesincevax/effect*.png
-        csv: output/test/timesincevax/effect*.csv
+        csv: output/models/test/timesincevax/reportcox_*.csv
+        svg: output/models/test/timesincevax/reportcox_*.svg
+        png: output/models/test/timesincevax/reportcox_*.png
 
-  model_test_calendar:
+  model_test_calendar_cox:
     run: r:latest analysis/models/model_cox.R test calendar
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/test/calendar/data_cox_split.rds
-        models: output/test/calendar/model*.rds
+        rds: output/models/test/calendar/modelcox*.rds
       moderately_sensitive:
-        logs: output/test/calendar/log*.txt
-        glance: output/test/calendar/glance*.csv
+        txt: output/models/test/calendar/modelcox*.txt
+        csv: output/models/test/calendar/modelcox*.csv
 
-  report_test_calendar:
+  report_test_calendar_cox:
     run: r:latest analysis/models/report_cox.R test calendar
     needs:
     - design
-    - model_test_calendar
+    - model_test_calendar_cox
     outputs:
       highly_sensitive:
-        rds: output/test/calendar/effect*.rds
+        rds: output/models/test/calendar/reportcox_*.rds
       moderately_sensitive:
-        svg: output/test/calendar/effect*.svg
-        png: output/test/calendar/effect*.png
-        csv: output/test/calendar/effect*.csv
+        csv: output/models/test/calendar/reportcox_*.csv
+        svg: output/models/test/calendar/reportcox_*.svg
+        png: output/models/test/calendar/reportcox_*.png
 
-  model_postest_timesincevax:
+  model_postest_timesincevax_cox:
     run: r:latest analysis/models/model_cox.R postest timesincevax
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/postest/timesincevax/data_cox_split.rds
-        models: output/postest/timesincevax/model*.rds
+        rds: output/models/postest/timesincevax/modelcox*.rds
       moderately_sensitive:
-        logs: output/postest/timesincevax/log*.txt
-        glance: output/postest/timesincevax/glance*.csv
+        txt: output/models/postest/timesincevax/modelcox*.txt
+        csv: output/models/postest/timesincevax/modelcox*.csv
 
-  report_postest_timesincevax:
+  report_postest_timesincevax_cox:
     run: r:latest analysis/models/report_cox.R postest timesincevax
     needs:
     - design
-    - model_postest_timesincevax
+    - model_postest_timesincevax_cox
     outputs:
       highly_sensitive:
-        rds: output/postest/timesincevax/effect*.rds
+        rds: output/models/postest/timesincevax/reportcox_*.rds
       moderately_sensitive:
-        svg: output/postest/timesincevax/effect*.svg
-        png: output/postest/timesincevax/effect*.png
-        csv: output/postest/timesincevax/effect*.csv
+        csv: output/models/postest/timesincevax/reportcox_*.csv
+        svg: output/models/postest/timesincevax/reportcox_*.svg
+        png: output/models/postest/timesincevax/reportcox_*.png
 
-  model_postest_calendar:
+  model_postest_calendar_cox:
     run: r:latest analysis/models/model_cox.R postest calendar
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/postest/calendar/data_cox_split.rds
-        models: output/postest/calendar/model*.rds
+        rds: output/models/postest/calendar/modelcox*.rds
       moderately_sensitive:
-        logs: output/postest/calendar/log*.txt
-        glance: output/postest/calendar/glance*.csv
+        txt: output/models/postest/calendar/modelcox*.txt
+        csv: output/models/postest/calendar/modelcox*.csv
 
-  report_postest_calendar:
+  report_postest_calendar_cox:
     run: r:latest analysis/models/report_cox.R postest calendar
     needs:
     - design
-    - model_postest_calendar
+    - model_postest_calendar_cox
     outputs:
       highly_sensitive:
-        rds: output/postest/calendar/effect*.rds
+        rds: output/models/postest/calendar/reportcox_*.rds
       moderately_sensitive:
-        svg: output/postest/calendar/effect*.svg
-        png: output/postest/calendar/effect*.png
-        csv: output/postest/calendar/effect*.csv
+        csv: output/models/postest/calendar/reportcox_*.csv
+        svg: output/models/postest/calendar/reportcox_*.svg
+        png: output/models/postest/calendar/reportcox_*.png
 
-  model_emergency_timesincevax:
+  model_emergency_timesincevax_cox:
     run: r:latest analysis/models/model_cox.R emergency timesincevax
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/emergency/timesincevax/data_cox_split.rds
-        models: output/emergency/timesincevax/model*.rds
+        rds: output/models/emergency/timesincevax/modelcox*.rds
       moderately_sensitive:
-        logs: output/emergency/timesincevax/log*.txt
-        glance: output/emergency/timesincevax/glance*.csv
+        txt: output/models/emergency/timesincevax/modelcox*.txt
+        csv: output/models/emergency/timesincevax/modelcox*.csv
 
-  report_emergency_timesincevax:
+  report_emergency_timesincevax_cox:
     run: r:latest analysis/models/report_cox.R emergency timesincevax
     needs:
     - design
-    - model_emergency_timesincevax
+    - model_emergency_timesincevax_cox
     outputs:
       highly_sensitive:
-        rds: output/emergency/timesincevax/effect*.rds
+        rds: output/models/emergency/timesincevax/reportcox_*.rds
       moderately_sensitive:
-        svg: output/emergency/timesincevax/effect*.svg
-        png: output/emergency/timesincevax/effect*.png
-        csv: output/emergency/timesincevax/effect*.csv
+        csv: output/models/emergency/timesincevax/reportcox_*.csv
+        svg: output/models/emergency/timesincevax/reportcox_*.svg
+        png: output/models/emergency/timesincevax/reportcox_*.png
 
-  model_emergency_calendar:
+  model_emergency_calendar_cox:
     run: r:latest analysis/models/model_cox.R emergency calendar
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/emergency/calendar/data_cox_split.rds
-        models: output/emergency/calendar/model*.rds
+        rds: output/models/emergency/calendar/modelcox*.rds
       moderately_sensitive:
-        logs: output/emergency/calendar/log*.txt
-        glance: output/emergency/calendar/glance*.csv
+        txt: output/models/emergency/calendar/modelcox*.txt
+        csv: output/models/emergency/calendar/modelcox*.csv
 
-  report_emergency_calendar:
+  report_emergency_calendar_cox:
     run: r:latest analysis/models/report_cox.R emergency calendar
     needs:
     - design
-    - model_emergency_calendar
+    - model_emergency_calendar_cox
     outputs:
       highly_sensitive:
-        rds: output/emergency/calendar/effect*.rds
+        rds: output/models/emergency/calendar/reportcox_*.rds
       moderately_sensitive:
-        svg: output/emergency/calendar/effect*.svg
-        png: output/emergency/calendar/effect*.png
-        csv: output/emergency/calendar/effect*.csv
+        csv: output/models/emergency/calendar/reportcox_*.csv
+        svg: output/models/emergency/calendar/reportcox_*.svg
+        png: output/models/emergency/calendar/reportcox_*.png
 
-  model_covidadmitted_timesincevax:
+  model_covidadmitted_timesincevax_cox:
     run: r:latest analysis/models/model_cox.R covidadmitted timesincevax
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/covidadmitted/timesincevax/data_cox_split.rds
-        models: output/covidadmitted/timesincevax/model*.rds
+        rds: output/models/covidadmitted/timesincevax/modelcox*.rds
       moderately_sensitive:
-        logs: output/covidadmitted/timesincevax/log*.txt
-        glance: output/covidadmitted/timesincevax/glance*.csv
+        txt: output/models/covidadmitted/timesincevax/modelcox*.txt
+        csv: output/models/covidadmitted/timesincevax/modelcox*.csv
 
-  report_covidadmitted_timesincevax:
+  report_covidadmitted_timesincevax_cox:
     run: r:latest analysis/models/report_cox.R covidadmitted timesincevax
     needs:
     - design
-    - model_covidadmitted_timesincevax
+    - model_covidadmitted_timesincevax_cox
     outputs:
       highly_sensitive:
-        rds: output/covidadmitted/timesincevax/effect*.rds
+        rds: output/models/covidadmitted/timesincevax/reportcox_*.rds
       moderately_sensitive:
-        svg: output/covidadmitted/timesincevax/effect*.svg
-        png: output/covidadmitted/timesincevax/effect*.png
-        csv: output/covidadmitted/timesincevax/effect*.csv
+        csv: output/models/covidadmitted/timesincevax/reportcox_*.csv
+        svg: output/models/covidadmitted/timesincevax/reportcox_*.svg
+        png: output/models/covidadmitted/timesincevax/reportcox_*.png
 
-  model_covidadmitted_calendar:
+  model_covidadmitted_calendar_cox:
     run: r:latest analysis/models/model_cox.R covidadmitted calendar
     needs:
     - design
     - data_selection
     outputs:
       highly_sensitive:
-        data: output/covidadmitted/calendar/data_cox_split.rds
-        models: output/covidadmitted/calendar/model*.rds
+        rds: output/models/covidadmitted/calendar/modelcox*.rds
       moderately_sensitive:
-        logs: output/covidadmitted/calendar/log*.txt
-        glance: output/covidadmitted/calendar/glance*.csv
+        txt: output/models/covidadmitted/calendar/modelcox*.txt
+        csv: output/models/covidadmitted/calendar/modelcox*.csv
 
-  report_covidadmitted_calendar:
+  report_covidadmitted_calendar_cox:
     run: r:latest analysis/models/report_cox.R covidadmitted calendar
     needs:
     - design
-    - model_covidadmitted_calendar
+    - model_covidadmitted_calendar_cox
     outputs:
       highly_sensitive:
-        rds: output/covidadmitted/calendar/effect*.rds
+        rds: output/models/covidadmitted/calendar/reportcox_*.rds
       moderately_sensitive:
-        svg: output/covidadmitted/calendar/effect*.svg
-        png: output/covidadmitted/calendar/effect*.png
-        csv: output/covidadmitted/calendar/effect*.csv
+        csv: output/models/covidadmitted/calendar/reportcox_*.csv
+        svg: output/models/covidadmitted/calendar/reportcox_*.svg
+        png: output/models/covidadmitted/calendar/reportcox_*.png
+
+  model_test_timesincevax_plr:
+    run: r:latest analysis/models/model_plr.R test timesincevax
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/test/timesincevax/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/test/timesincevax/modelplr*.txt
+        csv: output/models/test/timesincevax/modelplr*.csv
+
+  report_test_timesincevax_plr:
+    run: r:latest analysis/models/report_plr.R test timesincevax
+    needs:
+    - design
+    - model_test_timesincevax_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/test/timesincevax/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/test/timesincevax/reportplr_*.csv
+        svg: output/models/test/timesincevax/reportplr_*.svg
+        png: output/models/test/timesincevax/reportplr_*.png
+
+  model_test_calendar_plr:
+    run: r:latest analysis/models/model_plr.R test calendar
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/test/calendar/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/test/calendar/modelplr*.txt
+        csv: output/models/test/calendar/modelplr*.csv
+
+  report_test_calendar_plr:
+    run: r:latest analysis/models/report_plr.R test calendar
+    needs:
+    - design
+    - model_test_calendar_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/test/calendar/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/test/calendar/reportplr_*.csv
+        svg: output/models/test/calendar/reportplr_*.svg
+        png: output/models/test/calendar/reportplr_*.png
+
+  model_postest_timesincevax_plr:
+    run: r:latest analysis/models/model_plr.R postest timesincevax
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/timesincevax/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/postest/timesincevax/modelplr*.txt
+        csv: output/models/postest/timesincevax/modelplr*.csv
+
+  report_postest_timesincevax_plr:
+    run: r:latest analysis/models/report_plr.R postest timesincevax
+    needs:
+    - design
+    - model_postest_timesincevax_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/timesincevax/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/postest/timesincevax/reportplr_*.csv
+        svg: output/models/postest/timesincevax/reportplr_*.svg
+        png: output/models/postest/timesincevax/reportplr_*.png
+
+  model_postest_calendar_plr:
+    run: r:latest analysis/models/model_plr.R postest calendar
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/calendar/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/postest/calendar/modelplr*.txt
+        csv: output/models/postest/calendar/modelplr*.csv
+
+  report_postest_calendar_plr:
+    run: r:latest analysis/models/report_plr.R postest calendar
+    needs:
+    - design
+    - model_postest_calendar_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/calendar/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/postest/calendar/reportplr_*.csv
+        svg: output/models/postest/calendar/reportplr_*.svg
+        png: output/models/postest/calendar/reportplr_*.png
+
+  model_emergency_timesincevax_plr:
+    run: r:latest analysis/models/model_plr.R emergency timesincevax
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/emergency/timesincevax/modelplr*.txt
+        csv: output/models/emergency/timesincevax/modelplr*.csv
+
+  report_emergency_timesincevax_plr:
+    run: r:latest analysis/models/report_plr.R emergency timesincevax
+    needs:
+    - design
+    - model_emergency_timesincevax_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/emergency/timesincevax/reportplr_*.csv
+        svg: output/models/emergency/timesincevax/reportplr_*.svg
+        png: output/models/emergency/timesincevax/reportplr_*.png
+
+  model_emergency_calendar_plr:
+    run: r:latest analysis/models/model_plr.R emergency calendar
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/calendar/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/emergency/calendar/modelplr*.txt
+        csv: output/models/emergency/calendar/modelplr*.csv
+
+  report_emergency_calendar_plr:
+    run: r:latest analysis/models/report_plr.R emergency calendar
+    needs:
+    - design
+    - model_emergency_calendar_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/calendar/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/emergency/calendar/reportplr_*.csv
+        svg: output/models/emergency/calendar/reportplr_*.svg
+        png: output/models/emergency/calendar/reportplr_*.png
+
+  model_covidadmitted_timesincevax_plr:
+    run: r:latest analysis/models/model_plr.R covidadmitted timesincevax
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/timesincevax/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/covidadmitted/timesincevax/modelplr*.txt
+        csv: output/models/covidadmitted/timesincevax/modelplr*.csv
+
+  report_covidadmitted_timesincevax_plr:
+    run: r:latest analysis/models/report_plr.R covidadmitted timesincevax
+    needs:
+    - design
+    - model_covidadmitted_timesincevax_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/timesincevax/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/covidadmitted/timesincevax/reportplr_*.csv
+        svg: output/models/covidadmitted/timesincevax/reportplr_*.svg
+        png: output/models/covidadmitted/timesincevax/reportplr_*.png
+
+  model_covidadmitted_calendar_plr:
+    run: r:latest analysis/models/model_plr.R covidadmitted calendar
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/calendar/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/covidadmitted/calendar/modelplr*.txt
+        csv: output/models/covidadmitted/calendar/modelplr*.csv
+
+  report_covidadmitted_calendar_plr:
+    run: r:latest analysis/models/report_plr.R covidadmitted calendar
+    needs:
+    - design
+    - model_covidadmitted_calendar_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/calendar/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/covidadmitted/calendar/reportplr_*.csv
+        svg: output/models/covidadmitted/calendar/reportplr_*.svg
+        png: output/models/covidadmitted/calendar/reportplr_*.png
 
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",
@@ -347,14 +539,14 @@ actions:
     - descr_table1
     - descr_irr
     - descr_km
-    - report_test_timesincevax
-    - report_test_calendar
-    - report_postest_timesincevax
-    - report_postest_calendar
-    - report_emergency_timesincevax
-    - report_emergency_calendar
-    - report_covidadmitted_timesincevax
-    - report_covidadmitted_calendar
+    - report_test_timesincevax_cox
+    - report_test_calendar_cox
+    - report_postest_timesincevax_cox
+    - report_postest_calendar_cox
+    - report_emergency_timesincevax_cox
+    - report_emergency_calendar_cox
+    - report_covidadmitted_timesincevax_cox
+    - report_covidadmitted_calendar_cox
     outputs:
       moderately_sensitive:
         html: output/effectiveness_report.html
