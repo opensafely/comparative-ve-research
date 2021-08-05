@@ -33,11 +33,10 @@ data_criteria <- data_processed %>%
     has_imd = !is.na(imd),
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
-    #has_follow_up_previous_year,
     not_cev = !cev,
-    no_prior_vaccine = is.na(covid_vax_any_0_date) & is.na(covid_vax_moderna_1_date),
-    vax_beforeenddate = vax1_date <= end_date,
-    vax1_4janonwards = vax1_date>=start_date_az,
+    knownvaxdate = vax1_date>=as.Date("2020-01-01"),
+    vax1_beforeenddate = vax1_date <= end_date,
+    vax1_afterstartdate = vax1_date >= start_date_az,
 
 
     include = (
@@ -45,14 +44,14 @@ data_criteria <- data_processed %>%
         #has_follow_up_previous_year &
         #no_unclear_brand &
         not_cev &
-        no_prior_vaccine &
-        vax_beforeenddate
+        knownvaxdate &
+        vax1_beforeenddate
     ),
   )
 
 data_cohort_allvax <- data_criteria %>% filter(include) %>% droplevels()
 write_rds(data_cohort_allvax, here("output", "data", "data_cohort_allvax.rds"), compress="gz")
-data_cohort <- data_criteria %>% filter(include & vax1_4janonwards) %>% droplevels()
+data_cohort <- data_criteria %>% filter(include & vax1_beforeenddate) %>% droplevels()
 write_rds(data_cohort, here("output", "data", "data_cohort.rds"), compress="gz")
 
 data_flowchart <- data_criteria %>%
@@ -61,9 +60,9 @@ data_flowchart <- data_criteria %>%
     #c1_1yearfup = c0_all & (has_follow_up_previous_year),
     c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
     c2_notcev = c1_notmissing & not_cev,
-    c3_nopriorvaccine = c2_notcev & (no_prior_vaccine),
-    c4_enddate = c3_nopriorvaccine & vax_beforeenddate,
-    c5_4jan = c4_enddate & vax1_4janonwards,
+    c3_knownvaxdate = c2_notcev & (knownvaxdate),
+    c4_enddate = c3_knownvaxdate & vax1_beforeenddate,
+    c5_4jan = c4_enddate & vax1_afterstartdate,
   ) %>%
   summarise(
     across(.fns=sum)
@@ -80,11 +79,11 @@ data_flowchart <- data_criteria %>%
     pct_step = n / lag(n),
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
-      crit == "c0" ~ "All HCWs aged 16-65",
-      crit == "c1" ~ "  with no missing info for age, IMD, ethnicity, region",
+      crit == "c0" ~ "All vaccinated HCWs aged 16-65",
+      crit == "c1" ~ "  with no missing demographic information",
       crit == "c2" ~ "  who are not clinically extremely vulnerable",
-      crit == "c3" ~ "  with no vaccination record prior to the national roll-out",
-      crit == "c4" ~ "  with vaccination on or before the study end date",
+      crit == "c3" ~ "  with known vaccination date",
+      crit == "c4" ~ "  with vaccination on or before study end date",
       crit == "c5" ~ "  with vaccination on or after 4 January 2021",
       TRUE ~ NA_character_
     )

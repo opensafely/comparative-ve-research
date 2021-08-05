@@ -18,11 +18,11 @@ fs::dir_create(here("output", "data"))
 
 metadata_outcomes <- tribble(
   ~outcome, ~outcome_var, ~outcome_descr,
-  "test", "covid_test_1_date", "SARS-CoV-2 test",
-  "postest", "positive_test_1_date", "Positive SARS-CoV-2 test",
-  "emergency", "emergency_1_date", "A&E attendance",
-  "covidadmitted", "covidadmitted_1_date", "COVID-19 hospitalisation",
-  "covidcc", "covidadmitted_1_date", "COVID-19 critical care",
+  "test", "covid_test_date", "SARS-CoV-2 test",
+  "postest", "positive_test_date", "Positive SARS-CoV-2 test",
+  "emergency", "emergency_date", "A&E attendance",
+  "covidadmitted", "covidadmitted_date", "COVID-19 hospitalisation",
+  "covidcc", "covidcc_date", "COVID-19 critical care",
   "coviddeath", "coviddeath_date", "COVID-19 death",
   "noncoviddeath", "noncoviddeath_date", "Non-COVID-19 death",
   "death", "death_date", "Any death",

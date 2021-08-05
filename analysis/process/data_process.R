@@ -98,7 +98,6 @@ data_processed <- data_extract %>%
     start_date_pfizer = as.Date(gbl_vars$start_date_pfizer),
     start_date_az = as.Date(gbl_vars$start_date_az),
     end_date = as.Date(gbl_vars$end_date),
-    censor_date = pmin(end_date, dereg_date, death_date, na.rm=TRUE),
 
     ageband = cut(
       age,
@@ -128,7 +127,16 @@ data_processed <- data_extract %>%
 
     ),
 
-
+    region = fct_collapse(
+      region,
+      `East of England` = "East",
+      `London` = "London",
+      `Midlands` = c("West Midlands", "East Midlands"),
+      `North East and Yorkshire` = c("Yorkshire and The Humber", "North East"),
+      `North West` = "North West",
+      `South East` = "South East",
+      `South West` = "South West"
+    ),
 
     imd = as.integer(as.character(imd)), # imd is a factor, so convert to character then integer to get underlying values
     imd = if_else(imd<=0, NA_integer_, imd),
