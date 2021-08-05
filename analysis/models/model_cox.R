@@ -260,7 +260,7 @@ cox_model <- function(number, formula_cox){
     )
 
   glance <-
-    glance(coxmod) %>%
+    broom::glance(coxmod) %>%
     add_column(
     model = number,
     convergence = coxmod$info[["convergence"]],
@@ -297,4 +297,5 @@ model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$ti
     outcome = outcome
   )
 write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelcox_tidy.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelcox_tidy.rds")))
 

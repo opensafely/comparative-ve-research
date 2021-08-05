@@ -90,9 +90,10 @@ data_plr <- read_rds(here("output", "models", outcome, timescale, "modelplr_data
 
 ## report models ----
 
-tidy_plr <- read_rds(here("output", "models", outcome, timescale, "modelplr_tidy_pw.rds"))
 
-effectsplr <- tidy_plr %>%
+tidy_plr_pw <- read_rds(here("output", "models", outcome, timescale, "modelplr_tidy_pw.rds"))
+
+effectsplr <- tidy_plr_pw %>%
   filter(str_detect(term, fixed("vax1_az"))) %>%
   mutate(
     pw=str_replace(term, pattern=fixed("vax1_az:timesincevax_pw"), ""),
@@ -155,6 +156,12 @@ ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_eff
 
 ## risk-adjusted survival curves ----
 
+
+plrmod0 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model0pw.rds")))
+plrmod1 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model1pw.rds")))
+plrmod2 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model2pw.rds")))
+plrmod3 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model3pw.rds")))
+
 survival_az <- data_plr %>%
   mutate(vax1_az=1L) %>%
   transmute(
@@ -162,7 +169,9 @@ survival_az <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
+    outcome_prob0=predict(plrmod0, newdata=., type="response"),
     outcome_prob1=predict(plrmod1, newdata=., type="response"),
+    outcome_prob2=predict(plrmod1, newdata=., type="response"),
     outcome_prob3=predict(plrmod3, newdata=., type="response"),
   )
 
@@ -173,7 +182,9 @@ survival_pfizer <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
+    outcome_prob0=predict(plrmod0, newdata=., type="response"),
     outcome_prob1=predict(plrmod1, newdata=., type="response"),
+    outcome_prob2=predict(plrmod1, newdata=., type="response"),
     outcome_prob3=predict(plrmod3, newdata=., type="response"),
   )
 
@@ -183,28 +194,43 @@ curves <- bind_rows(survival_az, survival_pfizer) %>%
 #marginalise over all patients
 group_by(vax1_az, tstop) %>%
   summarise(
+    outcome_prob0=mean(outcome_prob0),
     outcome_prob1=mean(outcome_prob1),
+    outcome_prob2=mean(outcome_prob2),
     outcome_prob3=mean(outcome_prob3),
   ) %>%
-  arrange(vax1_az, tstop) %>%
-  group_by(vax1_az) %>%
+  pivot_longer(
+    cols=starts_with("outcome_prob"),
+    names_to="model",
+    names_pattern="outcome_prob(\\d+$)",
+    values_to="outcome_prob"
+  ) %>%
+  arrange(model, vax1_az, tstop) %>%
+  group_by(model, vax1_az) %>%
   mutate(
-    survival3 = cumprod(1-outcome_prob3),
+    survival = cumprod(1-outcome_prob),
+    haz = (lag(survival,n=1,default=1)-survival)/survival
   ) %>%
   ungroup() %>%
   add_row(
-    vax1_az=c(0L, 1L),
+    model = rep(c("0", "1", "2", "3"), each=2),
+    vax1_az = rep(c(0L, 1L), times=4),
     tstop=0,
-    outcome_prob3 =0,
-    survival3 = 1,
+    outcome_prob =0,
+    survival = 1,
+    haz = 0
   ) %>%
   mutate(
+    model = as.integer(model),
     vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2"),
   ) %>%
-  arrange(vax1_az, tstop)
+  left_join(
+    tidy_plr_pw %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
+  ) %>%
+  arrange(model, vax1_az, tstop)
 
-cml_inc <- ggplot(curves)+
-  geom_step(aes(x=tstop, y=1-survival3, group=vax1_az_descr, colour=vax1_az_descr))+
+cml_inc <- ggplot(curves %>% filter(model=="3"))+
+  geom_step(aes(x=tstop, y=1-survival, group=vax1_az_descr, colour=vax1_az_descr))+
   scale_x_continuous(
     breaks = seq(0,7*52,by=14),
     expand = expansion(0)
@@ -224,10 +250,11 @@ cml_inc <- ggplot(curves)+
     legend.justification = c(0,1),
     axis.text.x.top=element_text(hjust=0)
   )
-cml_inc
 
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.svg")), cml_inc, width=20, height=15, units="cm")
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.png")), cml_inc, width=20, height=15, units="cm")
+
+
 
 
 
@@ -238,10 +265,10 @@ ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cml
 tidy_plr_ns <- read_csv(here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.csv")))
 
 
-plrmod0 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model0_ns.csv")))
-plrmod1 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model1_ns.csv")))
-plrmod2 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model2_ns.csv")))
-plrmod3 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model3_ns.csv")))
+plrmod0 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model0ns.rds")))
+plrmod1 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model1ns.rds")))
+plrmod2 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model2ns.rds")))
+plrmod3 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model3ns.rds")))
 
 
 ## risk-adjusted survival curves ----
@@ -276,10 +303,10 @@ survival_pfizer <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
-    predict0=predict(plrmod0, newdata=., type="response"),
-    predict1=predict(plrmod1, newdata=., type="response"),
-    predict2=predict(plrmod2, newdata=., type="response"),
-    predict3=predict(plrmod3, newdata=., type="response"),
+    outcome_prob0=predict(plrmod0, newdata=., type="response"),
+    outcome_prob1=predict(plrmod1, newdata=., type="response"),
+    outcome_prob2=predict(plrmod2, newdata=., type="response"),
+    outcome_prob3=predict(plrmod3, newdata=., type="response"),
   )
 
 if(removeobs) rm(plrmod0, plrmod1, plrmod2, plrmod3)
@@ -315,10 +342,11 @@ curves <- bind_rows(survival_az, survival_pfizer) %>%
     haz = 0
   ) %>%
   mutate(
+    model = as.integer(model),
     vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2"),
   ) %>%
   left_join(
-    tidyplr %>% group_by(model_name) %>% summarise(model=first(str_extract(model_name, "^\\d+"))) %>% ungroup(), by="model"
+    tidy_plr_ns %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
   ) %>%
   arrange(model, vax1_az, tstop)
 
@@ -364,7 +392,7 @@ curves_hr <- curves %>%
 
 plotplr <-
   ggplot(data = curves_hr) +
-  geom_line(aes(y=exp(hr), x=tstop, colour=model_name))+
+  geom_line(aes(y=hr, x=tstop, colour=model_name))+
   geom_hline(aes(yintercept=1), colour='grey')+
   scale_y_log10(
     breaks=c(0.25, 0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3, 4),

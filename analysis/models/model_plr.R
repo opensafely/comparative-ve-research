@@ -371,6 +371,7 @@ model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$ti
     outcome = outcome
   )
 write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_pw.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_pw.rds")))
 
 ## continuous estimands ----
 
@@ -446,6 +447,7 @@ model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$ti
     outcome = outcome
   )
 write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.rds")))
 
 ## print warnings
 print(warnings())
