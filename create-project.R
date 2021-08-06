@@ -117,6 +117,22 @@ defaults_list <- list(
 ## actions ----
 actions_list <- splice(
 
+  action(
+    name = "seconddose_extract",
+    run = "cohortextractor:latest generate_cohort --study-definition study_definition_2dose --output-format feather",
+    highly_sensitive = list(
+      cohort = "output/input_2dose.feather"
+    )
+  ),
+
+  action(
+    name = "seconddose_process",
+    run = "r:latest analysis/seconddose/process.R",
+    needs = list("seconddose_extract"),
+    highly_sensitive = list(
+      data = "output/data/seconddose_data_processed.rds"
+    )
+  ),
 
   action(
     name = "hcw_extract",

@@ -6,6 +6,21 @@ expectations:
 
 actions:
 
+  seconddose_extract:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_2dose
+      --output-format feather
+    outputs:
+      highly_sensitive:
+        cohort: output/input_2dose.feather
+
+  seconddose_process:
+    run: r:latest analysis/seconddose/process.R
+    needs:
+    - seconddose_extract
+    outputs:
+      highly_sensitive:
+        data: output/data/seconddose_data_processed.rds
+
   hcw_extract:
     run: cohortextractor:latest generate_cohort --study-definition study_definition_hcw
       --output-format feather
