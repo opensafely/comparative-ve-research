@@ -286,8 +286,6 @@ study = StudyDefinition(
     "covid_vax_pfizer_1_date", "covid_vax_az_1_date", "covid_vax_moderna_1_date"
   ),
   
-  
-  
   covid_vax_any_2_date=patients.minimum_of(
     "covid_vax_pfizer_2_date", "covid_vax_az_2_date", "covid_vax_moderna_2_date"
   ),
@@ -323,8 +321,8 @@ study = StudyDefinition(
   
   
   # https://github.com/opensafely/risk-factors-research/issues/49
-  age=patients.age_as_of( # do not use vaccination date here as some vax dates will be 1900-01-01
-    "index_date",
+  age=patients.age_as_of( 
+    "covid_vax_any_1_date - 1 days",
     return_expectations={
       "rate": "universal",
       "int": {"distribution": "population_ages"},
@@ -693,19 +691,19 @@ study = StudyDefinition(
   
   chronic_cardiac_disease=patients.with_these_clinical_events(
     codelists.chronic_cardiac_disease,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
   heart_failure=patients.with_these_clinical_events(
     codelists.heart_failure,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
   other_heart_disease=patients.with_these_clinical_events(
     codelists.other_heart_disease,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
@@ -714,7 +712,7 @@ study = StudyDefinition(
     codelists.diabetes,
     returning="binary_flag",
     find_last_match_in_period=True,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     return_expectations={"incidence": 0.01},
   ),
   dialysis=patients.with_these_clinical_events(
@@ -725,121 +723,121 @@ study = StudyDefinition(
   ),
   chronic_liver_disease=patients.with_these_clinical_events(
     codelists.chronic_liver_disease,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
   
   current_copd=patients.with_these_clinical_events(
     codelists.current_copd,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
   LD_incl_DS_and_CP=patients.with_these_clinical_events(
     codelists.learning_disability_including_downs_syndrome_and_cerebral_palsy,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   cystic_fibrosis=patients.with_these_clinical_events(
     codelists.cystic_fibrosis,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   other_resp_conditions=patients.with_these_clinical_events(
     codelists.other_respiratory_conditions,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
   
   lung_cancer=patients.with_these_clinical_events(
     codelists.lung_cancer,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   haematological_cancer=patients.with_these_clinical_events(
     codelists.haematological_cancer,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   cancer_excl_lung_and_haem=patients.with_these_clinical_events(
     codelists.cancer_excluding_lung_and_haematological,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   
   chemo_or_radio=patients.with_these_clinical_events(
     codelists.chemotherapy_or_radiotherapy,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   solid_organ_transplantation=patients.with_these_clinical_events(
     codelists.solid_organ_transplantation,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   bone_marrow_transplant=patients.with_these_clinical_events(
     codelists.bone_marrow_transplant,
-    between=["2020-07-01", "index_date"],
+    between=["2020-07-01", "covid_vax_any_1_date - 1 days"],
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   
   sickle_cell_disease=patients.with_these_clinical_events(
     codelists.sickle_cell_disease,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   permanant_immunosuppression=patients.with_these_clinical_events(
     codelists.permanent_immunosuppression,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   temporary_immunosuppression=patients.with_these_clinical_events(
     codelists.temporary_immunosuppression,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   asplenia=patients.with_these_clinical_events(
     codelists.asplenia,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   dmards=patients.with_these_medications(
     codelists.dmards,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   # dementia
   dementia=patients.with_these_clinical_events(
     codelists.dementia,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01, },
   ),
   other_neuro_conditions=patients.with_these_clinical_events(
     codelists.other_neuro,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
   
   psychosis_schiz_bipolar=patients.with_these_clinical_events(
     codelists.psychosis_schizophrenia_bipolar_affective_disease,
-    on_or_before="index_date",
+    on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
@@ -855,7 +853,7 @@ study = StudyDefinition(
   cev_ever = patients.with_these_clinical_events(
     codelists.shield,
     returning="binary_flag",
-    on_or_before = "index_date",
+    on_or_before = "covid_vax_any_1_date - 1 days",
     find_last_match_in_period = True,
     return_expectations={"incidence": 0.02},
   ),
@@ -867,7 +865,7 @@ study = StudyDefinition(
     severely_clinically_vulnerable=patients.with_these_clinical_events(
       codelists.shield,
       returning="binary_flag",
-      on_or_before = "index_date",
+      on_or_before = "covid_vax_any_1_date - 1 days",
       find_last_match_in_period = True,
     ),
     
@@ -880,7 +878,7 @@ study = StudyDefinition(
     ### NOT SHIELDED GROUP (medium and low risk) - only flag if later than 'shielded'
     less_vulnerable=patients.with_these_clinical_events(
       codelists.nonshield,
-      between=["date_severely_clinically_vulnerable + 1 day", "index_date - 1 days"],
+      between=["date_severely_clinically_vulnerable + 1 day", "covid_vax_any_1_date - 1 days"],
     ),
     
     return_expectations={"incidence": 0.01},

@@ -94,11 +94,7 @@ data_tte <- data_cohort %>%
   ) %>%
   filter(
     # select all patients who experienced the outcome, and a sample of those who don't
-    sample_outcome==1L,
-
-    ## TODO remove once study def rerun with new dereg date
-    tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
-    tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
+    sample_outcome==1L
   )
 
 alltimes <- expand(data_tte, patient_id, times=as.integer(full_seq(c(1, tte_stop),1)))
@@ -126,9 +122,9 @@ data_plr <-
     alltimes = event(times, times)
   )  %>%
   mutate(
-    timesincevax_pw = droplevels(timesince_cut(tstop, postvaxcuts, "blah")), #TODO should use tstop?
+    timesincevax_pw = droplevels(timesince_cut(tstop, postvaxcuts, "blah")),
 
-    tstart_calendar = tstart + vax1_day - 1, # TODO double-check
+    tstart_calendar = tstart + vax1_day - 1,
     tstop_calendar = tstop + vax1_day - 1,
 
     vax1_az = (vax1_type=="az")*1

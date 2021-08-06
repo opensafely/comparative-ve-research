@@ -85,12 +85,6 @@ data_tte <- data_cohort %>%
     ind_outcome = censor_indicator(outcome_date, censor_date),
 
     tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE),
-
-  ) %>%
-  filter(
-    ## TODO remove once study def rerun with new dereg date
-    tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
-    tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )
 
 data_cox0 <- data_tte %>%
