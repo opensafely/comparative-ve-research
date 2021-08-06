@@ -79,12 +79,11 @@ data_tte <- data_cohort %>%
     outcome_date = .[[glue("{outcome_var}")]],
     censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
-    vax1_date = vax1_date-1, # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
-
-    tte_censor = tte(vax1_date, censor_date, censor_date, na.censor=TRUE),
+    # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
+    tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
     ind_censor = censor_indicator(censor_date, censor_date),
 
-    tte_outcome = tte(vax1_date, outcome_date, censor_date, na.censor=TRUE),
+    tte_outcome = tte(vax1_date-1, outcome_date, censor_date, na.censor=TRUE),
     ind_outcome = censor_indicator(outcome_date, censor_date),
 
     tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE)
@@ -100,7 +99,7 @@ data_cox0 <- data_tte %>%
     vax1_az = (vax1_type=="az")*1
   ) %>%
   filter(
-    ## TODO check if still necessary once cohort extractor categorical bug fixed
+    ## TODO remove once study def rerun with new dereg date
     tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
     tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )

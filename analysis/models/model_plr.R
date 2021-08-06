@@ -79,12 +79,10 @@ data_tte <- data_cohort %>%
     outcome_date = .[[glue("{outcome_var}")]],
     censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
-    vax1_date = vax1_date-1, # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
-
-    tte_censor = tte(vax1_date, censor_date, censor_date, na.censor=TRUE),
+    tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
     ind_censor = censor_indicator(censor_date, censor_date),
 
-    tte_outcome = tte(vax1_date, outcome_date, censor_date, na.censor=TRUE),
+    tte_outcome = tte(vax1_date-1, outcome_date, censor_date, na.censor=TRUE),
     ind_outcome = censor_indicator(outcome_date, censor_date),
 
     tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE)
@@ -130,6 +128,20 @@ data_plr <-
   )
 
 
+
+test <- data_plr %>% select(
+  patient_id,
+  vax1_date,
+  vax1_day,
+  tstart,
+  tstop,
+  tstart_calendar,
+  tstop_calendar,
+  censor_date,
+  censor_event,
+  censor_status,
+  timesincevax_pw
+)
 
 ### print dataset size and save ----
 logoutput(

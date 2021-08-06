@@ -34,7 +34,7 @@ data_criteria <- data_processed %>%
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
     not_cev = !cev,
-    knownvaxdate = vax1_date>=as.Date("2020-01-01"),
+    knownvaxdate = vax1_date>=as.Date("2020-03-01"),
     vax1_beforeenddate = vax1_date <= end_date,
     vax1_afterstartdate = vax1_date >= start_date_az,
 

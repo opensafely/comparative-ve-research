@@ -180,8 +180,8 @@ data_processed <- data_extract %>%
     ),
 
     vax1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, covid_vax_moderna_1_date, na.rm=TRUE),
-    vax1_day = as.integer(floor((vax1_date - start_date))+1),
-    vax1_week = as.integer(floor((vax1_date - start_date)/7)+1),
+    vax1_day = as.integer(floor((vax1_date - start_date_az))+1), # day 0 is the day before "start_date"
+    vax1_week = as.integer(floor((vax1_date - start_date_az)/7)+1), # week 1 is days 1-7.
 
     cause_of_death = fct_case_when(
       !is.na(coviddeath_date) ~ "covid-related",

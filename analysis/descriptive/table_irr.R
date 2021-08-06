@@ -59,45 +59,43 @@ data_tte <- data_cohort %>%
   transmute(
     patient_id,
     vax1_type,
-    start_date,
     end_date,
 
-    vax1_date = vax1_date - 1,
     censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     # time to last follow up day
-    tte_enddate = tte(vax1_date, end_date, end_date),
+    tte_enddate = tte(vax1_date-1, end_date, end_date),
 
     # time to last follow up day or death or deregistration
-    tte_censor = tte(vax1_date, censor_date, censor_date),
+    tte_censor = tte(vax1_date-1, censor_date, censor_date),
 
-    tte_test =tte(vax1_date, covid_test_date, censor_date, na.censor=TRUE),
+    tte_test =tte(vax1_date-1, covid_test_date, censor_date, na.censor=TRUE),
     ind_test = censor_indicator(covid_test_date, censor_date),
 
-    tte_postest = tte(vax1_date, positive_test_date, censor_date, na.censor=TRUE),
+    tte_postest = tte(vax1_date-1, positive_test_date, censor_date, na.censor=TRUE),
     ind_postest = censor_indicator(positive_test_date, censor_date),
 
-    tte_emergency = tte(vax1_date, emergency_date, censor_date, na.censor=TRUE),
+    tte_emergency = tte(vax1_date-1, emergency_date, censor_date, na.censor=TRUE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
 
-    tte_covidadmitted = tte(vax1_date, covidadmitted_date, censor_date, na.censor=TRUE),
+    tte_covidadmitted = tte(vax1_date-1, covidadmitted_date, censor_date, na.censor=TRUE),
     ind_covidadmitted = censor_indicator(covidadmitted_date, censor_date),
 
-    tte_covidcc = tte(vax1_date, covidcc_date, censor_date, na.censor=TRUE),
+    tte_covidcc = tte(vax1_date-1, covidcc_date, censor_date, na.censor=TRUE),
     ind_covidcc = censor_indicator(covidcc_date, censor_date),
 
-    tte_coviddeath = tte(vax1_date, coviddeath_date, censor_date, na.censor=TRUE),
+    tte_coviddeath = tte(vax1_date-1, coviddeath_date, censor_date, na.censor=TRUE),
     ind_coviddeath = censor_indicator(coviddeath_date, censor_date),
 
-    tte_noncoviddeath = tte(vax1_date, noncoviddeath_date, censor_date, na.censor=TRUE),
+    tte_noncoviddeath = tte(vax1_date-1, noncoviddeath_date, censor_date, na.censor=TRUE),
     ind_noncoviddeath = censor_indicator(noncoviddeath_date, censor_date),
 
-    tte_death = tte(vax1_date, death_date, censor_date, na.censor=TRUE),
+    tte_death = tte(vax1_date-1, death_date, censor_date, na.censor=TRUE),
     ind_death = censor_indicator(death_date, censor_date),
 
-    all = factor("all")
   ) %>%
   filter(
+    # TDOD remove once study def rerun with new dereg date
     tte_censor>0 | is.na(tte_censor)
   )
 
