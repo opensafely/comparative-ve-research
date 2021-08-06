@@ -97,7 +97,7 @@ sim_list = list(
   ),
 
   dereg_day = bn_node(
-    ~as.integer(runif(n=1, index_day, index_day+120)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+120)),
     missing_rate = ~0.99
   ),
 
