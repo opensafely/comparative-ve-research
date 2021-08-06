@@ -82,7 +82,7 @@ data_flowchart <- data_criteria %>%
       crit == "c1" ~ "  with no missing demographic information",
       crit == "c2" ~ "  who are not clinically extremely vulnerable",
       crit == "c3" ~ "  with vaccination on or before study end date",
-      crit == "c4" ~ "  with vaccination on or study start date",
+      crit == "c4" ~ "  with vaccination on or after study start date",
       TRUE ~ NA_character_
     )
   )
