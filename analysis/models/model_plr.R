@@ -24,11 +24,12 @@ if(length(args)==0){
   removeobs <- FALSE
   outcome <- "postest"
   timescale <- "timesincevax"
+  samplesize_nonoutcomes_n <- 5000
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
-
+  samplesize_nonoutcomes_n <- as.integer(args[[3]])
 }
 
 
@@ -85,11 +86,17 @@ data_tte <- data_cohort %>%
     tte_outcome = tte(vax1_date-1, outcome_date, censor_date, na.censor=TRUE),
     ind_outcome = censor_indicator(outcome_date, censor_date),
 
-    tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE)
+    tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE),
 
+    sample_outcome = sample_nonoutcomes_n(!is.na(tte_outcome), patient_id, samplesize_nonoutcomes_n),
+
+    sample_weights = sample_weights(!is.na(tte_outcome), sample_outcome),
   ) %>%
   filter(
-    # TODO is this needed?
+    # select all patients who experienced the outcome, and a sample of those who don't
+    sample_outcome==1L,
+
+    ## TODO remove once study def rerun with new dereg date
     tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
     tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )
@@ -126,22 +133,6 @@ data_plr <-
 
     vax1_az = (vax1_type=="az")*1
   )
-
-
-
-test <- data_plr %>% select(
-  patient_id,
-  vax1_date,
-  vax1_day,
-  tstart,
-  tstop,
-  tstart_calendar,
-  tstop_calendar,
-  censor_date,
-  censor_event,
-  censor_status,
-  timesincevax_pw
-)
 
 ### print dataset size and save ----
 logoutput(
@@ -205,62 +196,6 @@ parglmparams <- parglm.control(
   nthreads = 8,
   maxit = 40 # default = 25
 )
-#
-# plr_process <- function(.data, number, plr_formula, cluster, splinetype){
-#
-#   plrmod <-parglm(
-#     formula = plr_formula,
-#     data = .data,
-#     family = binomial,
-#     control = parglmparams,
-#     na.action = "na.fail",
-#     model = FALSE
-#   )
-#
-#   print(warnings())
-#   logoutput(
-#     glue("model{number} data size = ", plrmod$n),
-#     glue("model{number} memory usage = ", format(object.size(plrmod), units="GB", standard="SI", digits=3L)),
-#     glue("convergence status: ", plrmod$converged)
-#   )
-#
-#   glance <-
-#     glance_plr(plrmod) %>%
-#     add_column(
-#       model = number,
-#       convergence = plrmod$converged,
-#       ram = format(object.size(plrmod), units="GB", standard="SI", digits=3L),
-#       .before=1
-#     )
-#   write_rds(glance, here("output", "models", outcome, timescale, glue("modelplr_glance{number}{splinetype}.rds")), compress="gz")
-#
-#   # tidy <- broom.helpers::tidy_plus_plus(
-#   #   plrmod,
-#   #   tidy_fun = tidy_plr,
-#   #   exponentiate = FALSE,
-#   #   cluster = cluster
-#   # ) %>%
-#   # add_column(
-#   #   model=number,
-#   #   .before=1
-#   # )
-#   # tidy <- tidy_plr(
-#   #   plrmod,
-#   #   exponentiate = FALSE,
-#   #   cluster = cluster
-#   # )
-#   #write_rds(tidy, here("output", "models", outcome, timescale, glue("modelplr_tidy{number}{splinetype}.rds")), compress="gz")
-#
-#   vcov <- vcovCL(plrmod, cluster = cluster, type = "HC0")
-#   write_rds(vcov, here("output", "models", outcome, timescale, glue("modelplr_vcov{number}{splinetype}.rds")), compress="gz")
-#
-#   plrmod$data <- NULL
-#   write_rds(plrmod, here("output", "models", outcome, timescale, glue("modelplr_model{number}{splinetype}.rds")), compress="gz")
-#
-#   #lst(glance, tidy)
-# }
-
-
 
 plr_process <- function(plrmod, number, cluster, splinetype){
 
@@ -309,67 +244,71 @@ plr_process <- function(plrmod, number, cluster, splinetype){
 # sandwich::vcovCL doesn't handle formulae properly!
 
 ## vaccination + timescale only, no adjustment variables
-plrmod0 <-parglm(
+plrmod0 <- parglm(
   formula = formula0_pw,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary0<-plr_process(
+summary0 <- plr_process(
   plrmod0, 0,
   data_plr$patient_id, "pw"
 )
 if(removeobs){remove(plrmod0)}
 
 ## model 1 - minimally adjusted vaccination effect model, stratification by region only
-plrmod1 <-parglm(
+plrmod1 <- parglm(
   formula = formula0_pw,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary1<-plr_process(
+summary1 <- plr_process(
   plrmod1, 1,
   data_plr$patient_id, "pw"
 )
 if(removeobs){remove(plrmod1)}
 
 ### model 2 - minimally adjusted vaccination effect model, baseline demographics only
-plrmod2 <-parglm(
+plrmod2 <- parglm(
   formula = formula3_pw,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary2<-plr_process(
+summary2 <- plr_process(
   plrmod2, 2,
   data_plr$patient_id, "pw"
 )
 if(removeobs){remove(plrmod2)}
 
 ### model 3 - fully adjusted vaccination effect model, baseline demographics + clinical characteristics
-plrmod3 <-parglm(
+plrmod3 <- parglm(
   formula = formula3_pw,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary3<-plr_process(
+summary3 <- plr_process(
   plrmod3, 3,
   data_plr$patient_id, "pw"
 )
 if(removeobs){remove(plrmod3)}
 
 
-# combine results
+### combine results ----
 model_glance <- bind_rows(summary0$glance, summary1$glance, summary2$glance, summary3$glance) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
@@ -388,64 +327,68 @@ write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("m
 ## continuous estimands ----
 
 
-plrmod0 <-parglm(
+plrmod0 <- parglm(
   formula = formula0_ns,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary0<-plr_process(
+summary0 <- plr_process(
   plrmod0, 0,
   data_plr$patient_id, "ns"
 )
 if(removeobs){remove(plrmod0)}
 
-plrmod1 <-parglm(
+plrmod1 <- parglm(
   formula = formula0_ns,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary1<-plr_process(
+summary1 <- plr_process(
   plrmod1, 1,
   data_plr$patient_id, "ns"
 )
 if(removeobs){remove(plrmod1)}
 
-plrmod2 <-parglm(
+plrmod2 <- parglm(
   formula = formula3_ns,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary2<-plr_process(
+summary2 <- plr_process(
   plrmod2, 2,
   data_plr$patient_id, "ns"
 )
 if(removeobs){remove(plrmod2)}
 
-plrmod3 <-parglm(
+plrmod3 <- parglm(
   formula = formula3_ns,
   data = data_plr,
+  weights = data_plr$sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
   model = FALSE
 )
-summary3<-plr_process(
+summary3 <- plr_process(
   plrmod3, 3,
   data_plr$patient_id, "ns"
 )
 if(removeobs){remove(plrmod3)}
 
 
-# combine results
+### combine results ----
 model_glance <- bind_rows(summary0$glance, summary1$glance, summary2$glance, summary3$glance) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
@@ -461,7 +404,7 @@ model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$ti
 write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.csv")))
 write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.rds")))
 
-## print warnings
+## print warnings ----
 print(warnings())
 cat("  \n")
 print(gc(reset=TRUE))

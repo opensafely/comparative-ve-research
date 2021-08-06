@@ -331,7 +331,7 @@ actions:
         png: output/models/covidadmitted/calendar/reportcox_*.png
 
   model_test_timesincevax_plr:
-    run: r:latest analysis/models/model_plr.R test timesincevax
+    run: r:latest analysis/models/model_plr.R test timesincevax 50000
     needs:
     - design
     - data_selection
@@ -356,7 +356,7 @@ actions:
         png: output/models/test/timesincevax/reportplr_*.png
 
   model_test_calendar_plr:
-    run: r:latest analysis/models/model_plr.R test calendar
+    run: r:latest analysis/models/model_plr.R test calendar 50000
     needs:
     - design
     - data_selection
@@ -381,7 +381,7 @@ actions:
         png: output/models/test/calendar/reportplr_*.png
 
   model_postest_timesincevax_plr:
-    run: r:latest analysis/models/model_plr.R postest timesincevax
+    run: r:latest analysis/models/model_plr.R postest timesincevax 50000
     needs:
     - design
     - data_selection
@@ -406,7 +406,7 @@ actions:
         png: output/models/postest/timesincevax/reportplr_*.png
 
   model_postest_calendar_plr:
-    run: r:latest analysis/models/model_plr.R postest calendar
+    run: r:latest analysis/models/model_plr.R postest calendar 50000
     needs:
     - design
     - data_selection
@@ -431,7 +431,7 @@ actions:
         png: output/models/postest/calendar/reportplr_*.png
 
   model_emergency_timesincevax_plr:
-    run: r:latest analysis/models/model_plr.R emergency timesincevax
+    run: r:latest analysis/models/model_plr.R emergency timesincevax 50000
     needs:
     - design
     - data_selection
@@ -456,7 +456,7 @@ actions:
         png: output/models/emergency/timesincevax/reportplr_*.png
 
   model_emergency_calendar_plr:
-    run: r:latest analysis/models/model_plr.R emergency calendar
+    run: r:latest analysis/models/model_plr.R emergency calendar 50000
     needs:
     - design
     - data_selection
@@ -481,7 +481,7 @@ actions:
         png: output/models/emergency/calendar/reportplr_*.png
 
   model_covidadmitted_timesincevax_plr:
-    run: r:latest analysis/models/model_plr.R covidadmitted timesincevax
+    run: r:latest analysis/models/model_plr.R covidadmitted timesincevax 50000
     needs:
     - design
     - data_selection
@@ -506,7 +506,7 @@ actions:
         png: output/models/covidadmitted/timesincevax/reportplr_*.png
 
   model_covidadmitted_calendar_plr:
-    run: r:latest analysis/models/model_plr.R covidadmitted calendar
+    run: r:latest analysis/models/model_plr.R covidadmitted calendar 50000
     needs:
     - design
     - data_selection

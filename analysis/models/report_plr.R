@@ -169,6 +169,7 @@ survival_az <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
+    sample_weights,
     outcome_prob0=predict(plrmod0, newdata=., type="response"),
     outcome_prob1=predict(plrmod1, newdata=., type="response"),
     outcome_prob2=predict(plrmod1, newdata=., type="response"),
@@ -182,6 +183,7 @@ survival_pfizer <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
+    sample_weights,
     outcome_prob0=predict(plrmod0, newdata=., type="response"),
     outcome_prob1=predict(plrmod1, newdata=., type="response"),
     outcome_prob2=predict(plrmod1, newdata=., type="response"),
@@ -194,10 +196,10 @@ curves <- bind_rows(survival_az, survival_pfizer) %>%
 #marginalise over all patients
 group_by(vax1_az, tstop) %>%
   summarise(
-    outcome_prob0=mean(outcome_prob0),
-    outcome_prob1=mean(outcome_prob1),
-    outcome_prob2=mean(outcome_prob2),
-    outcome_prob3=mean(outcome_prob3),
+    outcome_prob0=weighted.mean(outcome_prob0, sample_weights),
+    outcome_prob1=weighted.mean(outcome_prob1, sample_weights),
+    outcome_prob2=weighted.mean(outcome_prob2, sample_weights),
+    outcome_prob3=weighted.mean(outcome_prob3, sample_weights),
   ) %>%
   pivot_longer(
     cols=starts_with("outcome_prob"),
@@ -289,6 +291,7 @@ survival_az <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
+    sample_weights,
     outcome_prob0=predict(plrmod0, newdata=., type="response"),
     outcome_prob1=predict(plrmod1, newdata=., type="response"),
     outcome_prob2=predict(plrmod2, newdata=., type="response"),
@@ -303,6 +306,7 @@ survival_pfizer <- data_plr %>%
     tstop,
     tstop_calendar,
     vax1_az,
+    sample_weights,
     outcome_prob0=predict(plrmod0, newdata=., type="response"),
     outcome_prob1=predict(plrmod1, newdata=., type="response"),
     outcome_prob2=predict(plrmod2, newdata=., type="response"),
@@ -315,10 +319,10 @@ curves <- bind_rows(survival_az, survival_pfizer) %>%
   #marginalise over all patients
   group_by(vax1_az, tstop) %>%
   summarise(
-    outcome_prob0=mean(outcome_prob0),
-    outcome_prob1=mean(outcome_prob1),
-    outcome_prob2=mean(outcome_prob2),
-    outcome_prob3=mean(outcome_prob3),
+    outcome_prob0=weighted.mean(outcome_prob0, sample_weights),
+    outcome_prob1=weighted.mean(outcome_prob1, sample_weights),
+    outcome_prob2=weighted.mean(outcome_prob2, sample_weights),
+    outcome_prob3=weighted.mean(outcome_prob3, sample_weights),
   ) %>%
   pivot_longer(
     cols=starts_with("outcome_prob"),

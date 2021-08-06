@@ -66,12 +66,12 @@ action <- function(
 
 ## model action function ----
 action_model<- function(
-  outcome, timescale, modeltype
+  outcome, timescale, modeltype, samplesize_nonoutcomes_n=NULL
 ){
   action(
     name = glue("model_{outcome}_{timescale}_{modeltype}"),
     run = glue("r:latest analysis/models/model_{modeltype}.R"),
-    arguments = c(outcome, timescale),
+    arguments = c(outcome, timescale, samplesize_nonoutcomes_n),
     needs = list("design", "data_selection"),
     highly_sensitive = list(
       rds = glue("output/models/{outcome}/{timescale}/model{modeltype}*.rds")
@@ -285,29 +285,29 @@ actions_list <- splice(
   # action_model("covidcc", "calendar", "cox"),
   # action_report("covidcc", "calendar", "cox"),
 
-  action_model("test", "timesincevax", "plr"),
+  action_model("test", "timesincevax", "plr", 50000),
   action_report("test", "timesincevax", "plr"),
-  action_model("test", "calendar", "plr"),
+  action_model("test", "calendar", "plr", 50000),
   action_report("test", "calendar", "plr"),
 
-  action_model("postest", "timesincevax", "plr"),
+  action_model("postest", "timesincevax", "plr", 50000),
   action_report("postest", "timesincevax", "plr"),
-  action_model("postest", "calendar", "plr"),
+  action_model("postest", "calendar", "plr", 50000),
   action_report("postest", "calendar", "plr"),
 
-  action_model("emergency", "timesincevax", "plr"),
+  action_model("emergency", "timesincevax", "plr", 50000),
   action_report("emergency", "timesincevax", "plr"),
-  action_model("emergency", "calendar", "plr"),
+  action_model("emergency", "calendar", "plr", 50000),
   action_report("emergency", "calendar", "plr"),
 
-  action_model("covidadmitted", "timesincevax", "plr"),
+  action_model("covidadmitted", "timesincevax", "plr", 50000),
   action_report("covidadmitted", "timesincevax", "plr"),
-  action_model("covidadmitted", "calendar", "plr"),
+  action_model("covidadmitted", "calendar", "plr", 50000),
   action_report("covidadmitted", "calendar", "plr"),
 
-  # action_model("covidcc", "timesincevax", "plr"),
+  # action_model("covidcc", "timesincevax", "plr", 50000),
   # action_report("covidcc", "timesincevax", "plr"),
-  # action_model("covidcc", "calendar", "plr"),
+  # action_model("covidcc", "calendar", "plr", 50000),
   # action_report("covidcc", "calendar", "plr"),
 
 

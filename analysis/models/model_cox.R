@@ -30,7 +30,6 @@ if(length(args)==0){
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
-
 }
 
 
@@ -72,7 +71,6 @@ list2env(list_formula, globalenv())
 # Import data ----
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 
-# redo tte variables to indclude censoring date (ie use na.censor=FALSE)
 data_tte <- data_cohort %>%
   mutate(
 
@@ -86,8 +84,13 @@ data_tte <- data_cohort %>%
     tte_outcome = tte(vax1_date-1, outcome_date, censor_date, na.censor=TRUE),
     ind_outcome = censor_indicator(outcome_date, censor_date),
 
-    tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE)
+    tte_stop = pmin(tte_censor, tte_outcome, na.rm=TRUE),
 
+  ) %>%
+  filter(
+    ## TODO remove once study def rerun with new dereg date
+    tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
+    tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )
 
 data_cox0 <- data_tte %>%
@@ -97,13 +100,7 @@ data_cox0 <- data_tte %>%
   mutate(
     week_region = paste0(vax1_week, "__", region),
     vax1_az = (vax1_type=="az")*1
-  ) %>%
-  filter(
-    ## TODO remove once study def rerun with new dereg date
-    tte_outcome>0 | is.na(tte_outcome), # necessary for filtering out bad dummy data and removing people who experienced an event on the same day as vaccination
-    tte_censor>0 | is.na(tte_censor), # necessary for filtering out bad dummy data and removing people who experienced a censoring event on the same day as vaccination
   )
-
 
 stopifnot("there is some unvaccinated person-time" = !any(is.na(data_cox0$vax1_type)))
 
