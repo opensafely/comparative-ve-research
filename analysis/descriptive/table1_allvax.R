@@ -49,26 +49,26 @@ list2env(list_formula, globalenv())
 data_cohort <- read_rds(here("output", "data", "data_cohort_allvax.rds"))
 
 
-var_labels$vax1_4janonwards <- vax1_4janonwards~"Vaccinated on or after 4 Jan 2021"
+var_labels$vax1_afterstartdate <- vax1_afterstartdate~"Vaccinated on or after 4 January 2021"
 
 ## baseline variables
 data_baseline <- data_cohort %>%
   select(
     all_of(names(var_labels)),
-    vax1_4janonwards,
+    vax1_afterstartdate,
     -age
   ) %>%
   mutate(
-    vax1_4janonwards = case_when(
-      vax1_4janonwards ~ "on or after Jan 2021",
-      !vax1_4janonwards ~ "before 4 Jan 2021"
+    vax1_afterstartdate = case_when(
+      !vax1_afterstartdate ~ paste0("Before ", format.Date(gbl_vars$start_date_az, "%d %b %Y")),
+      vax1_afterstartdate ~ paste0("On or after ", format.Date(gbl_vars$start_date_az, "%d %b %Y"))
     )
   )
 if(removeobs) rm(data_cohort)
 
 tab_summary_baseline <- data_baseline %>%
   tbl_summary(
-    by = vax1_4janonwards,
+    by = vax1_afterstartdate,
     label=unname(var_labels[names(data_baseline)])
   )  %>%
   modify_footnote(starts_with("stat_") ~ NA)
