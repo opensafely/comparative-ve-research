@@ -140,19 +140,6 @@ write_rds(data_plr, here("output", "models", outcome, timescale, "modelplr_data.
 
 ## make formulas ----
 
-formula_outcome <- outcome_event ~ 1
-
-# mimicing timescale / stratification in simple cox models
-if(timescale=="calendar"){
-  formula_timescale <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
-}
-if(timescale=="timesincevax"){
-  formula_timescale <- . ~ . +  ns(tstop, 3) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
-}
-
-
 ### model 0 - vaccination + timescale only, no adjustment variables
 ### model 1 - minimally adjusted vaccination effect model, stratification by region only
 ### model 2 - minimally adjusted vaccination effect model, baseline demographics only
@@ -164,6 +151,21 @@ model_names = c(
   "Adjusting for time + demographics" = "2",
   "Adjusting for time + demographics + clinical" = "3"
 )
+
+
+formula_outcome <- outcome_event ~ 1
+
+# mimicing timescale / stratification in simple cox models
+if(timescale=="calendar"){
+  formula_timescale <- . ~ . + ns(tstop_calendar, 3) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
+}
+if(timescale=="timesincevax"){
+  formula_timescale <- . ~ . +  ns(tstop, 3) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
+}
+
+
 
 ### piecewise formulae ----
 ### estimand

@@ -57,28 +57,40 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
-# redo formulae from model script
+# redo formulae from model script ----
 
 formula_outcome <- outcome_event ~ 1
 
 # mimicing timescale / stratification in simple cox models
 if(timescale=="calendar"){
-  formula_timescale <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
+  formula_timescale <- . ~ . + ns(tstop_calendar, 3) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 if(timescale=="timesincevax"){
   formula_timescale <- . ~ . +  ns(tstop, 3) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
+  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 
-## piecewise estimand
-formula_timesincevax_pw <- . ~ . + vax1_az*timesincevax_pw
-## natural cubic spline estimand
-formula_timesincevax_ns <- . ~ . + vax1_az*ns(tstop, 3)
 
+### piecewise formulae ----
+### estimand
+formula_timesincevax_pw <- . ~ . + vax1_az*timesincevax_pw
 formula_vaxonly_pw <- formula_outcome  %>% update(formula_timesincevax_pw) %>% update(formula_timescale)
+
+formula0_pw <- formula_vaxonly_pw
+formula1_pw <- formula_vaxonly_pw %>% update(formula_spacetime)
+formula2_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog)
+formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
+
+### natural cubic spline formulae ----
+### estimands
+formula_timesincevax_ns <- . ~ . + vax1_az*ns(tstop, 3)
 formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% update(formula_timescale)
 
+formula0_ns <- formula_vaxonly_ns
+formula1_ns <- formula_vaxonly_ns %>% update(formula_spacetime)
+formula2_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog)
+formula3_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
 
 # Import processed data ----
 

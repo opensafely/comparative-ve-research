@@ -201,7 +201,7 @@ if(timescale=="timesincevax"){
     )
 
   formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax_pw) #as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
-  formula_spacetime <- . ~ . + strata(region) * ns(calendar_day, 4)
+  formula_spacetime <- . ~ . + strata(region) * ns(calendar_day, 3)
 }
 
 ### model 0 - vaccination + timescale only, no adjustment variables
