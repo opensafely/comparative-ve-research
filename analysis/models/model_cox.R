@@ -24,7 +24,7 @@ args <- commandArgs(trailingOnly=TRUE)
 if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
-  outcome <- "postest"
+  outcome <- "test"
   timescale <- "timesincevax"
 } else {
   removeobs <- TRUE
@@ -110,8 +110,9 @@ postvax_time <- data_cox0 %>%
   uncount(weights = length(postvaxcuts), .id="id_postvax") %>%
   mutate(
     fup_day = postvaxcuts[id_postvax],
-    timesincevax_pw = timesince_cut(fup_day+0.5, postvaxcuts, "blah")
+    timesincevax_pw = timesince_cut(fup_day+1, postvaxcuts)
   ) %>%
+  droplevels() %>%
   select(patient_id, fup_day, timesincevax_pw)
 
 

@@ -122,7 +122,7 @@ data_plr <-
     alltimes = event(times, times)
   )  %>%
   mutate(
-    timesincevax_pw = droplevels(timesince_cut(tstop, postvaxcuts, "blah")),
+    timesincevax_pw = droplevels(timesince_cut(tstop, postvaxcuts)),
 
     tstart_calendar = tstart + vax1_day - 1,
     tstop_calendar = tstop + vax1_day - 1,

@@ -107,7 +107,7 @@ postvax_time <- data_tte %>%
   select(patient_id, tte_censor) %>%
   mutate(
     fup_day = list(postvaxcuts),
-    timesincevax = map(fup_day, ~droplevels(timesince_cut(.x+0.5, postvaxcuts, "blah")))
+    timesincevax = map(fup_day, ~droplevels(timesince_cut(.x+1, postvaxcuts)))
   ) %>%
   unnest(c(fup_day, timesincevax))
 
@@ -310,28 +310,5 @@ tab_summary <- data_summary %>%
 
 write_rds(tab_summary, here("output", "descriptive", "tables", "table_irr.rds"))
 gtsave(tab_summary, here("output", "descriptive", "tables", "table_irr.html"))
-
-
-## note:
-# the follow poisson model gives the same results eg for postest
-# poismod <- glm(
-#   formula = postest_n ~ timesincevax_pw + offset(log(postest_yearsatrisk*365.25)),
-#   family=poisson,
-#   data=pt_summary(data_pt, "timesincevaxany1", postvaxcuts)
-# )
-
-# same but with person-time data
-# poismod2 <- glm(
-#   formula = postest ~ timesincevax_pw ,
-#   family=poisson,
-#   data=data_pt %>% mutate(timesincevax_pw = timesince_cut(timesincevaxany1, postvaxcuts, "Unvaccinated")) %>% filter(postest_status==0, death_status==0, dereg_status==0)
-# )
-
-# and the following pyears call gives the same results
-# pyears(
-#  Surv(time=tstart, time2=tstop, event=postest) ~ timesincevaxany1,
-#  data=data_pt %>% filter(postest_status==0),
-#  data.frame = TRUE
-# )
 
 
