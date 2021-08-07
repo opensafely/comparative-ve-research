@@ -63,7 +63,7 @@ data_flowchart <- data_criteria %>%
     c2_notcev = c1_notmissing & not_cev,
     c3_enddate = c2_notcev & vax1_beforeenddate,
     c4_startdate = c3_enddate & vax1_afterstartdate,
-    c5_azpfizer = c4_startdate $ vax1_azpfizer
+    c5_azpfizer = c4_startdate & vax1_azpfizer
   ) %>%
   summarise(
     across(.fns=sum)
