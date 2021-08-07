@@ -168,14 +168,16 @@ data_processed <- data_extract %>%
     prior_covid_infection = !is.na(prior_positive_test_date) | !is.na(prior_covidadmitted_date) | !is.na(prior_primary_care_covid_case_date),
 
     vax1_type = case_when(
-      pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
-      pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) > pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "pfizer",
+      pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, covid_vax_moderna_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
+      pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, covid_vax_moderna_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "pfizer",
+      pmin(covid_vax_moderna_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "moderna",
       TRUE ~ NA_character_
     ),
 
     vax1_type_descr = fct_case_when(
       vax1_type == "pfizer" ~ "BNT162b2",
       vax1_type == "az" ~ "ChAdOx1",
+      vax1_type == "moderna" ~ "Moderna",
       TRUE ~ NA_character_
     ),
 

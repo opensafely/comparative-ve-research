@@ -84,7 +84,7 @@ actions:
     needs:
     - data_process
     outputs:
-      highly_sensitive:
+      moderately_sensitive:
         cohort: output/data_properties/data_processed*.txt
 
   data_selection:
