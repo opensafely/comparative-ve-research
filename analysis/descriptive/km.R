@@ -128,11 +128,7 @@ data_tte <- data_cohort %>%
     tte_dereg = tte(vax1_date-1, dereg_date, censor_date, na.censor=FALSE),
     ind_dereg = censor_indicator(dereg_date, censor_date),
 
-  ) %>%
-  filter(
-    tte_censor>0 | is.na(tte_censor)
   )
-
 
 
 survobj <- function(.data, time, indicator, group_vars, threshold){
