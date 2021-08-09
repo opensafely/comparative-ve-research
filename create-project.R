@@ -344,6 +344,7 @@ actions_list <- splice(
   # action_model("covidcc", "calendar", "plr", 50000),
   # action_report("covidcc", "calendar", "plr"),
 
+  comment("# # # # # # # # # # # # # # # # # # #", "Report", "# # # # # # # # # # # # # # # # # # #"),
 
   action(
     name = "rmd_report",
@@ -355,7 +356,8 @@ actions_list <- splice(
       as.list(glue("report_{outcome}_{timescale}_{modeltype}", outcome=rep(c("test", "postest", "emergency", "covidadmitted"),each=2), timescale = rep(c("timesincevax", "calendar"), 4), modeltype="cox"))
     ),
     moderately_sensitive = list(
-      html = "output/effectiveness_report.html"
+      html = "output/effectiveness_report.html",
+      md = "output/effectiveness_report.md"
     )
   )
 )
@@ -384,12 +386,12 @@ as.yaml(project_list, indent=2) %>%
 
 names(actions_list) %>% tibble(action=.) %>%
   mutate(
-    model = str_detect(action, "model"),
-    model_number = cumsum(model)
+    model = action==""  & lag(action!="", 1, TRUE),
+    model_number = cumsum(model),
   ) %>%
   group_by(model_number) %>%
   summarise(
-    sets = paste(action, collapse=" ")
+    sets = str_trim(paste(action, collapse=" "))
   ) %>% pull(sets) %>%
   paste(collapse="\n") %>%
   writeLines(here("actions.txt"))

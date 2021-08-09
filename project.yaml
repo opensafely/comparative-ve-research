@@ -580,6 +580,10 @@ actions:
         svg: output/models/covidadmitted/calendar/reportplr_*.svg
         png: output/models/covidadmitted/calendar/reportplr_*.png
 
+  ## # # # # # # # # # # # # # # # # # # # 
+  ## Report 
+  ## # # # # # # # # # # # # # # # # # # # 
+
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",
       knit_root_dir = "/workspace", output_dir="/workspace/output")'
@@ -600,4 +604,5 @@ actions:
     outputs:
       moderately_sensitive:
         html: output/effectiveness_report.html
+        md: output/effectiveness_report.md
 
