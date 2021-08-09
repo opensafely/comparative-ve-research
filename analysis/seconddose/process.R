@@ -101,8 +101,8 @@ data_processed <- data_extract %>%
 
     ageband = cut(
       age,
-      breaks=c(-Inf, 18, 30, 40, 50, 60, 65, Inf),
-      labels=c("under 18", "18-30", "30s", "40s", "50s", "60-64", "65+"),
+      breaks=c(-Inf, 18, 50, 55, 60, 65, 70, 75, 80, Inf),
+      labels=c("under 18", "18-50", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"),
       right=FALSE
     ),
 
@@ -149,6 +149,8 @@ data_processed <- data_extract %>%
       TRUE ~ NA_character_
     ),
 
+    care_home_combined = care_home_tpp | care_home_code, # any carehome flag
+
     vax1_type = case_when(
       pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, covid_vax_moderna_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
       pmin(covid_vax_pfizer_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_az_1_date, covid_vax_moderna_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "pfizer",
@@ -166,6 +168,20 @@ data_processed <- data_extract %>%
     vax1_date = pmin(covid_vax_pfizer_1_date, covid_vax_az_1_date, covid_vax_moderna_1_date, na.rm=TRUE),
     vax1_day = as.integer(floor((vax1_date - start_date_az))+1), # day 0 is the day before "start_date"
     vax1_week = as.integer(floor((vax1_date - start_date_az)/7)+1), # week 1 is days 1-7.
+
+
+    # jcvi_cat = fct_case_when(
+    #   care_home_combined | age_mar>=80 | hscworker  ~ "1 & 2",
+    #   age_mar>=75 ~ "3",
+    #   age_mar>=70 | cev ~ "4",
+    #   age_mar>=65 ~ "5",
+    #   between(age_mar, 16,64.999) & cv ~ "6",
+    #   age_mar >= 60 ~ "7",
+    #   age_mar >= 55 ~ "8",
+    #   age_mar >= 50 ~ "9",
+    #   TRUE ~ "10"
+    # )
+
 
   ) %>%
   droplevels()

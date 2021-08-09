@@ -223,7 +223,7 @@ ICD10_I = codelist_from_csv(
 
 ## PRIMIS
 
-carehome_primis = codelist_from_csv(
+carehome = codelist_from_csv(
     "codelists/primis-covid19-vacc-uptake-longres.csv", 
     system="snomed", 
     column="code",

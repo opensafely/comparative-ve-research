@@ -316,6 +316,15 @@ study = StudyDefinition(
     },
   ),
   
+  age_mar=patients.age_as_of( 
+    "2020-03-31",
+    return_expectations={
+      "rate": "universal",
+      "int": {"distribution": "population_ages"},
+      "incidence" : 1
+    },
+  ),
+  
   # https://github.com/opensafely/risk-factors-research/issues/46
   sex=patients.sex(
     return_expectations={
@@ -346,6 +355,80 @@ study = StudyDefinition(
       "category": {"ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}},
       "incidence": 0.8,
     },
+  ),
+  
+  hscworker = patients.with_healthcare_worker_flag_on_covid_vaccine_record(returning="binary_flag"),
+  
+  
+  care_home_type=patients.care_home_status_as_of(
+        "index_date - 1 day",
+        categorised_as={
+            "Carehome": """
+              IsPotentialCareHome
+              AND LocationDoesNotRequireNursing='Y'
+              AND LocationRequiresNursing='N'
+            """,
+            "Nursinghome": """
+              IsPotentialCareHome
+              AND LocationDoesNotRequireNursing='N'
+              AND LocationRequiresNursing='Y'
+            """,
+            "Mixed": "IsPotentialCareHome",
+            "": "DEFAULT",  # use empty string
+        },
+        return_expectations={
+            "category": {"ratios": {"Carehome": 0.05, "Nursinghome": 0.05, "Mixed": 0.05, "": 0.85, }, },
+            "incidence": 1,
+        },
+    ),
+
+    # simple care home flag
+    care_home_tpp=patients.satisfying(
+        """care_home_type""",
+        return_expectations={"incidence": 0.01},
+    ),
+    
+    care_home_code=patients.with_these_clinical_events(
+        codelists.carehome,
+        on_or_before="index_date - 1 day",
+        returning="binary_flag",
+        return_expectations={"incidence": 0.01},
+    ),
+    
+    
+    
+    cev_ever = patients.with_these_clinical_events(
+    codelists.shield,
+    returning="binary_flag",
+    on_or_before = "covid_vax_any_1_date - 1 days",
+    find_last_match_in_period = True,
+    return_expectations={"incidence": 0.02},
+  ),
+  
+  cev = patients.satisfying(
+    """severely_clinically_vulnerable AND NOT less_vulnerable""",
+    
+    ### SHIELDED GROUP - first flag all patients with "high risk" codes
+    severely_clinically_vulnerable=patients.with_these_clinical_events(
+      codelists.shield,
+      returning="binary_flag",
+      on_or_before = "covid_vax_any_1_date - 1 days",
+      find_last_match_in_period = True,
+    ),
+    
+    # find date at which the high risk code was added
+    date_severely_clinically_vulnerable=patients.date_of(
+      "severely_clinically_vulnerable",
+      date_format="YYYY-MM-DD",
+    ),
+    
+    ### NOT SHIELDED GROUP (medium and low risk) - only flag if later than 'shielded'
+    less_vulnerable=patients.with_these_clinical_events(
+      codelists.nonshield,
+      between=["date_severely_clinically_vulnerable + 1 day", "covid_vax_any_1_date - 1 days"],
+    ),
+    
+    return_expectations={"incidence": 0.01},
   ),
   
   ################################################

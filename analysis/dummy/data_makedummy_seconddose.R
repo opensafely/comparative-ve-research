@@ -66,7 +66,7 @@ sim_list = list(
     missing_rate = ~0.7
   ),
   covid_vax_moderna_3_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_moderna_1_day+80, covid_vax_moderna_1_day+120)),
+    ~as.integer(runif(n=1, covid_vax_moderna_2_day+80, covid_vax_moderna_2_day+120)),
     missing_rate = ~1
   ),
 
@@ -104,6 +104,8 @@ sim_list = list(
   age = bn_node(
     ~as.integer(rnorm(n=1, mean=60, sd=15))
   ),
+  age_mar = bn_node(~age),
+
   sex = bn_node(
     ~rfactor(n=1, levels = c("F", "M"), p = c(0.51, 0.49)),
     missing_rate = ~0.001 # this is shorthand for ~(rbernoulli(n=1, p = 0.2))
@@ -118,6 +120,21 @@ sim_list = list(
     ~rfactor(n=1, levels = c(0,1,2,3,4,5), p = c(0.1, 0.7, 0.05, 0.05, 0.05, 0.05)),
     missing_rate = ~ 0
   ),
+
+  care_home_type = bn_node(
+    ~rfactor(n=1, levels=c("Carehome", "Nursinghome", "Mixed", ""), p = c(0.01, 0.01, 0.01, 0.97))
+  ),
+
+  care_home_tpp = bn_node(
+    ~care_home_type!=""
+  ),
+  care_home_code = bn_node(
+    ~rbernoulli(n=1, p = 0.01)
+  ),
+
+  hscworker = bn_node( ~rbernoulli(n=1, p = 0.01)),
+  cev_ever = bn_node( ~rbernoulli(n=1, p = 0.02)),
+  cev = bn_node( ~rbernoulli(n=1, p = 0.02)),
 
   practice_id = bn_node(
     ~as.integer(runif(n=1, 1, 200))
