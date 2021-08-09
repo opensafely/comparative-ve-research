@@ -96,22 +96,23 @@ data_tte <- data_cohort %>%
     tte_vaxany2 = tte(covid_vax_1_date-1, covid_vax_2_date, censor_date),
     ind_vaxany2 = censor_indicator(covid_vax_2_date, censor_date),
 
-
     ageband,
     sex,
     ethnicity_combined,
     imd_Q5,
     all=""
-
   )
 
 
 
 
-plot_2dose <- function(var, var_descr){
+plot_2dose <- function(var, var_descr, weekly){
 
-  #var <- "ageband"
-  #var_descr <- "Age group"
+  weekly <- TRUE
+  var <- "ageband"
+  var_descr <- "Age group"
+
+  resolution <- ifelse(weekly, "weekly", "daily")
 
   data_only2dose <-
     data_tte %>%
@@ -125,10 +126,22 @@ plot_2dose <- function(var, var_descr){
     ) %>%
     droplevels()
 
+  if(weekly){
+    data_freq <-
+      data_only2dose %>%
+      mutate(
+        #round date to nearest week, starting on tuesday
+        covid_vax_1_date=floor_date(covid_vax_1_date, unit="week", week_start=2),
+        covid_vax_2_date=floor_date(covid_vax_2_date, unit="week", week_start=2),
+      ) %>%
+      group_by(covid_vax_1_date, covid_vax_2_date, vax1_type_descr, temp_var) %>%
+      count()
+  } else{
   data_freq <-
     data_only2dose %>%
     group_by(covid_vax_1_date, covid_vax_2_date, vax1_type_descr, temp_var) %>%
     count()
+  }
 
   # data_freq %>%
   #   ggplot()+
@@ -184,16 +197,20 @@ plot_2dose <- function(var, var_descr){
     width= 20,
     height = plotHeight(tile, "cm") + (plotNpanels(tile)/3)*4,
     limitsize = FALSE,
-    filename = glue("plot_tile_{var}.png"),
+    filename = glue("plot_tile_{resolution}_{var}.png"),
     path = here("output", "seconddose", "plots")
   )
 
+
+  binwidth <- ifelse(weekly, 7, 1)
 
   histogram <- data_only2dose %>%
     ggplot()+
     geom_histogram(
       aes(x=as.numeric(covid_vax_2_date-covid_vax_1_date)),
-      binwidth=1
+      binwidth=binwidth,
+      boundary=0,
+      closed="right"
     ) +
     geom_rect(
       aes(xmin=-Inf, xmax=Inf,ymin=1, ymax=6), fill="mistyrose", colour="transparent"
@@ -202,9 +219,10 @@ plot_2dose <- function(var, var_descr){
       rows = vars(temp_var),
       cols=vars(vax1_type_descr)
     )+
+    scale_x_continuous(breaks=seq(0, 52*7, 7))+
     scale_y_continuous(expand=expansion(c(0,NA)))+
     labs(
-      x="days to second dose",
+      x="Days to second dose",
       y="Count"
     )+
     theme_minimal(base_size = 14)+
@@ -221,7 +239,7 @@ plot_2dose <- function(var, var_descr){
     height = plotHeight(histogram, "cm") + (plotNpanels(histogram)/3)*4,
     width= 20,
     limitsize = FALSE,
-    filename = glue("plot_histogram_{var}.png"),
+    filename = glue("plot_histogram_{resolution}_{var}.png"),
     path = here("output", "seconddose", "plots")
   )
 
@@ -238,8 +256,14 @@ plot_2dose <- function(var, var_descr){
 #   "ethnicity_combined", "Ethnicity",
 # )
 
-plot_2dose("all", "Overall")
-plot_2dose("sex", "Sex")
-plot_2dose("imd_Q5", "IMD")
-plot_2dose("ageband", "Age")
-plot_2dose("ethnicity_combined", "Ethnicity")
+plot_2dose("all", "Overall", TRUE)
+plot_2dose("sex", "Sex", TRUE)
+plot_2dose("imd_Q5", "IMD", TRUE)
+plot_2dose("ageband", "Age", TRUE)
+plot_2dose("ethnicity_combined", "Ethnicity", TRUE)
+
+plot_2dose("all", "Overall", FALSE)
+plot_2dose("sex", "Sex", FALSE)
+plot_2dose("imd_Q5", "IMD", FALSE)
+plot_2dose("ageband", "Age", FALSE)
+plot_2dose("ethnicity_combined", "Ethnicity", FALSE)
