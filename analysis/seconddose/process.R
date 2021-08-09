@@ -149,7 +149,7 @@ data_processed <- data_extract %>%
       TRUE ~ NA_character_
     ),
 
-    care_home_combined = care_home_tpp | care_home_code, # any carehome flag
+    #care_home_combined = care_home_tpp | care_home_code, # any carehome flag
 
     vax1_type = case_when(
       pmin(covid_vax_az_1_date, as.Date("2030-01-01"), na.rm=TRUE) <= pmin(covid_vax_pfizer_1_date, covid_vax_moderna_1_date, as.Date("2030-01-01"), na.rm=TRUE) ~ "az",
