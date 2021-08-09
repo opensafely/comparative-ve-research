@@ -25,6 +25,14 @@ actions:
       highly_sensitive:
         data: output/data/seconddose_data_processed.rds
 
+  seconddose_graphs:
+    run: r:latest analysis/seconddose/graphs.R
+    needs:
+    - seconddose_process
+    outputs:
+      moderately_sensitive:
+        data: output/seconddose/plots/plot*.png
+
   ## # # # # # # # # # # # # # # # # # # # 
   ## HCW characteristics 
   ## # # # # # # # # # # # # # # # # # # # 
@@ -370,56 +378,6 @@ actions:
 
   ## ###  A&E attendence 
 
-  model_emergency_timesincevax_plr:
-    run: r:latest analysis/models/model_plr.R emergency timesincevax 50000
-    needs:
-    - design
-    - data_selection
-    outputs:
-      highly_sensitive:
-        rds: output/models/emergency/timesincevax/modelplr*.rds
-      moderately_sensitive:
-        txt: output/models/emergency/timesincevax/modelplr*.txt
-        csv: output/models/emergency/timesincevax/modelplr*.csv
-
-  report_emergency_timesincevax_plr:
-    run: r:latest analysis/models/report_plr.R emergency timesincevax
-    needs:
-    - design
-    - model_emergency_timesincevax_plr
-    outputs:
-      highly_sensitive:
-        rds: output/models/emergency/timesincevax/reportplr_*.rds
-      moderately_sensitive:
-        csv: output/models/emergency/timesincevax/reportplr_*.csv
-        svg: output/models/emergency/timesincevax/reportplr_*.svg
-        png: output/models/emergency/timesincevax/reportplr_*.png
-
-  model_emergency_calendar_plr:
-    run: r:latest analysis/models/model_plr.R emergency calendar 50000
-    needs:
-    - design
-    - data_selection
-    outputs:
-      highly_sensitive:
-        rds: output/models/emergency/calendar/modelplr*.rds
-      moderately_sensitive:
-        txt: output/models/emergency/calendar/modelplr*.txt
-        csv: output/models/emergency/calendar/modelplr*.csv
-
-  report_emergency_calendar_plr:
-    run: r:latest analysis/models/report_plr.R emergency calendar
-    needs:
-    - design
-    - model_emergency_calendar_plr
-    outputs:
-      highly_sensitive:
-        rds: output/models/emergency/calendar/reportplr_*.rds
-      moderately_sensitive:
-        csv: output/models/emergency/calendar/reportplr_*.csv
-        svg: output/models/emergency/calendar/reportplr_*.svg
-        png: output/models/emergency/calendar/reportplr_*.png
-
   model_emergency_timesincevax_cox:
     run: r:latest analysis/models/model_cox.R emergency timesincevax
     needs:
@@ -469,6 +427,56 @@ actions:
         csv: output/models/emergency/calendar/reportcox_*.csv
         svg: output/models/emergency/calendar/reportcox_*.svg
         png: output/models/emergency/calendar/reportcox_*.png
+
+  model_emergency_timesincevax_plr:
+    run: r:latest analysis/models/model_plr.R emergency timesincevax 50000
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/emergency/timesincevax/modelplr*.txt
+        csv: output/models/emergency/timesincevax/modelplr*.csv
+
+  report_emergency_timesincevax_plr:
+    run: r:latest analysis/models/report_plr.R emergency timesincevax
+    needs:
+    - design
+    - model_emergency_timesincevax_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/emergency/timesincevax/reportplr_*.csv
+        svg: output/models/emergency/timesincevax/reportplr_*.svg
+        png: output/models/emergency/timesincevax/reportplr_*.png
+
+  model_emergency_calendar_plr:
+    run: r:latest analysis/models/model_plr.R emergency calendar 50000
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/calendar/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/emergency/calendar/modelplr*.txt
+        csv: output/models/emergency/calendar/modelplr*.csv
+
+  report_emergency_calendar_plr:
+    run: r:latest analysis/models/report_plr.R emergency calendar
+    needs:
+    - design
+    - model_emergency_calendar_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/calendar/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/emergency/calendar/reportplr_*.csv
+        svg: output/models/emergency/calendar/reportplr_*.svg
+        png: output/models/emergency/calendar/reportplr_*.png
 
   ## ###  COVID-19 hospital admission 
 

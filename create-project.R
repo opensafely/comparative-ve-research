@@ -136,6 +136,15 @@ actions_list <- splice(
     )
   ),
 
+  action(
+    name = "seconddose_graphs",
+    run = "r:latest analysis/seconddose/graphs.R",
+    needs = list("seconddose_process"),
+    moderately_sensitive = list(
+      data = "output/seconddose/plots/plot*.png"
+    )
+  ),
+
 
   comment("# # # # # # # # # # # # # # # # # # #", "HCW characteristics", "# # # # # # # # # # # # # # # # # # #"),
 
@@ -306,14 +315,15 @@ actions_list <- splice(
   action_report("postest", "calendar", "plr"),
 
   comment("###  A&E attendence"),
-  action_model("emergency", "timesincevax", "plr", 50000),
-  action_report("emergency", "timesincevax", "plr"),
-  action_model("emergency", "calendar", "plr", 50000),
-  action_report("emergency", "calendar", "plr"),
   action_model("emergency", "timesincevax", "cox"),
   action_report("emergency", "timesincevax", "cox"),
   action_model("emergency", "calendar", "cox"),
   action_report("emergency", "calendar", "cox"),
+  action_model("emergency", "timesincevax", "plr", 50000),
+  action_report("emergency", "timesincevax", "plr"),
+  action_model("emergency", "calendar", "plr", 50000),
+  action_report("emergency", "calendar", "plr"),
+
 
   comment("###  COVID-19 hospital admission"),
   action_model("covidadmitted", "timesincevax", "cox"),
