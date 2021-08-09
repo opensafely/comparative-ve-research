@@ -46,13 +46,21 @@ data_criteria <- data_processed %>%
         #no_unclear_brand &
         not_cev &
         #knownvaxdate &
-        vax1_beforeenddate
+        vax1_beforeenddate &
+        vax1_afterstartdate &
+        vax1_azpfizer
     ),
   )
 
-data_cohort_allvax <- data_criteria %>% filter(include) %>% droplevels()
+data_cohort_allvax <- data_criteria %>%
+  filter(
+    has_age & has_sex & has_imd & has_ethnicity & has_region &
+    #has_follow_up_previous_year &
+    #no_unclear_brand &
+    not_cev
+  ) %>% droplevels()
 write_rds(data_cohort_allvax, here("output", "data", "data_cohort_allvax.rds"), compress="gz")
-data_cohort <- data_criteria %>% filter(include & vax1_beforeenddate) %>% droplevels()
+data_cohort <- data_criteria %>% filter(include) %>% droplevels()
 write_rds(data_cohort, here("output", "data", "data_cohort.rds"), compress="gz")
 
 data_flowchart <- data_criteria %>%
