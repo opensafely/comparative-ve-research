@@ -117,6 +117,8 @@ defaults_list <- list(
 ## actions ----
 actions_list <- splice(
 
+
+  comment("# # # # # # # # # # # # # # # # # # #", "Temp second dose info", "# # # # # # # # # # # # # # # # # # #"),
   action(
     name = "seconddose_extract",
     run = "cohortextractor:latest generate_cohort --study-definition study_definition_2dose --output-format feather",
@@ -133,6 +135,9 @@ actions_list <- splice(
       data = "output/data/seconddose_data_processed.rds"
     )
   ),
+
+
+  comment("# # # # # # # # # # # # # # # # # # #", "HCW characteristics", "# # # # # # # # # # # # # # # # # # #"),
 
   action(
     name = "hcw_extract",
@@ -174,6 +179,8 @@ actions_list <- splice(
     )
   ),
 
+
+  comment("# # # # # # # # # # # # # # # # # # #", "Extract and process", "# # # # # # # # # # # # # # # # # # #"),
 
   action(
     name = "design",
@@ -223,6 +230,7 @@ actions_list <- splice(
     )
   ),
 
+  comment("# # # # # # # # # # # # # # # # # # #", "Descriptive stats", "# # # # # # # # # # # # # # # # # # #"),
 
   action(
     name = "descr_table1",
@@ -275,52 +283,52 @@ actions_list <- splice(
     )
   ),
 
+  comment("# # # # # # # # # # # # # # # # # # #", "Models", "# # # # # # # # # # # # # # # # # # #"),
 
+  comment("###  SARS-CoV-2 Test"),
   action_model("test", "timesincevax", "cox"),
   action_report("test", "timesincevax", "cox"),
   action_model("test", "calendar", "cox"),
   action_report("test", "calendar", "cox"),
-
-  action_model("postest", "timesincevax", "cox"),
-  action_report("postest", "timesincevax", "cox"),
-  action_model("postest", "calendar", "cox"),
-  action_report("postest", "calendar", "cox"),
-
-  action_model("emergency", "timesincevax", "cox"),
-  action_report("emergency", "timesincevax", "cox"),
-  action_model("emergency", "calendar", "cox"),
-  action_report("emergency", "calendar", "cox"),
-
-  action_model("covidadmitted", "timesincevax", "cox"),
-  action_report("covidadmitted", "timesincevax", "cox"),
-  action_model("covidadmitted", "calendar", "cox"),
-  action_report("covidadmitted", "calendar", "cox"),
-
-  # action_model("covidcc", "timesincevax", "cox"),
-  # action_report("covidcc", "timesincevax", "cox"),
-  # action_model("covidcc", "calendar", "cox"),
-  # action_report("covidcc", "calendar", "cox"),
-
   action_model("test", "timesincevax", "plr", 50000),
   action_report("test", "timesincevax", "plr"),
   action_model("test", "calendar", "plr", 50000),
   action_report("test", "calendar", "plr"),
 
+  comment("###  Positive SARS-CoV-2 Test"),
+  action_model("postest", "timesincevax", "cox"),
+  action_report("postest", "timesincevax", "cox"),
+  action_model("postest", "calendar", "cox"),
+  action_report("postest", "calendar", "cox"),
   action_model("postest", "timesincevax", "plr", 50000),
   action_report("postest", "timesincevax", "plr"),
   action_model("postest", "calendar", "plr", 50000),
   action_report("postest", "calendar", "plr"),
 
+  comment("###  A&E attendence"),
   action_model("emergency", "timesincevax", "plr", 50000),
   action_report("emergency", "timesincevax", "plr"),
   action_model("emergency", "calendar", "plr", 50000),
   action_report("emergency", "calendar", "plr"),
+  action_model("emergency", "timesincevax", "cox"),
+  action_report("emergency", "timesincevax", "cox"),
+  action_model("emergency", "calendar", "cox"),
+  action_report("emergency", "calendar", "cox"),
 
+  comment("###  COVID-19 hospital admission"),
+  action_model("covidadmitted", "timesincevax", "cox"),
+  action_report("covidadmitted", "timesincevax", "cox"),
+  action_model("covidadmitted", "calendar", "cox"),
+  action_report("covidadmitted", "calendar", "cox"),
   action_model("covidadmitted", "timesincevax", "plr", 50000),
   action_report("covidadmitted", "timesincevax", "plr"),
   action_model("covidadmitted", "calendar", "plr", 50000),
   action_report("covidadmitted", "calendar", "plr"),
 
+  # action_model("covidcc", "timesincevax", "cox"),
+  # action_report("covidcc", "timesincevax", "cox"),
+  # action_model("covidcc", "calendar", "cox"),
+  # action_report("covidcc", "calendar", "cox"),
   # action_model("covidcc", "timesincevax", "plr", 50000),
   # action_report("covidcc", "timesincevax", "plr"),
   # action_model("covidcc", "calendar", "plr", 50000),
