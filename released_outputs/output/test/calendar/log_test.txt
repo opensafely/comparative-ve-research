@@ -1,29 +1,29 @@
 ## script info for test ##   
-data_cox data size = 343173
-  data_cox memory usage = 0.231 GB
+data_cox data size = 352886
+  data_cox memory usage = 0.239 GB
 
 
-data_cox_split data size = 1899651
-  data_cox_split memory usage = 0.775 GB
+data_cox_split data size = 1871825
+  data_cox_split memory usage = 0.772 GB
 
 
-model0 data size = 1899651
-  model0 memory usage = 0.319 GB
+model0 data size = 1871825
+  model0 memory usage = 0.314 GB
   convergence status: 0
 
 
-model1 data size = 1899651
-  model1 memory usage = 0.319 GB
+model1 data size = 1871825
+  model1 memory usage = 0.314 GB
   convergence status: 0
 
 
-model2 data size = 1899651
-  model2 memory usage = 0.319 GB
+model2 data size = 1871825
+  model2 memory usage = 0.315 GB
   convergence status: 0
 
 
-model3 data size = 1899651
-  model3 memory usage = 0.319 GB
+model3 data size = 1871825
+  model3 memory usage = 0.315 GB
   convergence status: 0
 
 

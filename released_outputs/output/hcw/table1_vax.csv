@@ -1,0 +1,52 @@
+variable,**Characteristic**,"**FALSE**, N = 98,691","**TRUE**, N = 525,734"
+ageband,ageband,NA,NA
+ageband,under 18,160 (0.2%),"1,898 (0.4%)"
+ageband,18-30,"35,354 (36%)","98,225 (19%)"
+ageband,30s,"33,709 (34%)","120,396 (23%)"
+ageband,40s,"16,482 (17%)","125,971 (24%)"
+ageband,50s,"9,803 (9.9%)","128,722 (24%)"
+ageband,60-64,"2,372 (2.4%)","36,020 (6.9%)"
+ageband,65+,811 (0.8%),"14,502 (2.8%)"
+sex,sex,NA,NA
+sex,Female,"73,444 (74%)","405,592 (77%)"
+sex,Male,"25,241 (26%)","120,140 (23%)"
+sex,Other,6 (<0.1%),2 (<0.1%)
+imd_Q5,imd_Q5,NA,NA
+imd_Q5,1 most deprived,"14,926 (16%)","77,356 (15%)"
+imd_Q5,2,"20,196 (21%)","95,272 (19%)"
+imd_Q5,3,"22,452 (24%)","110,095 (22%)"
+imd_Q5,4,"20,343 (21%)","113,404 (22%)"
+imd_Q5,5 least deprived,"17,489 (18%)","109,897 (22%)"
+imd_Q5,Unknown,"3,285","19,710"
+ethnicity_combined,ethnicity_combined,NA,NA
+ethnicity_combined,White,"68,966 (75%)","400,700 (82%)"
+ethnicity_combined,Black,"5,450 (5.9%)","20,932 (4.3%)"
+ethnicity_combined,South Asian,"11,886 (13%)","48,850 (9.9%)"
+ethnicity_combined,Mixed,"2,335 (2.5%)","8,460 (1.7%)"
+ethnicity_combined,Other,"3,568 (3.9%)","12,262 (2.5%)"
+ethnicity_combined,Unknown,"6,486","34,530"
+region,region,NA,NA
+region,Yorkshire and The Humber,"1,970 (12%)","73,791 (15%)"
+region,East,"3,140 (19%)","110,652 (22%)"
+region,East Midlands,"2,286 (14%)","93,639 (19%)"
+region,South West,"2,542 (16%)","69,639 (14%)"
+region,West Midlands,"1,304 (8.0%)","18,945 (3.7%)"
+region,North East,846 (5.2%),"30,620 (6.1%)"
+region,South East,"1,348 (8.3%)","33,812 (6.7%)"
+region,North West,"1,237 (7.6%)","52,884 (10%)"
+region,London,"1,597 (9.8%)","22,111 (4.4%)"
+region,Unknown,"82,421","19,641"
+vax_doses,vax_doses,NA,NA
+vax_doses,0,0 (NA%),0 (0%)
+vax_doses,1,0 (NA%),"31,425 (6.0%)"
+vax_doses,2,0 (NA%),"493,076 (94%)"
+vax_doses,3+,0 (NA%),"1,231 (0.2%)"
+vax_doses,Unknown,"98,691",2
+vax1_type,vax1_type,NA,NA
+vax1_type,az,0 (NA%),"118,007 (22%)"
+vax1_type,pfizer,0 (NA%),"405,173 (77%)"
+vax1_type,moderna,0 (NA%),"2,283 (0.4%)"
+vax1_type,unclear,0 (NA%),269 (<0.1%)
+vax1_type,Unknown,"98,691",2
+vax_disease_record,vax_disease_record,34 (<0.1%),"525,734 (100%)"
+vax_date1_mismatch,vax_date1_mismatch,34 (<0.1%),7 (<0.1%)

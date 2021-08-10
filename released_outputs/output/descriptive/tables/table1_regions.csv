@@ -1,48 +1,48 @@
-variable,**Characteristic**,"**az**, N = 88,074","**pfizer**, N = 256,383"
+variable,**Characteristic**,"**BNT162b2**, N = 259,753","**ChAdOx1**, N = 93,133"
 ageband,Age,NA,NA
-ageband,18-30,"15,421 (18%)","41,947 (16%)"
-ageband,30s,"20,161 (23%)","60,684 (24%)"
-ageband,40s,"20,777 (24%)","65,333 (25%)"
-ageband,50s,"24,396 (28%)","68,139 (27%)"
-ageband,60-64,"7,319 (8.3%)","20,280 (7.9%)"
+ageband,18-30,"43,041 (17%)","16,336 (18%)"
+ageband,30s,"61,683 (24%)","21,698 (23%)"
+ageband,40s,"65,951 (25%)","22,369 (24%)"
+ageband,50s,"68,659 (26%)","25,255 (27%)"
+ageband,60-64,"20,419 (7.9%)","7,475 (8.0%)"
 sex,Sex,NA,NA
-sex,F,"68,331 (78%)","202,708 (79%)"
-sex,M,"19,743 (22%)","53,675 (21%)"
+sex,Female,"205,383 (79%)","72,291 (78%)"
+sex,Male,"54,370 (21%)","20,842 (22%)"
 ethnicity_combined,Ethnicity,NA,NA
-ethnicity_combined,White,"72,780 (83%)","213,418 (83%)"
-ethnicity_combined,Black,"5,073 (5.8%)","8,871 (3.5%)"
-ethnicity_combined,South Asian,"7,038 (8.0%)","23,821 (9.3%)"
-ethnicity_combined,Mixed,"1,567 (1.8%)","3,971 (1.5%)"
-ethnicity_combined,Other,"1,616 (1.8%)","6,302 (2.5%)"
+ethnicity_combined,White,"215,843 (83%)","76,557 (82%)"
+ethnicity_combined,Black,"9,119 (3.5%)","5,536 (5.9%)"
+ethnicity_combined,South Asian,"24,299 (9.4%)","7,596 (8.2%)"
+ethnicity_combined,Mixed,"4,053 (1.6%)","1,691 (1.8%)"
+ethnicity_combined,Other,"6,439 (2.5%)","1,753 (1.9%)"
 imd_Q5,IMD,NA,NA
-imd_Q5,1 most deprived,"14,980 (17%)","37,610 (15%)"
-imd_Q5,2,"16,966 (19%)","47,954 (19%)"
-imd_Q5,3,"18,835 (21%)","56,444 (22%)"
-imd_Q5,4,"19,244 (22%)","58,110 (23%)"
-imd_Q5,5 least deprived,"18,049 (20%)","56,265 (22%)"
-vax1_day,Day of vaccination,"57 (43, 87)","39 (34, 46)"
+imd_Q5,1 most deprived,"38,245 (15%)","15,962 (17%)"
+imd_Q5,2,"48,701 (19%)","18,059 (19%)"
+imd_Q5,3,"57,202 (22%)","19,950 (21%)"
+imd_Q5,4,"58,798 (23%)","20,244 (22%)"
+imd_Q5,5 least deprived,"56,807 (22%)","18,918 (20%)"
+vax1_day,Day of vaccination,"39 (34, 46)","60 (44, 92)"
 bmi,Body Mass Index,NA,NA
-bmi,Not obese,"67,814 (77%)","201,789 (79%)"
-bmi,Obese I (30-34.9),"11,476 (13%)","31,200 (12%)"
-bmi,Obese II (35-39.9),"5,255 (6.0%)","14,277 (5.6%)"
-bmi,Obese III (40+),"3,529 (4.0%)","9,117 (3.6%)"
-heart_failure,Heart failure,244 (0.3%),635 (0.2%)
-other_heart_disease,Other heart disease,"1,631 (1.9%)","4,679 (1.8%)"
-dialysis,Dialysis,7 (<0.1%),17 (<0.1%)
-diabetes,Diabetes,"4,639 (5.3%)","14,009 (5.5%)"
-chronic_liver_disease,Chronic liver disease,307 (0.3%),654 (0.3%)
-current_copd,COPD,459 (0.5%),"1,311 (0.5%)"
-other_resp_conditions,Other respiratory conditions,301 (0.3%),747 (0.3%)
-lung_cancer,Lung Cancer,14 (<0.1%),53 (<0.1%)
-haematological_cancer,Haematological cancer,161 (0.2%),438 (0.2%)
-cancer_excl_lung_and_haem,"Cancer excl. lung, haemo","2,201 (2.5%)","6,589 (2.6%)"
-any_immunosuppression,Immunosuppressed,"1,767 (2.0%)","5,464 (2.1%)"
-other_neuro_conditions,Other neurological conditions,437 (0.5%),"1,245 (0.5%)"
-LD_incl_DS_and_CP,Learning disabilities,158 (0.2%),368 (0.1%)
-psychosis_schiz_bipolar,Serious mental illness,859 (1.0%),"1,609 (0.6%)"
+bmi,Not obese,"204,084 (79%)","71,677 (77%)"
+bmi,Obese I (30-34.9),"31,768 (12%)","12,207 (13%)"
+bmi,Obese II (35-39.9),"14,573 (5.6%)","5,536 (5.9%)"
+bmi,Obese III (40+),"9,328 (3.6%)","3,713 (4.0%)"
+heart_failure,Heart failure,637 (0.2%),252 (0.3%)
+other_heart_disease,Other heart disease,"4,702 (1.8%)","1,690 (1.8%)"
+dialysis,Dialysis,17 (<0.1%),8 (<0.1%)
+diabetes,Diabetes,"14,135 (5.4%)","4,852 (5.2%)"
+chronic_liver_disease,Chronic liver disease,659 (0.3%),321 (0.3%)
+current_copd,COPD,"1,319 (0.5%)",470 (0.5%)
+other_resp_conditions,Other respiratory conditions,753 (0.3%),309 (0.3%)
+lung_cancer,Lung Cancer,53 (<0.1%),14 (<0.1%)
+haematological_cancer,Haematological cancer,443 (0.2%),171 (0.2%)
+cancer_excl_lung_and_haem,"Cancer excl. lung, haemo","6,650 (2.6%)","2,279 (2.4%)"
+any_immunosuppression,Immunosuppressed,"5,494 (2.1%)","1,820 (2.0%)"
+other_neuro_conditions,Other neurological conditions,"1,255 (0.5%)",451 (0.5%)
+LD_incl_DS_and_CP,Learning disabilities,372 (0.1%),165 (0.2%)
+psychosis_schiz_bipolar,Serious mental illness,"1,631 (0.6%)",902 (1.0%)
 multimorb,Morbidity count,NA,NA
-multimorb,0,"69,917 (79%)","205,709 (80%)"
-multimorb,1,"14,887 (17%)","41,614 (16%)"
-multimorb,2,"2,881 (3.3%)","8,008 (3.1%)"
-multimorb,3+,389 (0.4%),"1,052 (0.4%)"
-prior_covid_infection,Prior SARS-CoV-2 infection,"14,127 (16%)","28,183 (11%)"
+multimorb,0,"208,363 (80%)","74,130 (80%)"
+multimorb,1,"42,241 (16%)","15,607 (17%)"
+multimorb,2,"8,094 (3.1%)","2,998 (3.2%)"
+multimorb,3+,"1,055 (0.4%)",398 (0.4%)
+prior_covid_infection,Prior SARS-CoV-2 infection,"28,823 (11%)","15,096 (16%)"

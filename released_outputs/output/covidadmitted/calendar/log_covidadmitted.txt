@@ -1,29 +1,29 @@
 ## script info for covidadmitted ##   
-data_cox data size = 343474
-  data_cox memory usage = 0.231 GB
+data_cox data size = 352886
+  data_cox memory usage = 0.239 GB
 
 
-data_cox_split data size = 1952861
-  data_cox_split memory usage = 0.797 GB
+data_cox_split data size = 2082042
+  data_cox_split memory usage = 0.858 GB
 
 
-model0 data size = 1952861
-  model0 memory usage = 0.328 GB
+model0 data size = 2082042
+  model0 memory usage = 0.35 GB
   convergence status: 0
 
 
-model1 data size = 1952861
-  model1 memory usage = 0.328 GB
+model1 data size = 2082042
+  model1 memory usage = 0.35 GB
   convergence status: 0
 
 
-model2 data size = 1952861
-  model2 memory usage = 0.328 GB
+model2 data size = 2082042
+  model2 memory usage = 0.35 GB
   convergence status: 0
 
 
-model3 data size = 1952861
-  model3 memory usage = 0.328 GB
+model3 data size = 2082042
+  model3 memory usage = 0.35 GB
   convergence status: 0
 
 
