@@ -372,6 +372,33 @@ actions_list <- splice(
       md = "output/report/effectiveness_report.md",
       figures = "output/report/figures/*.png"
     )
+  ),
+
+  action(
+    name = "rmd_report_vaxtime",
+    run = glue(
+      "r:latest -e {q}",
+      q = single_quote('rmarkdown::render("analysis/report/effectiveness_report_vaccinatedtime.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )')
+    ),
+    needs = splice(
+      "design", "data_selection",
+      "descr_table1", "descr_irr",
+      "descr_km",
+      as.list(
+        glue_data(
+          .x = expand_grid(
+            outcome = c("test", "postest", "emergency", "covidadmitted"),
+            modeltype = c("cox", "plr")
+          ),
+          "report_{outcome}_timesincevax_{modeltype}"
+        )
+      )
+    ),
+    moderately_sensitive = list(
+      html = "output/report/effectiveness_report_vaccinatedtime.html",
+      md = "output/report/effectiveness_report_vaccinatedtime.md",
+      figures = "output/report/figures-vaxtime/*.png"
+    )
   )
 
 )

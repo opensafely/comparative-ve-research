@@ -615,3 +615,26 @@ actions:
         md: output/report/effectiveness_report.md
         figures: output/report/figures/*.png
 
+  rmd_report_vaxtime:
+    run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_vaccinatedtime.Rmd",  knit_root_dir
+      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )'
+    needs:
+    - design
+    - data_selection
+    - descr_table1
+    - descr_irr
+    - descr_km
+    - report_test_timesincevax_cox
+    - report_test_timesincevax_plr
+    - report_postest_timesincevax_cox
+    - report_postest_timesincevax_plr
+    - report_emergency_timesincevax_cox
+    - report_emergency_timesincevax_plr
+    - report_covidadmitted_timesincevax_cox
+    - report_covidadmitted_timesincevax_plr
+    outputs:
+      moderately_sensitive:
+        html: output/report/effectiveness_report_vaccinatedtime.html
+        md: output/report/effectiveness_report_vaccinatedtime.md
+        figures: output/report/figures-vaxtime/*.png
+
