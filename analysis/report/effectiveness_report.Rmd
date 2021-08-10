@@ -1,17 +1,17 @@
 ---
 title: "Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers"
 output:
-  html_document:
-    code_folding: hide
-    keep_md: yes
-  pdf_document: default
-  md_document:
-    variant: gfm
+  github_document:
+    keep_html: TRUE
+  #  code_folding: hide
+    #keep_md: yes
+  #pdf_document: default
+  # md_document:
+  #   variant: gfm
+  #html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
 
 library('tidyverse')
 library('here')
@@ -22,6 +22,13 @@ library('patchwork')
 
 
 output_dir <- here("output")
+
+fs::dir_create(output_dir, "report", "figures")
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.path = paste0(fs::path(output_dir, "report", "figures"), "/")
+)
 
 gbl_vars <- jsonlite::fromJSON(
   txt=here("analysis", "global-variables.json")

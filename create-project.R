@@ -348,18 +348,32 @@ actions_list <- splice(
 
   action(
     name = "rmd_report",
-    run = glue("r:latest -e {q}", q = single_quote('rmarkdown::render("analysis/report/effectiveness_report.Rmd", knit_root_dir = "/workspace", output_dir="/workspace/output")') ),
+    run = glue(
+      "r:latest -e {q}",
+      q = single_quote('rmarkdown::render("analysis/report/effectiveness_report.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )')
+    ),
     needs = splice(
       "design", "data_selection",
       "descr_table1", "descr_irr",
       "descr_km",
-      as.list(glue("report_{outcome}_{timescale}_{modeltype}", outcome=rep(c("test", "postest", "emergency", "covidadmitted"),each=2), timescale = rep(c("timesincevax", "calendar"), 4), modeltype="cox"))
+      as.list(
+        glue_data(
+             .x = expand_grid(
+               outcome = c("test", "postest", "emergency", "covidadmitted"),
+               modeltype = c("cox", "plr"),
+               timescale = c("timesincevax", "calendar")
+             ),
+             "report_{outcome}_{timescale}_{modeltype}"
+        )
+      )
     ),
     moderately_sensitive = list(
-      html = "output/effectiveness_report.html",
-      md = "output/effectiveness_report.md"
+      html = "output/report/effectiveness_report.html",
+      md = "output/report/effectiveness_report.md",
+      figures = "output/report/figures/*.png"
     )
   )
+
 )
 
 
@@ -395,3 +409,4 @@ names(actions_list) %>% tibble(action=.) %>%
   ) %>% pull(sets) %>%
   paste(collapse="\n") %>%
   writeLines(here("actions.txt"))
+
