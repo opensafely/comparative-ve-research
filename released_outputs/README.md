@@ -138,6 +138,28 @@
       * [output/postest/timesincevax/forest_plot_cox.svg](output/postest/timesincevax/forest_plot_cox.svg)
       * [output/postest/timesincevax/glance_postest.csv](output/postest/timesincevax/glance_postest.csv)
       * [output/postest/timesincevax/log_postest.txt](output/postest/timesincevax/log_postest.txt)
+  * output/seconddose
+    * output/seconddose/plots
+      * [output/seconddose/plots/plot_histogram_daily_ageband.png](output/seconddose/plots/plot_histogram_daily_ageband.png)
+      * [output/seconddose/plots/plot_histogram_daily_all.png](output/seconddose/plots/plot_histogram_daily_all.png)
+      * [output/seconddose/plots/plot_histogram_daily_ethnicity_combined.png](output/seconddose/plots/plot_histogram_daily_ethnicity_combined.png)
+      * [output/seconddose/plots/plot_histogram_daily_imd_Q5.png](output/seconddose/plots/plot_histogram_daily_imd_Q5.png)
+      * [output/seconddose/plots/plot_histogram_daily_sex.png](output/seconddose/plots/plot_histogram_daily_sex.png)
+      * [output/seconddose/plots/plot_histogram_weekly_ageband.png](output/seconddose/plots/plot_histogram_weekly_ageband.png)
+      * [output/seconddose/plots/plot_histogram_weekly_all.png](output/seconddose/plots/plot_histogram_weekly_all.png)
+      * [output/seconddose/plots/plot_histogram_weekly_ethnicity_combined.png](output/seconddose/plots/plot_histogram_weekly_ethnicity_combined.png)
+      * [output/seconddose/plots/plot_histogram_weekly_imd_Q5.png](output/seconddose/plots/plot_histogram_weekly_imd_Q5.png)
+      * [output/seconddose/plots/plot_histogram_weekly_sex.png](output/seconddose/plots/plot_histogram_weekly_sex.png)
+      * [output/seconddose/plots/plot_tile_daily_ageband.png](output/seconddose/plots/plot_tile_daily_ageband.png)
+      * [output/seconddose/plots/plot_tile_daily_all.png](output/seconddose/plots/plot_tile_daily_all.png)
+      * [output/seconddose/plots/plot_tile_daily_ethnicity_combined.png](output/seconddose/plots/plot_tile_daily_ethnicity_combined.png)
+      * [output/seconddose/plots/plot_tile_daily_imd_Q5.png](output/seconddose/plots/plot_tile_daily_imd_Q5.png)
+      * [output/seconddose/plots/plot_tile_daily_sex.png](output/seconddose/plots/plot_tile_daily_sex.png)
+      * [output/seconddose/plots/plot_tile_weekly_ageband.png](output/seconddose/plots/plot_tile_weekly_ageband.png)
+      * [output/seconddose/plots/plot_tile_weekly_all.png](output/seconddose/plots/plot_tile_weekly_all.png)
+      * [output/seconddose/plots/plot_tile_weekly_ethnicity_combined.png](output/seconddose/plots/plot_tile_weekly_ethnicity_combined.png)
+      * [output/seconddose/plots/plot_tile_weekly_imd_Q5.png](output/seconddose/plots/plot_tile_weekly_imd_Q5.png)
+      * [output/seconddose/plots/plot_tile_weekly_sex.png](output/seconddose/plots/plot_tile_weekly_sex.png)
   * output/test
     * output/test/calendar
       * [output/test/calendar/effect_estimates.csv](output/test/calendar/effect_estimates.csv)
