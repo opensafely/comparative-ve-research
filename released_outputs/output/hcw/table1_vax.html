@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+
+
+</head>
+<body>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#hiawlsnmbo .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#hiawlsnmbo .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#hiawlsnmbo .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#hiawlsnmbo .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#hiawlsnmbo .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#hiawlsnmbo .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#hiawlsnmbo .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#hiawlsnmbo .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hiawlsnmbo .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hiawlsnmbo .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#hiawlsnmbo .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#hiawlsnmbo .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#hiawlsnmbo .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#hiawlsnmbo .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hiawlsnmbo .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hiawlsnmbo .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#hiawlsnmbo .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#hiawlsnmbo .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hiawlsnmbo .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#hiawlsnmbo .gt_left {
+  text-align: left;
+}
+
+#hiawlsnmbo .gt_center {
+  text-align: center;
+}
+
+#hiawlsnmbo .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#hiawlsnmbo .gt_font_normal {
+  font-weight: normal;
+}
+
+#hiawlsnmbo .gt_font_bold {
+  font-weight: bold;
+}
+
+#hiawlsnmbo .gt_font_italic {
+  font-style: italic;
+}
+
+#hiawlsnmbo .gt_super {
+  font-size: 65%;
+}
+
+#hiawlsnmbo .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="hiawlsnmbo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>FALSE</strong>, N = 98,691</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>TRUE</strong>, N = 525,734</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">ageband</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">under 18</td>
+      <td class="gt_row gt_center">160 (0.2%)</td>
+      <td class="gt_row gt_center">1,898 (0.4%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">18-30</td>
+      <td class="gt_row gt_center">35,354 (36%)</td>
+      <td class="gt_row gt_center">98,225 (19%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">30s</td>
+      <td class="gt_row gt_center">33,709 (34%)</td>
+      <td class="gt_row gt_center">120,396 (23%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">40s</td>
+      <td class="gt_row gt_center">16,482 (17%)</td>
+      <td class="gt_row gt_center">125,971 (24%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">50s</td>
+      <td class="gt_row gt_center">9,803 (9.9%)</td>
+      <td class="gt_row gt_center">128,722 (24%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">60-64</td>
+      <td class="gt_row gt_center">2,372 (2.4%)</td>
+      <td class="gt_row gt_center">36,020 (6.9%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">65+</td>
+      <td class="gt_row gt_center">811 (0.8%)</td>
+      <td class="gt_row gt_center">14,502 (2.8%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">sex</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Female</td>
+      <td class="gt_row gt_center">73,444 (74%)</td>
+      <td class="gt_row gt_center">405,592 (77%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Male</td>
+      <td class="gt_row gt_center">25,241 (26%)</td>
+      <td class="gt_row gt_center">120,140 (23%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Other</td>
+      <td class="gt_row gt_center">6 (&lt;0.1%)</td>
+      <td class="gt_row gt_center">2 (&lt;0.1%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">imd_Q5</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1 most deprived</td>
+      <td class="gt_row gt_center">14,926 (16%)</td>
+      <td class="gt_row gt_center">77,356 (15%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+      <td class="gt_row gt_center">20,196 (21%)</td>
+      <td class="gt_row gt_center">95,272 (19%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">3</td>
+      <td class="gt_row gt_center">22,452 (24%)</td>
+      <td class="gt_row gt_center">110,095 (22%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">4</td>
+      <td class="gt_row gt_center">20,343 (21%)</td>
+      <td class="gt_row gt_center">113,404 (22%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">5 least deprived</td>
+      <td class="gt_row gt_center">17,489 (18%)</td>
+      <td class="gt_row gt_center">109,897 (22%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Unknown</td>
+      <td class="gt_row gt_center">3,285</td>
+      <td class="gt_row gt_center">19,710</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">ethnicity_combined</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">White</td>
+      <td class="gt_row gt_center">68,966 (75%)</td>
+      <td class="gt_row gt_center">400,700 (82%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Black</td>
+      <td class="gt_row gt_center">5,450 (5.9%)</td>
+      <td class="gt_row gt_center">20,932 (4.3%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">South Asian</td>
+      <td class="gt_row gt_center">11,886 (13%)</td>
+      <td class="gt_row gt_center">48,850 (9.9%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Mixed</td>
+      <td class="gt_row gt_center">2,335 (2.5%)</td>
+      <td class="gt_row gt_center">8,460 (1.7%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Other</td>
+      <td class="gt_row gt_center">3,568 (3.9%)</td>
+      <td class="gt_row gt_center">12,262 (2.5%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Unknown</td>
+      <td class="gt_row gt_center">6,486</td>
+      <td class="gt_row gt_center">34,530</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">region</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Yorkshire and The Humber</td>
+      <td class="gt_row gt_center">1,970 (12%)</td>
+      <td class="gt_row gt_center">73,791 (15%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">East</td>
+      <td class="gt_row gt_center">3,140 (19%)</td>
+      <td class="gt_row gt_center">110,652 (22%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">East Midlands</td>
+      <td class="gt_row gt_center">2,286 (14%)</td>
+      <td class="gt_row gt_center">93,639 (19%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">South West</td>
+      <td class="gt_row gt_center">2,542 (16%)</td>
+      <td class="gt_row gt_center">69,639 (14%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">West Midlands</td>
+      <td class="gt_row gt_center">1,304 (8.0%)</td>
+      <td class="gt_row gt_center">18,945 (3.7%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">North East</td>
+      <td class="gt_row gt_center">846 (5.2%)</td>
+      <td class="gt_row gt_center">30,620 (6.1%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">South East</td>
+      <td class="gt_row gt_center">1,348 (8.3%)</td>
+      <td class="gt_row gt_center">33,812 (6.7%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">North West</td>
+      <td class="gt_row gt_center">1,237 (7.6%)</td>
+      <td class="gt_row gt_center">52,884 (10%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">London</td>
+      <td class="gt_row gt_center">1,597 (9.8%)</td>
+      <td class="gt_row gt_center">22,111 (4.4%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Unknown</td>
+      <td class="gt_row gt_center">82,421</td>
+      <td class="gt_row gt_center">19,641</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">vax_doses</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">0 (0%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">31,425 (6.0%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">493,076 (94%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">3+</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">1,231 (0.2%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Unknown</td>
+      <td class="gt_row gt_center">98,691</td>
+      <td class="gt_row gt_center">2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">vax1_type</td>
+      <td class="gt_row gt_center"></td>
+      <td class="gt_row gt_center"></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">az</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">118,007 (22%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">pfizer</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">405,173 (77%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">moderna</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">2,283 (0.4%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">unclear</td>
+      <td class="gt_row gt_center">0 (NA%)</td>
+      <td class="gt_row gt_center">269 (&lt;0.1%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Unknown</td>
+      <td class="gt_row gt_center">98,691</td>
+      <td class="gt_row gt_center">2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">vax_disease_record</td>
+      <td class="gt_row gt_center">34 (&lt;0.1%)</td>
+      <td class="gt_row gt_center">525,734 (100%)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">vax_date1_mismatch</td>
+      <td class="gt_row gt_center">34 (&lt;0.1%)</td>
+      <td class="gt_row gt_center">7 (&lt;0.1%)</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+</body>
+</html>
