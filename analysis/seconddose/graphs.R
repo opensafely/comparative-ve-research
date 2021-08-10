@@ -108,9 +108,9 @@ data_tte <- data_cohort %>%
 
 plot_2dose <- function(var, var_descr, weekly){
 
-  weekly <- TRUE
-  var <- "ageband"
-  var_descr <- "Age group"
+  # weekly <- TRUE
+  # var <- "ageband"
+  # var_descr <- "Age group"
 
   resolution <- ifelse(weekly, "weekly", "daily")
 
@@ -165,7 +165,7 @@ plot_2dose <- function(var, var_descr, weekly){
     )+
     scale_y_continuous(limits=c(14,18*7), breaks=seq(0,365,14))+
     scale_fill_gradientn(
-      colours=c("white", "lightgrey", "lightgrey", "darkblue"),
+      colours=c("transparent", "aliceblue", "aliceblue", "darkblue"),
       values=scales::rescale(c(0,1,redact_threshold,max(data_freq$n, na.rm=TRUE))),
       na.value = "grey50"
     )+
