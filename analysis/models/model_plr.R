@@ -68,7 +68,7 @@ outcome_var <- metadata_outcomes$outcome_var[metadata_outcomes$outcome==outcome]
 
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
-list_formula <- read_rds(here::here("output", "data", "metadata_formulas.rds"))
+list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
 # Import data ----
