@@ -265,6 +265,8 @@ cml_inc <- ggplot(curves %>% filter(model=="3"))+
     axis.text.x.top=element_text(hjust=0)
   )
 
+write_rds(curves, here("output", "models", outcome, timescale, glue("reportplr_cmlinccurves_pw.rds")), compress="gz")
+
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.svg")), cml_inc, width=20, height=15, units="cm")
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.png")), cml_inc, width=20, height=15, units="cm")
 
@@ -390,6 +392,8 @@ cml_inc <- ggplot(curves %>% filter(model=="3"))+
     axis.text.x.top=element_text(hjust=0)
   )
 
+write_rds(curves, here("output", "models", outcome, timescale, glue("reportplr_cmlinccurves_ns.rds")), compress="gz")
+
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_ns.svg")), cml_inc, width=20, height=15, units="cm")
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_ns.png")), cml_inc, width=20, height=15, units="cm")
 
@@ -447,7 +451,7 @@ plotplr <-
   ) +
   NULL
 
-
+write_rds(plotplr, path=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.rds")))
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.svg")), plotplr, width=20, height=15, units="cm")
 ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.png")), plotplr, width=20, height=15, units="cm")
 
