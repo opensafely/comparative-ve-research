@@ -156,7 +156,7 @@ plot_2dose <- function(var, var_descr, weekly){
     filter(!is.na(covid_vax_2_date)) %>%
     ggplot()+
     geom_abline(slope=-1, intercept=seq.Date(as.Date("2020-12-01"), as.Date("2021-08-01"), by="month"), colour="lightgrey", alpha=0.2)+
-    geom_tile(aes(x=covid_vax_1_date, covid_vax_2_date-covid_vax_1_date, fill=n), colour="transparent")+
+    geom_tile(aes(x=covid_vax_1_date, covid_vax_2_date-covid_vax_1_date, fill=n), colour="transparent", alpha=0.7)+
     scale_x_date(
       limits=as.Date(c("2020-12-01","2021-05-01")),
       date_breaks="months",
@@ -188,7 +188,8 @@ plot_2dose <- function(var, var_descr, weekly){
       axis.text.x.bottom = element_text(angle = 70, vjust = 1, hjust=1),
       axis.text.x.top = element_text(angle = 70, vjust = 0, hjust=0),
       panel.grid.minor = element_blank(),
-      axis.ticks.x = element_line(colour = 'black')
+      axis.ticks.x = element_line(colour = 'black'),
+      legend.text = element_text(angle = 70, vjust = 1, hjust=1)
     )
 
   ggsave(
@@ -219,7 +220,7 @@ plot_2dose <- function(var, var_descr, weekly){
       rows = vars(temp_var),
       cols=vars(vax1_type_descr)
     )+
-    scale_x_continuous(breaks=seq(0, 52*7, 7))+
+    scale_x_continuous(breaks=seq(0, 52*7, 14))+
     scale_y_continuous(expand=expansion(c(0,NA)))+
     labs(
       x="Days to second dose",
