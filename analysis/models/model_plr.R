@@ -259,7 +259,7 @@ if(removeobs){remove(plrmod0)}
 
 ## model 1 - minimally adjusted vaccination effect model, stratification by region only
 plrmod1 <- parglm(
-  formula = formula0_pw,
+  formula = formula1_pw,
   data = data_plr,
   weights = data_plr$sample_weights,
   family = binomial,
@@ -275,7 +275,7 @@ if(removeobs){remove(plrmod1)}
 
 ### model 2 - minimally adjusted vaccination effect model, baseline demographics only
 plrmod2 <- parglm(
-  formula = formula3_pw,
+  formula = formula2_pw,
   data = data_plr,
   weights = data_plr$sample_weights,
   family = binomial,
@@ -341,7 +341,7 @@ summary0 <- plr_process(
 if(removeobs){remove(plrmod0)}
 
 plrmod1 <- parglm(
-  formula = formula0_ns,
+  formula = formula1_ns,
   data = data_plr,
   weights = data_plr$sample_weights,
   family = binomial,
@@ -356,7 +356,7 @@ summary1 <- plr_process(
 if(removeobs){remove(plrmod1)}
 
 plrmod2 <- parglm(
-  formula = formula3_ns,
+  formula = formula2_ns,
   data = data_plr,
   weights = data_plr$sample_weights,
   family = binomial,
