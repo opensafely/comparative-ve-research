@@ -161,7 +161,7 @@ if(timescale=="calendar"){
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 if(timescale=="timesincevax"){
-  formula_timescale <- . ~ . +  ns(tstop, 3) # spline for timescale only
+  formula_timescale <- . ~ . + ns(tstop, 3) # spline for timescale only
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 
