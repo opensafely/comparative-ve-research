@@ -22,7 +22,7 @@ if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
   outcome <- "postest"
-  timescale <- "calendar"
+  timescale <- "timesincevax"
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
@@ -67,7 +67,7 @@ if(timescale=="calendar"){
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 if(timescale=="timesincevax"){
-  formula_timescale <- . ~ . +  ns(tstop, 3) # spline for timescale only
+  formula_timescale <- . ~ . +  ns(log(tstop), 3) # spline for timescale only
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 
@@ -84,7 +84,7 @@ formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formu
 
 ### natural cubic spline formulae ----
 ### estimands
-formula_timesincevax_ns <- . ~ . + vax1_az*ns(tstop, 3)
+formula_timesincevax_ns <- . ~ . + vax1_az*ns(log(tstop), 3)
 formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% update(formula_timescale)
 
 formula0_ns <- formula_vaxonly_ns
@@ -303,7 +303,7 @@ get_HRspline <- function(.data, model, vcov, df){
   distinctX0 <- mat0[match(tstop_distinct, tstop),]
   distinctX1 <- mat1[match(tstop_distinct, tstop),]
 
-  term_index <- str_detect(names(coef(model)), fixed("ns(tstop,")) | str_detect(names(coef(model)), fixed("vax1_az"))
+  term_index <- str_detect(names(coef(model)), fixed("ns(log(tstop),")) | str_detect(names(coef(model)), fixed("vax1_az"))
 
   partialX0 <- distinctX0[,term_index]
   partialX1 <- distinctX1[,term_index]

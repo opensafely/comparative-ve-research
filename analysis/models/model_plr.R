@@ -161,7 +161,7 @@ if(timescale=="calendar"){
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 if(timescale=="timesincevax"){
-  formula_timescale <- . ~ . + ns(tstop, 3) # spline for timescale only
+  formula_timescale <- . ~ . + ns(log(tstop), 3) # spline for timescale only
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 
@@ -179,7 +179,7 @@ formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formu
 
 ### natural cubic spline formulae ----
 ### estimands
-formula_timesincevax_ns <- . ~ . + vax1_az*ns(tstop, 3)
+formula_timesincevax_ns <- . ~ . + vax1_az*ns(log(tstop), 3)
 formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% update(formula_timescale)
 
 formula0_ns <- formula_vaxonly_ns
