@@ -278,13 +278,104 @@ ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cml
 # import spline models ----
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-tidy_plr_ns <- read_csv(here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.csv")))
-
+tidy_plr_ns <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.rds")))
 
 plrmod0 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model0ns.rds")))
 plrmod1 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model1ns.rds")))
 plrmod2 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model2ns.rds")))
 plrmod3 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_model3ns.rds")))
+
+vcov0 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov0ns.rds")))
+vcov1 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov1ns.rds")))
+vcov2 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov2ns.rds")))
+vcov3 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov3ns.rds")))
+
+
+get_HRspline <- function(.data, model, vcov, df){
+  ## function to get AZ/pfizer hazard ratio spline over time since first dose
+
+  tstop <- .data$tstop
+  spline <- ns(.data$tstop, df=df)
+
+  mat0 <- model.matrix(model, data = mutate(.data, vax1_az=0))
+  mat1 <- model.matrix(model, data = mutate(.data, vax1_az=1))
+
+  tstop_distinct <- unique(tstop)
+
+  distinctX0 <- mat0[match(tstop_distinct, tstop),]
+  distinctX1 <- mat1[match(tstop_distinct, tstop),]
+
+  term_index <- str_detect(names(coef(model)), fixed("ns(tstop,")) | str_detect(names(coef(model)), fixed("vax1_az"))
+
+  partialX0 <- distinctX0[,term_index]
+  partialX1 <- distinctX1[,term_index]
+
+  diffX <- partialX1-partialX0
+
+  partialbeta <- coef(model)[term_index]
+  partialV <- vcov[term_index, term_index]
+
+  tibble(
+    tstop = tstop_distinct,
+    loghr = unname((diffX %*% partialbeta)[,1]),
+    se = sqrt( rowSums(diffX * (diffX %*% partialV)) ),
+    loghr.ul = loghr + se * qnorm(0.025),
+    loghr.ll = loghr - se * qnorm(0.025)
+  )
+
+}
+
+effectsplr <-
+  bind_rows(
+    get_HRspline(data_plr, plrmod0, vcov0, df=3) %>% mutate(model=0),
+    get_HRspline(data_plr, plrmod1, vcov1, df=3) %>% mutate(model=1),
+    get_HRspline(data_plr, plrmod2, vcov2, df=3) %>% mutate(model=2),
+    get_HRspline(data_plr, plrmod3, vcov3, df=3) %>% mutate(model=3)
+  ) %>%
+  select(model, everything()) %>%
+  mutate(
+    hr=exp(loghr),
+    hr.ll=exp(loghr.ll),
+    hr.ul=exp(loghr.ul),
+  ) %>%
+  left_join(
+    tidy_plr_ns %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
+  )
+
+
+plotplr <-
+  ggplot(effectsplr)+
+  geom_hline(aes(yintercept=1), colour='grey')+
+  geom_line(aes(x=tstop-1, y=hr, colour=model_name))+
+  geom_ribbon(aes(x=tstop-1, ymin=hr.ll, ymax=hr.ul, fill=model_name), alpha=0.2, colour="transparent")+
+  scale_x_continuous(
+    breaks = seq(0,7*52,by=14),
+    expand = expansion(0)
+  )+
+  scale_y_log10(
+    breaks=c(0.25, 0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3, 4),
+    sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
+  )+
+  scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
+  scale_fill_brewer(type="qual", palette="Set2", guide="none")+
+  labs(
+    x = "Days since first dose",
+    y = "Hazard ratio",
+    colour = NULL, fill=NULL
+  )+
+  theme_bw()+
+  theme(
+    panel.border = element_blank(),
+    axis.line.y = element_line(colour = "black"),
+    panel.grid.minor.y = element_blank(),
+    legend.position = "bottom"
+  ) +
+  NULL
+
+
+write_rds(plotplr, path=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.rds")))
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.svg")), plotplr, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.png")), plotplr, width=20, height=15, units="cm")
 
 
 ## risk-adjusted survival curves ----
@@ -451,8 +542,8 @@ plotplr <-
   ) +
   NULL
 
-write_rds(plotplr, path=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.rds")))
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.svg")), plotplr, width=20, height=15, units="cm")
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot_ns.png")), plotplr, width=20, height=15, units="cm")
+write_rds(plotplr, path=here("output", "models", outcome, timescale, glue("reportplr_effectsplot2_ns.rds")))
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot2_ns.svg")), plotplr, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot2_ns.png")), plotplr, width=20, height=15, units="cm")
 
 
