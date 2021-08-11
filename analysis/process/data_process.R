@@ -97,6 +97,7 @@ data_processed <- data_extract %>%
     start_date = as.Date(gbl_vars$start_date), # i.e., this is interpreted later as [midnight at the _end of_ the start date] = [midnight at the _start of_ start date + 1], So that for example deaths on start_date+1 occur at t=1, not t=0.
     start_date_pfizer = as.Date(gbl_vars$start_date_pfizer),
     start_date_az = as.Date(gbl_vars$start_date_az),
+    lastvax_date = as.Date(gbl_vars$lastvax_date),
     end_date = as.Date(gbl_vars$end_date),
 
     ageband = cut(

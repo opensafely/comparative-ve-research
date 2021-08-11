@@ -35,7 +35,7 @@ data_criteria <- data_processed %>%
     has_region = !is.na(region),
     not_cev = !cev,
     #knownvaxdate = vax1_date>=as.Date("2020-03-01"), # not currently used because these are excluded in study definition
-    vax1_beforeenddate = vax1_date < end_date, #strictly less than otherwise there is zero days of follow-up
+    vax1_beforelastvaxdate = vax1_date <= lastvax_date,
     vax1_afterstartdate = vax1_date >= start_date_az,
     vax1_azpfizer = vax1_type %in% c("az", "pfizer"),
 
@@ -46,7 +46,7 @@ data_criteria <- data_processed %>%
         #no_unclear_brand &
         not_cev &
         #knownvaxdate &
-        vax1_beforeenddate &
+        vax1_beforelastvaxdate &
         vax1_afterstartdate &
         vax1_azpfizer
     ),
@@ -69,8 +69,8 @@ data_flowchart <- data_criteria %>%
     #c1_1yearfup = c0_all & (has_follow_up_previous_year),
     c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
     c2_notcev = c1_notmissing & not_cev,
-    c3_enddate = c2_notcev & vax1_beforeenddate,
-    c4_startdate = c3_enddate & vax1_afterstartdate,
+    c3_lastvaxdate = c2_notcev & vax1_beforelastvaxdate,
+    c4_startdate = c3_lastvaxdate & vax1_afterstartdate,
     c5_azpfizer = c4_startdate & vax1_azpfizer
   ) %>%
   summarise(
@@ -91,8 +91,8 @@ data_flowchart <- data_criteria %>%
       crit == "c0" ~ "All vaccinated HCWs aged 16-65",
       crit == "c1" ~ "  with no missing demographic information",
       crit == "c2" ~ "  who are not clinically extremely vulnerable",
-      crit == "c3" ~ "  with vaccination on or before study end date",
-      crit == "c4" ~ "  with vaccination on or after study start date",
+      crit == "c3" ~ "  with vaccination on or before recruitment end date",
+      crit == "c4" ~ "  with vaccination on or after recruitment start date",
       crit == "c5" ~ "  with Pfizer/BNT or Oxford/AZ vaccine",
       TRUE ~ NA_character_
     )
