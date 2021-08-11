@@ -1,0 +1,45 @@
+## script info for test ##   
+data_pt data size = 9740755
+  data_pt memory usage = 6.273 GB
+
+
+model0 data size = 1014331.94561628
+  model0 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model1 data size = 1014331.94561628
+  model1 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model2 data size = 1014331.94561628
+  model2 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model3 data size = 1014331.94561628
+  model3 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model0 data size = 1014331.94561628
+  model0 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model1 data size = 1014331.94561628
+  model1 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model2 data size = 1014331.94561628
+  model2 memory usage = 10.482 GB
+  convergence status: TRUE
+
+
+model3 data size = 1014331.94561628
+  model3 memory usage = 10.482 GB
+  convergence status: TRUE
+
+

@@ -1,0 +1,45 @@
+## script info for covidadmitted ##   
+data_pt data size = 3500271
+  data_pt memory usage = 2.255 GB
+
+
+model0 data size = 4023.04636654574
+  model0 memory usage = 3.767 GB
+  convergence status: TRUE
+
+
+model1 data size = 4023.04636654574
+  model1 memory usage = 3.767 GB
+  convergence status: FALSE
+
+
+model2 data size = 4023.04636654574
+  model2 memory usage = 3.767 GB
+  convergence status: FALSE
+
+
+model3 data size = 4023.04636654574
+  model3 memory usage = 3.767 GB
+  convergence status: FALSE
+
+
+model0 data size = 4023.04636654574
+  model0 memory usage = 3.767 GB
+  convergence status: TRUE
+
+
+model1 data size = 4023.04636654574
+  model1 memory usage = 3.767 GB
+  convergence status: TRUE
+
+
+model2 data size = 4023.04636654574
+  model2 memory usage = 3.767 GB
+  convergence status: TRUE
+
+
+model3 data size = 4023.04636654574
+  model3 memory usage = 3.767 GB
+  convergence status: TRUE
+
+
