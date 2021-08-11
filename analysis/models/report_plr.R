@@ -22,7 +22,7 @@ if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
   outcome <- "postest"
-  timescale <- "timesincevax"
+  timescale <- "calendar"
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
@@ -272,8 +272,6 @@ ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cml
 
 
 
-
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # import spline models ----
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -342,6 +340,7 @@ effectsplr <-
     tidy_plr_ns %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
   )
 
+write_rds(effectsplr, path=here("output", "models", outcome, timescale, glue("reportplr_effects_ns.rds")))
 
 plotplr <-
   ggplot(effectsplr)+
@@ -380,14 +379,7 @@ ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_eff
 
 ## risk-adjusted survival curves ----
 
-# no CIs / standard errors because difficult todo!
-
-#vcovCL0 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov0_ns.csv")))
-#vcovCL1 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov1_ns.csv")))
-#vcovCL2 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov2_ns.csv")))
-#vcovCL3 <- read_rds(here("output", "models", outcome, timescale, glue("modelplr_vcov3_ns.csv")))
-
-#plr.predict(plrmod0, vcovCL0, mutate(data_plr, vax1_az=1L))
+# no CIs / standard errors yet because difficult to do!
 
 survival_az <- data_plr %>%
   mutate(vax1_az=1L) %>%
@@ -402,7 +394,6 @@ survival_az <- data_plr %>%
     outcome_prob2=predict(plrmod2, newdata=., type="response"),
     outcome_prob3=predict(plrmod3, newdata=., type="response"),
   )
-
 
 survival_pfizer <- data_plr %>%
   mutate(vax1_az=0L) %>%

@@ -258,14 +258,14 @@ tidy_custom.glm  <- function(model, conf.int=TRUE, conf.level=0.95, exponentiate
   output
 }
 
-plr.predict <- function(x, clcov, newdata){
+plr.predict <- function(model, clcov, newdata){
   # from https://stackoverflow.com/questions/3790116/using-clustered-covariance-matrix-in-predict-lm
-  if(missing(newdata)){ newdata <- x$model }
-  tt <- terms(x)
+  if(missing(newdata)){ newdata <- model$model }
+  tt <- terms(model)
   Terms <- delete.response(tt)
   m.mat <- model.matrix(Terms, data=newdata)
-  m.coef <- x$coef
-  fit <- as.vector(m.mat %*% x$coef)
+  m.coef <- model$coef
+  fit <- as.vector(m.mat %*% model$coef)
   se.fit <- sqrt( rowSums(m.mat * (m.mat %*% clcov)) )
   return(list(fit=fit, se.fit=se.fit))
 }
