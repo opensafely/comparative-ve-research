@@ -206,6 +206,12 @@ sim_list = list(
     missing_rate = ~0.95
   ),
 
+  admitted_day = bn_node(
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    missing_rate = ~0.94
+  ),
+
+
   covidadmitted_ccdays = bn_node(
     ~rfactor(n=1, levels = 0:3, p = c(0.7, 0.1, 0.1, 0.1)),
     needs = "covidadmitted_day"

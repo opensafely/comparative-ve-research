@@ -643,6 +643,20 @@ study = StudyDefinition(
     },
   ),
   
+  # ANY UNPLANNED HOSPITAL ADMISSION
+  admitted_date=patients.admitted_to_hospital(
+    returning="date_admitted",
+    with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"],
+    on_or_after="covid_vax_any_1_date",
+    date_format="YYYY-MM-DD",
+    find_first_match_in_period=True,
+    return_expectations={
+      "date": {"earliest": "2021-05-01", "latest" : "2021-06-01"},
+      "rate": "uniform",
+      "incidence": 0.06,
+    },
+  ),
+  
   
   # COVID-RELATED UNPLANNED HOSPITAL ADMISSION DAYS IN CRITICAL CARE
   covidadmitted_ccdays=patients.admitted_to_hospital(
