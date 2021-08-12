@@ -35,11 +35,37 @@ def days(datestring, days):
 
   return datestring_add
 
+with open("./analysis/lib/diagnosis_groups.json") as f:
+  diagnosis_groups = json.load(f)
 
 
+def emergency_bydiagnosis_date(codelist_dict, on_date):
+  """
+  creates a new variable for each emergency attendance diagnosis
+  """
+  def make_variable(diagnosis_codelist, name, on_date):
+    return {
+      f"emergency_{name}_date": (
+        patients.attended_emergency_care(
+          returning="date_arrived",
+          between=[on_date, on_date],
+          date_format="YYYY-MM-DD",
+          with_these_diagnoses = codelist(diagnosis_codelist, system="snomed"),
+          return_expectations={
+            "date": {"earliest": "2021-05-01", "latest" : "2021-06-01"},
+            "rate": "uniform",
+            "incidence": 0.05,
+          },
+        )
+      )
+  }
 
-# start_date is currently set to the start of the vaccination campaign
-# end_date depends on the most reent data coverage in the database, and the particular variables of interest
+  variables = {}
+  for name in codelist_dict.keys():
+    diagnosis_codelist = codelist_dict[name]
+    variables.update(make_variable(diagnosis_codelist, name, on_date))
+  return variables
+
 
 # Specifiy study defeinition
 study = StudyDefinition(
@@ -627,6 +653,8 @@ study = StudyDefinition(
       "incidence": 0.05,
     },
   ),
+  
+  **emergency_bydiagnosis_date(diagnosis_groups, on_date="emergency_date"),
   
   # COVID-RELATED UNPLANNED HOSPITAL ADMISSION
   covidadmitted_date=patients.admitted_to_hospital(
