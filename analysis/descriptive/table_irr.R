@@ -78,6 +78,9 @@ data_tte <- data_cohort %>%
     tte_emergency = tte(vax1_date-1, emergency_date, censor_date, na.censor=TRUE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
 
+    tte_admitted = tte(vax1_date-1, admitted_date, censor_date, na.censor=TRUE),
+    ind_admitted = censor_indicator(admitted_date, censor_date),
+
     tte_covidadmitted = tte(vax1_date-1, covidadmitted_date, censor_date, na.censor=TRUE),
     ind_covidadmitted = censor_indicator(covidadmitted_date, censor_date),
 
@@ -122,6 +125,7 @@ data_cox_split <- tmerge(
   test = event(tte_test),
   postest = event(tte_postest),
   emergency = event(tte_emergency),
+  admitted = event(tte_admitted),
   covidadmitted = event(tte_covidadmitted),
   covidcc = event(tte_covidcc),
   coviddeath = event(tte_coviddeath),
@@ -132,6 +136,7 @@ data_cox_split <- tmerge(
   status_test = tdc(tte_test),
   status_postest = tdc(tte_postest),
   status_emergency = tdc(tte_emergency),
+  status_admitted = tdc(tte_admitted),
   status_covidadmitted = tdc(tte_covidadmitted),
   status_covidcc = tdc(tte_covidcc),
   status_coviddeath = tdc(tte_coviddeath),
@@ -248,14 +253,16 @@ data_summary <- local({
   temp1 <- pt_summary(data_cox_split, "test")
   temp2 <- pt_summary(data_cox_split, "postest")
   temp3 <- pt_summary(data_cox_split, "emergency")
-  temp4 <- pt_summary(data_cox_split, "covidadmitted")
-  temp5 <- pt_summary(data_cox_split, "covidcc")
-  temp6 <- pt_summary(data_cox_split, "coviddeath")
-  temp7 <- pt_summary(data_cox_split, "noncoviddeath")
-  temp8 <- pt_summary(data_cox_split, "death")
+  temp4 <- pt_summary(data_cox_split, "admitted")
+  temp5 <- pt_summary(data_cox_split, "covidadmitted")
+  temp6 <- pt_summary(data_cox_split, "covidcc")
+  temp7 <- pt_summary(data_cox_split, "coviddeath")
+  temp8 <- pt_summary(data_cox_split, "noncoviddeath")
+  temp9 <- pt_summary(data_cox_split, "death")
   bind_rows(
     temp1, temp2, temp3, temp4,
-    temp5, temp6, temp7, temp8
+    temp5, temp6, temp7, temp8,
+    temp9
   )
 }) %>%
 left_join(

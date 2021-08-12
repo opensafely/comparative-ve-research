@@ -21,6 +21,7 @@ metadata_outcomes <- tribble(
   "test", "covid_test_date", "SARS-CoV-2 test",
   "postest", "positive_test_date", "Positive SARS-CoV-2 test",
   "emergency", "emergency_date", "A&E attendance",
+  "admitted", "admitted_date", "Unplanned hospitalisation",
   "covidadmitted", "covidadmitted_date", "COVID-19 hospitalisation",
   "covidcc", "covidcc_date", "COVID-19 critical care",
   "coviddeath", "coviddeath_date", "COVID-19 death",

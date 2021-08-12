@@ -324,6 +324,15 @@ actions_list <- splice(
   action_model("emergency", "calendar", "plr", 50000),
   action_report("emergency", "calendar", "plr"),
 
+  comment("### Unplanned Hospital admission"),
+  action_model("admitted", "timesincevax", "cox"),
+  action_report("admitted", "timesincevax", "cox"),
+  action_model("admitted", "calendar", "cox"),
+  action_report("admitted", "calendar", "cox"),
+  action_model("admitted", "timesincevax", "plr", 50000),
+  action_report("admitted", "timesincevax", "plr"),
+  action_model("admitted", "calendar", "plr", 50000),
+  action_report("admitted", "calendar", "plr"),
 
   comment("###  COVID-19 hospital admission"),
   action_model("covidadmitted", "timesincevax", "cox"),

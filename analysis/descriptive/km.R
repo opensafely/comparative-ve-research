@@ -110,6 +110,9 @@ data_tte <- data_cohort %>%
     tte_emergency = tte(vax1_date-1, emergency_date, censor_date, na.censor=FALSE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
 
+    tte_admitted = tte(vax1_date-1, admitted_date, censor_date, na.censor=FALSE),
+    ind_admitted = censor_indicator(admitted_date, censor_date),
+
     tte_covidadmitted = tte(vax1_date-1, covidadmitted_date, censor_date, na.censor=FALSE),
     ind_covidadmitted = censor_indicator(covidadmitted_date, censor_date),
 
@@ -254,6 +257,7 @@ metadata_outcomes <- tribble(
   "test", "SARS-CoV-2 test",
   "postest", "Positive test",
   "emergency", "A&E attendance",
+  "admitted", "Unpanned admission",
   "covidadmitted", "COVID-19 admission",
   "covidcc", "COVID-19 critical care",
   "coviddeath", "COVID-19 death",
