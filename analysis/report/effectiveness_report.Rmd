@@ -98,7 +98,7 @@ Time-dependent Cox models are used to estimate the time-varying effects for each
 
 * On the *calendar time-scale*, time zero is `r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")`, and people only contribute follow-up time once they have been vaccinated (i.e., delayed study entry). Vaccine type, time since vaccination in weekly intervals, and the interaction between these two terms are included to estimate time-varying vaccine effects for each vaccine type. In `R`'s `coxph` function, this is modelled using `vaccine_type*week_since_first_dose`
 
-* On the *treatment time-scale*, time zero is the date of vaccination. Calendar-time is included as an additional covariate, in weekly intervals, using restricted cubic spline with knots at the first and second tertile, plus boundary knots. Here, follow-up time is stratified into weekly intervals with the vaccine-specific effect estimated within each time-strata. In `R`'s `coxph` function, this is modelled using `vaccine_type:strata(week_since_first_dose)`.
+* On the *treatment time-scale*, time zero is the date of vaccination. Date of vaccination is included as an additional baseline covariate using a restricted cubic spline with knots at the first and second tertile, plus boundary knots. Here, follow-up time is stratified into weekly intervals with the vaccine-specific effect estimated within each time-strata. In `R`'s `coxph` function, this is modelled using `vaccine_type:strata(week_since_first_dose)`.
 
 ### Pooled Logistic Regression models
 

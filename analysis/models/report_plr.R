@@ -67,10 +67,15 @@ if(timescale=="calendar"){
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 }
 if(timescale=="timesincevax"){
-  formula_timescale <- . ~ . +  ns(log(tstop), 3) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
+  formula_timescale <- . ~ . + ns(log(tstop), 3) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(vax1_day, 3)*region # spline for space-time adjustments
 }
 
+## NOTE
+# calendar-time PLR models are still probably wrong!
+# as time-varying splines for both vaccination time and calendar time are included.
+# This wrongly allows for estimation of the probability of, eg, the risk of death
+# in february for someone vaccinated on 1 march
 
 ### piecewise formulae ----
 ### estimand
@@ -91,6 +96,7 @@ formula0_ns <- formula_vaxonly_ns
 formula1_ns <- formula_vaxonly_ns %>% update(formula_spacetime)
 formula2_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog)
 formula3_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
+
 
 # Import processed data ----
 

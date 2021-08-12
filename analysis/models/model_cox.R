@@ -166,44 +166,44 @@ if(timescale=="calendar"){
 # - post-vax follow-up is already overlapping, so can use az/pfizer : weekly strata
 # - need to adjust for calendar time
 if(timescale=="timesincevax"){
-  # one row per patient per follow-up calendar day
-  calendar_time <- data_cox %>%
-    select(patient_id, vax1_day, tte_stop) %>%
-    mutate(
-      calendar_day = map2(vax1_day, tte_stop, ~.x:(.y+.x))
-    ) %>%
-    unnest(c(calendar_day)) %>%
-    mutate(
-      #calendar_week = paste0("week ", str_pad(floor(calendar_day/7), 2, pad = "0")),
-      calendar_week = floor(calendar_day/7),
-      treatment_day = calendar_day - vax1_day,
-      treatment_week = floor(treatment_day/7)
-    )
-
-  # one row per patient per follow-up calendar week
-  calendar_week <- calendar_time %>%
-    group_by(patient_id, calendar_week) %>%
-    filter(first(calendar_day)==calendar_day) %>%
-    ungroup()
-
-  # one row per patient per follow-up post-vax week
-  treatment_week <- calendar_time %>%
-    group_by(patient_id, treatment_week) %>%
-    filter(first(treatment_day)==treatment_day) %>%
-    ungroup()
-
-  data_cox <- data_cox %>%
-    tmerge(
-      data1 = .,
-      data2 = treatment_week,
-      id = patient_id,
-      calendar_day = tdc(treatment_day, calendar_day)
-    )
+  # # one row per patient per follow-up calendar day
+  # calendar_time <- data_cox %>%
+  #   select(patient_id, vax1_day, tte_stop) %>%
+  #   mutate(
+  #     calendar_day = map2(vax1_day, tte_stop, ~.x:(.y+.x))
+  #   ) %>%
+  #   unnest(c(calendar_day)) %>%
+  #   mutate(
+  #     #calendar_week = paste0("week ", str_pad(floor(calendar_day/7), 2, pad = "0")),
+  #     calendar_week = floor(calendar_day/7),
+  #     treatment_day = calendar_day - vax1_day,
+  #     treatment_week = floor(treatment_day/7)
+  #   )
+  #
+  # # one row per patient per follow-up calendar week
+  # calendar_week <- calendar_time %>%
+  #   group_by(patient_id, calendar_week) %>%
+  #   filter(first(calendar_day)==calendar_day) %>%
+  #   ungroup()
+  #
+  # # one row per patient per follow-up post-vax week
+  # treatment_week <- calendar_time %>%
+  #   group_by(patient_id, treatment_week) %>%
+  #   filter(first(treatment_day)==treatment_day) %>%
+  #   ungroup()
+  #
+  # data_cox <- data_cox %>%
+  #   tmerge(
+  #     data1 = .,
+  #     data2 = treatment_week,
+  #     id = patient_id,
+  #     calendar_day = tdc(treatment_day, calendar_day)
+  #   )
 
   # as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
   # only need interaction term (not * but :) because follow time is stratified by timesincevax_pw, so there's no baseline
   formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax_pw)
-  formula_spacetime <- . ~ . + strata(region) * ns(calendar_day, 3)
+  formula_spacetime <- . ~ . + strata(region) * ns(vax1_day, 3)
 }
 
 ### model 0 - vaccination + timescale only, no adjustment variables
