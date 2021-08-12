@@ -39,7 +39,6 @@ data_criteria <- data_processed %>%
     vax1_afterstartdate = vax1_date >= start_date_az,
     vax1_azpfizer = vax1_type %in% c("az", "pfizer"),
 
-
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region &
         #has_follow_up_previous_year &

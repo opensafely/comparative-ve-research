@@ -75,7 +75,7 @@ data_tte <- data_cohort %>%
   mutate(
 
     outcome_date = .[[glue("{outcome_var}")]],
-    censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    censor_date = pmin(vax1_date - 1 + (7*14), end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
     tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),

@@ -86,7 +86,7 @@ data_tte <- data_cohort %>%
     # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
     # so use vax1_date - 1
 
-    censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    censor_date = pmin(vax1_date - 1 + (7*14), end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     # time to last follow up day
     tte_enddate = tte(vax1_date-1, end_date, end_date),

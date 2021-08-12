@@ -78,7 +78,7 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 data_tte <- data_cohort %>%
   mutate(
     outcome_date = .[[glue("{outcome_var}")]],
-    censor_date = pmin(end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    censor_date = pmin(vax1_date - 1 + (7*14), end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
     ind_censor = censor_indicator(censor_date, censor_date),
