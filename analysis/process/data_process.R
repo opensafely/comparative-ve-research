@@ -27,6 +27,13 @@ gbl_vars <- jsonlite::fromJSON(
   txt="./analysis/global-variables.json"
 )
 
+## load A&E diagnosis column names
+diagnosis_codes <- jsonlite::fromJSON(
+  txt="./analysis/lib/diagnosis_groups.json"
+)
+diagnosis_col_names <- paste0("emergency_", names(diagnosis_codes), "_date")
+diagnosis_short <- str_remove(str_remove(diagnosis_col_names, "emergency_"), "_date")
+
 # output processed data to rds ----
 
 fs::dir_create(here("output", "data"))
@@ -197,6 +204,17 @@ data_processed <- data_extract %>%
     covidcc_date = if_else(!is.na(covidadmitted_date) & covidadmitted_ccdays>0, covidadmitted_date, as.Date(NA_character_))
 
   ) %>%
+  rowwise(patient_id) %>%
+  mutate(
+    emergency_diagnosis = paste(diagnosis_short[!is.na(c_across(all_of(diagnosis_col_names)))], collapse="; "),
+    emergency_diagnosis = if_else(is.na(emergency_date) , "(no admission)", emergency_diagnosis),
+    emergency_diagnosis = if_else(!is.na(emergency_date) & emergency_diagnosis=="", "(unknown)", emergency_diagnosis)
+  ) %>%
+  ungroup() %>%
+  # mutate(
+  #
+  # ) %>%
+  select(-all_of(diagnosis_col_names)) %>%
   droplevels()
 
 ## create one-row-per-event datasets ----

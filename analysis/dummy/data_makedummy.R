@@ -17,6 +17,15 @@ gbl_vars <- jsonlite::fromJSON(
   txt="./analysis/global-variables.json"
 )
 
+diagnosis_codes <- jsonlite::fromJSON(
+  txt="./analysis/lib/diagnosis_groups.json"
+)
+diagnosis_simfunction_list = set_names(
+  rep(list(bn_node(~emergency_day, missing_rate=~0.95, needs="emergency_day")), length(diagnosis_codes)),
+  paste0("emergency_", names(diagnosis_codes), "_day")
+)
+
+paste0("emergency_", names(diagnosis_codes), "_day")
 
 index_date <- as.Date(gbl_vars$start_date)
 start_date_pfizer <- as.Date(gbl_vars$start_date_pfizer)
@@ -33,7 +42,6 @@ end_day <- as.integer(end_date - index_date)
 
 
 known_variables <- c("index_date", "start_date_pfizer", "start_date_az", "start_date_moderna", "end_date", "index_day", "pfizer_day",  "az_day", "moderna_day", "end_day")
-
 
 sim_list = list(
   covid_vax_pfizer_1_day = bn_node(
@@ -144,10 +152,10 @@ sim_list = list(
     variable_formula = ~rfactor(n=1, levels=c(
       "North East",
       "North West",
-      "Yorkshire and the Humber",
+      "Yorkshire and The Humber",
       "East Midlands",
       "West Midlands",
-      "East of England",
+      "East",
       "London",
       "South East",
       "South West"
@@ -255,7 +263,9 @@ sim_list = list(
   cev_ever = bn_node( ~rbernoulli(n=1, p = 0.02)),
   cev = bn_node( ~rbernoulli(n=1, p = 0.02))
 
-)
+) %>%
+# add diagnosis-specific emergency attendances
+splice(diagnosis_simfunction_list)
 
 bn <- bn_create(sim_list, known_variables = known_variables)
 
@@ -264,6 +274,9 @@ bn_plot(bn, connected_only=TRUE)
 
 
 dummydata <-bn_simulate(bn, pop_size = population_size, keep_all = FALSE, .id="patient_id")
+
+
+
 
 dummydata_processed <- dummydata %>%
   mutate(
@@ -276,6 +289,7 @@ dummydata_processed <- dummydata %>%
 
     covid_vax_moderna_1_day = if_else(covid_vax_moderna_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_az_1_day, na.rm=TRUE), covid_vax_moderna_1_day, NA_integer_),
     covid_vax_moderna_2_day = if_else(covid_vax_moderna_1_day<pmin(Inf, covid_vax_pfizer_1_day, covid_vax_az_1_day, na.rm=TRUE), covid_vax_moderna_2_day, NA_integer_),
+    emergency_trauma_day = if_else(!apply(.[,paste0("emergency_", names(diagnosis_codes), "_day")], 1, any, na.rm=TRUE), emergency_day, emergency_trauma_day)
   ) %>%
   #convert logical to integer as study defs output 0/1 not TRUE/FALSE
   #mutate(across(where(is.logical), ~ as.integer(.))) %>%
