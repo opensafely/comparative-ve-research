@@ -292,6 +292,16 @@ actions_list <- splice(
     )
   ),
 
+
+  action(
+    name = "descr_diagnoses",
+    run = "r:latest analysis/descriptive/diagnoses.R",
+    needs = list("design", "data_selection"),
+    moderately_sensitive = list(
+      png = "output/descriptive/diagnoses/*.png"
+    )
+  ),
+
   comment("# # # # # # # # # # # # # # # # # # #", "Models", "# # # # # # # # # # # # # # # # # # #"),
 
   comment("###  SARS-CoV-2 Test"),

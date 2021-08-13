@@ -77,11 +77,7 @@ data_tte <- data_cohort %>%
     vax1_day,
     end_date,
 
-    vax1_type = fct_case_when(
-      vax1_type == "pfizer" ~ "BNT162b2",
-      vax1_type == "az" ~ "ChAdOx1",
-      TRUE ~ NA_character_
-    ),
+    vax1_type_descr,
 
     # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
     # so use vax1_date - 1
@@ -131,7 +127,8 @@ data_tte <- data_cohort %>%
     tte_dereg = tte(vax1_date-1, dereg_date, censor_date, na.censor=FALSE),
     ind_dereg = censor_indicator(dereg_date, censor_date),
 
-  )
+  ) %>%
+  droplevels()
 
 
 survobj <- function(.data, time, indicator, group_vars, threshold){
@@ -245,7 +242,7 @@ ggplot_surv <- function(.surv_data, colour_var, colour_name, colour_type="qual",
 
 metadata_variables <- tribble(
   ~variable, ~variable_name, ~colour_type,
-  "vax1_type", NULL, "qual",
+  "vax1_type_descr", NULL, "qual",
   #"ageband", "Age", "qual",
 )
 
