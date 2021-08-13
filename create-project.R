@@ -292,6 +292,14 @@ actions_list <- splice(
     )
   ),
 
+  action(
+    name = "descr_vaxdate",
+    run = "r:latest analysis/descriptive/vax_date.R",
+    needs = list("design", "data_selection"),
+    moderately_sensitive = list(
+      png = "output/descriptive/vaxdate/*.png"
+    )
+  ),
 
   action(
     name = "descr_diagnoses",

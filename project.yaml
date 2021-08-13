@@ -169,6 +169,15 @@ actions:
         png: output/descriptive/km/plot_survival*.png
         svg: output/descriptive/km/plot_survival*.svg
 
+  descr_vaxdate:
+    run: r:latest analysis/descriptive/vax_date.R
+    needs:
+    - design
+    - data_selection
+    outputs:
+      moderately_sensitive:
+        png: output/descriptive/vaxdate/*.png
+
   descr_diagnoses:
     run: r:latest analysis/descriptive/diagnoses.R
     needs:
