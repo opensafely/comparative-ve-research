@@ -97,8 +97,8 @@ write_rds(effectscox, path = here("output", "models", outcome, timescale, glue::
 
 plotcox <-
   ggplot(data = effectscox) +
-  geom_point(aes(y=estimate, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
-  geom_linerange(aes(ymin=conf.low, ymax=conf.high, x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
+  geom_point(aes(y=exp(estimate), x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
+  geom_linerange(aes(ymin=exp(conf.low), ymax=exp(conf.high), x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
   geom_hline(aes(yintercept=1), colour='grey')+
   scale_y_log10(
     breaks=c(0.25, 0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3, 4),
