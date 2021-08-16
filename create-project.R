@@ -386,7 +386,7 @@ actions_list <- splice(
       as.list(
         glue_data(
              .x = expand_grid(
-               outcome = c("test", "postest", "emergency", "covidadmitted"),
+               outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
                modeltype = c("cox", "plr"),
                timescale = c("timesincevax", "calendar")
              ),

@@ -725,6 +725,10 @@ actions:
     - report_emergency_calendar_cox
     - report_emergency_timesincevax_plr
     - report_emergency_calendar_plr
+    - report_admitted_timesincevax_cox
+    - report_admitted_calendar_cox
+    - report_admitted_timesincevax_plr
+    - report_admitted_calendar_plr
     - report_covidadmitted_timesincevax_cox
     - report_covidadmitted_calendar_cox
     - report_covidadmitted_timesincevax_plr
