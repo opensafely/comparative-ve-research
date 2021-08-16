@@ -96,7 +96,8 @@ actions:
     - extract
     outputs:
       highly_sensitive:
-        cohort: output/data/data_processed.rds
+        processed: output/data/data_processed.rds
+        diagnoses: output/data/data_disagnoses.rds
 
   data_properties:
     run: r:latest analysis/process/data_properties.R output/data/data_processed.rds

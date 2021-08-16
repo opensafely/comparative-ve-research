@@ -214,7 +214,6 @@ data_processed <- data_extract %>%
   ) %>%
   ungroup()
 
-
 data_diagnoses <-
   data_processed %>%
   select(
