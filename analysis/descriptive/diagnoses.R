@@ -39,56 +39,44 @@ list2env(list_formula, globalenv())
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
 
 ## create output directory ----
-fs::dir_create(here("output", "descriptive", "tables"))
+fs::dir_create(here("output", "descriptive", "diagnoses"))
 
 ## load A&E diagnosis column names
-diagnosis_codes <- jsonlite::fromJSON(
-  txt="./analysis/lib/diagnosis_groups.json"
-)
-diagnosis_col_names <- paste0("emergency_", names(diagnosis_codes), "_date")
-diagnosis_short <- str_remove(str_remove(diagnosis_col_names, "emergency_"), "_date")
+lookup <- read_rds(here("analysis", "lib", "diagnosis_groups_lookup.rds")) %>%
+  mutate(
+    diagnosis_col_names =  paste0("emergency_", group, "_date"),
+    diagnosis_short = group,
+    diagnosis_long = ECDS_GroupCustom,
+  ) %>%
+  add_row(
+    diagnosis_short="unknown",
+    diagnosis_long="(Unknown)"
+  )
 
+diagnoses <- set_names(lookup$diagnosis_short, lookup$diagnosis_long)
 
 ## Import processed data ----
 
 data_cohort <- read_rds(here::here("output", "data", "data_cohort.rds"))
+data_diagnoses <- read_rds(here::here("output", "data", "data_diagnoses.rds")) %>%
+  filter(patient_id %in% data_cohort$patient_id)
+rm(data_cohort)
 
-data_diagnosis <- data_cohort %>%
-  transmute(
-    patient_id,
-    vax1_type,
-    vax1_type_descr,
-    vax1_day,
-    end_date,
 
-    emergency_diagnosis,
 
-    # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
-    # so use vax1_date - 1
-
+data_diagnoses <- data_diagnoses %>%
+  mutate(
     censor_date = pmin(vax1_date - 1 + (7*14), end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
-
-    # time to last follow up day
-    tte_enddate = tte(vax1_date-1, end_date, end_date),
-
-    # time to last follow up day or death or deregistration
-    tte_censor = tte(vax1_date-1, censor_date, censor_date),
-
-    tte_test =tte(vax1_date-1, covid_test_date, censor_date, na.censor=FALSE),
-    ind_test = censor_indicator(covid_test_date, censor_date),
-
-    tte_postest = tte(vax1_date-1, positive_test_date, censor_date, na.censor=FALSE),
-    ind_postest = censor_indicator(positive_test_date, censor_date),
-
     tte_emergency = tte(vax1_date-1, emergency_date, censor_date, na.censor=FALSE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
   )
 
 
+## plot diagnosis frequencies ----
 
 get_freqs <- function(day){
 
-  data_wide <- data_diagnosis %>%
+  data_wide <- data_diagnoses %>%
     filter(tte_emergency<=day & ind_emergency==1) %>%
     mutate(
       emergency_diagnosis_list=str_split(emergency_diagnosis, "; "),
@@ -123,9 +111,10 @@ get_freqs <- function(day){
       names_sep="\\."
     ) %>%
     mutate(
-      diagnosis=factor(diagnosis, levels=diagnosis_short)
+      diagnosis_short = factor(diagnosis, levels=diagnoses),
+      diagnosis_long = fct_recode(diagnosis_short,  !!!diagnoses)
     ) %>%
-    arrange(vax1_type_descr, diagnosis)
+    arrange(vax1_type_descr, diagnosis_long)
 
   vax_freq <-
     data_wide %>%
@@ -136,41 +125,180 @@ get_freqs <- function(day){
     )
 
 
-  freq <- diag_freq %>% left_join(vax_freq, by="vax1_type_descr")
+  freq <- diag_freq %>%
+    left_join(vax_freq, by="vax1_type_descr") %>%
+    mutate(day = day)
 
   freq
 }
 
 
-freqs7 <- get_freqs(7)
+freqs <- bind_rows(
+  get_freqs(1),
+  get_freqs(2),
+  get_freqs(3),
+  get_freqs(4),
+  get_freqs(5),
+  get_freqs(6),
+  get_freqs(7),
+  get_freqs(8),
+  get_freqs(14)
+)
+
+plot_freq <- function(day){
+  dayy <- day
+
+  freqs_day <- freqs %>%
+    filter(day==dayy)
+
+  plot_freqs <-
+    freqs_day %>%
+    mutate(
+      day_name = glue("Proportion of attendance diagnoses\nafter {day} days"),
+      n=if_else(vax1_type_descr==first(vax1_type_descr), n, -n),
+      pct=if_else(vax1_type_descr==first(vax1_type_descr), pct, -pct),
+      vax1_type_descr = paste0(vax1_type_descr, " (N = ", n_vax, ")")
+    ) %>%
+    ggplot()+
+    geom_bar(aes(x=pct, y=diagnosis_long, fill=vax1_type_descr), width=freqs_day$pct_vax, stat = "identity")+
+    geom_vline(aes(xintercept=0), colour = "black")+
+    #scale_y_discrete(breaks=)
+    scale_fill_brewer(type="qual", palette="Set1")+
+    scale_y_discrete(position = "right")+
+    scale_x_continuous(breaks=seq(-1,1,0.1), labels = abs(seq(-1,1,0.1)))+
+    labs(
+      y=NULL,
+      x="Proportion",
+      fill=NULL,
+      title = glue("Post-vaccination emergency attendances after {day} days"),
+      subtitle= "There may be multiple diagnoses per attendance"
+    )+
+    theme_minimal()+
+    theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      #panel.grid.minor.x = element_blank(),
+      axis.line.x.bottom = element_line(),
+      plot.title.position = "plot",
+      legend.position = "bottom"
+
+    )
+  plot_freqs
+
+}
 
 
-plot7 <- freqs7 %>%
+
+
+ggsave(plot_freq(1), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq1.png"))
+ggsave(plot_freq(2), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq2.png"))
+ggsave(plot_freq(3), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq3.png"))
+ggsave(plot_freq(4), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq4.png"))
+ggsave(plot_freq(5), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq5.png"))
+ggsave(plot_freq(6), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq6.png"))
+ggsave(plot_freq(7), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq7.png"))
+ggsave(plot_freq(8), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq8.png"))
+ggsave(plot_freq(14), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq14.png"))
+
+## plot diagnosis-specific survival-curves ----
+
+ceiling_any <- function(x, to=1){
+  # round to nearest 100 millionth to avoid floating point errors
+  ceiling(plyr::round_any(x/to, 1/100000000))*to
+}
+
+survobj <- function(.data, diagnosis, threshold){
+
+  dat <- .data %>%
+    mutate(
+      event_date = .[[glue("emergency_{diagnosis}_date")]],
+      .time = tte(vax1_date-1, event_date, censor_date, na.censor=FALSE),
+      .indicator = censor_indicator(event_date, censor_date),
+    )
+
+  unique_times <- unique(c(dat[[".time"]]))
+
+  dat_surv <- dat %>%
+    group_by(across(all_of("vax1_type_descr"))) %>%
+    transmute(
+      .time, .indicator
+    )
+
+  dat_surv1 <- dat_surv %>%
+    nest() %>%
+    mutate(
+      n_events = map_int(data, ~sum(.x$.indicator, na.rm=TRUE)),
+      surv_obj = map(data, ~{
+        survfit(Surv(.time, .indicator) ~ 1, data = .x, conf.type="log-log")
+      }),
+      surv_obj_tidy = map(surv_obj, ~tidy_surv(.x, addtimezero = TRUE)),
+    ) %>%
+    select("vax1_type_descr", n_events, surv_obj_tidy) %>%
+    unnest(surv_obj_tidy)
+
+  dat_surv_rounded <- dat_surv1 %>%
+    mutate(
+      # Use ceiling not round. This is slightly biased upwards,
+      # but means there's no disclosure risk at the boundaries (0 and 1) where masking would otherwise be threshold/2
+      surv = ceiling_any(surv, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
+      surv.ll = ceiling_any(surv.ll, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
+      surv.ul = ceiling_any(surv.ul, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
+    )
+  dat_surv_rounded
+}
+
+
+
+
+surv_list <- vector("list", length(diagnoses))
+names(surv_list) <- diagnoses
+
+for(diagnosis in names(surv_list)){
+  surv_list[[diagnosis]] <-
+    survobj(data_diagnoses, diagnosis, 0) %>%
+    mutate(diagnosis = diagnosis)
+}
+
+surv_long <- bind_rows(surv_list) %>%
   mutate(
-    n=if_else(vax1_type_descr==first(vax1_type_descr), n, -n),
-    pct=if_else(vax1_type_descr==first(vax1_type_descr), pct, -pct),
-    vax1_type_descr = paste0(vax1_type_descr, " (", n_vax, ")")
-  ) %>%
-  ggplot()+
-  geom_bar(aes(x=pct, y=diagnosis, fill=vax1_type_descr), width=freqs7$pct_vax, stat = "identity")+
-  #scale_y_discrete(breaks=)
-  scale_x_continuous(breaks=seq(-1,1,0.1), labels = abs(seq(-1,1,0.1)))+
-  labs(
-    y="Diagnosis",
-    x="Proportion\n(there may be multiple diagnoses per attendance)",
-    fill=NULL
-  )+
-  theme_minimal()+
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    axis.line.x.bottom = element_line(),
+    diagnosis_short = factor(diagnosis, levels=diagnoses),
+    diagnosis_long = fct_recode(diagnosis,  !!!diagnoses)
   )
-plot7
+
+surv_plot <-
+  surv_long %>%
+  filter(time <= 14) %>%
+  ggplot(aes(group=vax1_type_descr, colour=vax1_type_descr, fill=vax1_type_descr)) +
+  geom_step(aes(x=time, y=surv))+
+  geom_rect(aes(xmin=time, xmax=leadtime, ymin=surv.ll, ymax=surv.ul), alpha=0.1, colour="transparent")+
+  facet_wrap(facets=vars(diagnosis_long))+
+  scale_color_brewer(type="qual", palette="Set1", na.value="grey")+
+  scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+  scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
+  coord_cartesian(xlim=c(0, NA))+
+  labs(
+    x="Days since vaccination",
+    y="1 - emergency attendance rate",
+    colour=NULL,
+    fill=NULL,
+    title=NULL
+  )+
+  theme_minimal(base_size=9)+
+  theme(
+    axis.line.x = element_line(colour = "black"),
+    panel.grid.minor.x = element_blank()
+  )
+
+ggsave(surv_plot, filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_surv.png"))
 
 
-fs::dir_create(here("output", "descriptive", "diagnoses"))
 
-ggsave(plot7, filename=here("output", "descriptive", "diagnoses", "diagnosis_freq7.png"))
+
+
+
+
+
+
+
+
 

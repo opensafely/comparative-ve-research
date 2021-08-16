@@ -208,12 +208,29 @@ data_processed <- data_extract %>%
   mutate(
     emergency_diagnosis = paste(diagnosis_short[!is.na(c_across(all_of(diagnosis_col_names)))], collapse="; "),
     emergency_diagnosis = if_else(is.na(emergency_date) , "(no admission)", emergency_diagnosis),
-    emergency_diagnosis = if_else(!is.na(emergency_date) & emergency_diagnosis=="", "(unknown)", emergency_diagnosis)
+    emergency_diagnosis = if_else(!is.na(emergency_date) & emergency_diagnosis %in% c("", NA), "unknown", emergency_diagnosis),
+
+    emergency_unknown_date = if_else(!is.na(emergency_date) & emergency_diagnosis=="unknown", emergency_date, as.Date(NA))
   ) %>%
-  ungroup() %>%
-  # mutate(
-  #
-  # ) %>%
+  ungroup()
+
+
+data_diagnoses <-
+  data_processed %>%
+  select(
+    patient_id,
+    vax1_day,
+    vax1_date,
+    vax1_type,
+    vax1_type_descr,
+    end_date, dereg_date, death_date,
+    covid_vax_any_2_date,
+    starts_with("emergency_"),
+    emergency_diagnosis
+  )
+
+data_processed <-
+  data_processed %>%
   select(-all_of(diagnosis_col_names)) %>%
   droplevels()
 
@@ -285,6 +302,8 @@ data_processed <- data_extract %>%
 #
 # })
 
+
+write_rds(data_diagnoses, here("output", "data", "data_diagnoses.rds"), compress="gz")
 
 write_rds(data_processed, here("output", "data", "data_processed.rds"), compress="gz")
 

@@ -22,6 +22,10 @@ diagnosis_groups <-
   ) %>%
   ungroup()
 
+
+table(diagnosis_groups$ECDS_GroupCustom, diagnosis_groups$group, useNA='ifany')
+table(diagnosis_groups$group, diagnosis_groups$ECDS_GroupCustom,  useNA='ifany')
+
 diagnosis_groups %>%
   select(group, codelist) %>%
   {set_names(.$codelist, .$group)} %>% # convert tibble to list in a slightly awkward way
@@ -30,3 +34,6 @@ diagnosis_groups %>%
 #    flatten = TRUE
   )
 
+diagnosis_groups %>%
+  select(group, ECDS_GroupCustom, codelist) %>%
+  write_rds(path = here("analysis", "lib", "diagnosis_groups_lookup.rds"))

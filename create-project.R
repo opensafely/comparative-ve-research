@@ -212,7 +212,8 @@ actions_list <- splice(
     run = "r:latest analysis/process/data_process.R",
     needs = list("extract"),
     highly_sensitive = list(
-      cohort = "output/data/data_processed.rds"
+      processed = "output/data/data_processed.rds",
+      diagnoses = "output/data/data_disagnoses.rds"
     )
   ),
 
