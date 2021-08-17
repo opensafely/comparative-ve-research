@@ -385,81 +385,149 @@ ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_eff
 
 ## risk-adjusted survival curves ----
 
-# no CIs / standard errors yet because difficult to do!
+cmlinc_variance <- function(model, vcov, newdata, id, time, weights){
 
-survival_az <- data_plr %>%
-  mutate(vax1_az=1L) %>%
-  transmute(
-    patient_id,
-    tstop,
-    tstop_calendar,
-    vax1_az,
-    sample_weights,
-    outcome_prob0=predict(plrmod0, newdata=., type="response"),
-    outcome_prob1=predict(plrmod1, newdata=., type="response"),
-    outcome_prob2=predict(plrmod2, newdata=., type="response"),
-    outcome_prob3=predict(plrmod3, newdata=., type="response"),
-  )
+  # calculate variance of adjusted survival / adjusted cumulative incidence
+  # needs model object, cluster-vcov, input data, model weights, and indices for patient and time
 
-survival_pfizer <- data_plr %>%
-  mutate(vax1_az=0L) %>%
-  transmute(
-    patient_id,
-    tstop,
-    tstop_calendar,
-    vax1_az,
-    sample_weights,
-    outcome_prob0=predict(plrmod0, newdata=., type="response"),
-    outcome_prob1=predict(plrmod1, newdata=., type="response"),
-    outcome_prob2=predict(plrmod2, newdata=., type="response"),
-    outcome_prob3=predict(plrmod3, newdata=., type="response"),
+  if(missing(newdata)){ newdata <- model$model }
+  tt <- terms(model) # this helpfully grabs the correct spline basis from the model, rather than recalculating based on `newdata`
+  Terms <- delete.response(tt)
+  m.mat <- model.matrix(Terms, data=newdata)
+  m.coef <- model$coef
+
+  N <- nrow(m.mat)
+  K <- length(m.coef)
+
+  # log-odds, nu_t, at time t
+  nu <- m.coef %*% t(m.mat) # t_i x 1
+  # part of partial derivative
+  pdc <- (exp(nu)/((1+exp(nu))^2)) # t_i x 1
+  # summand for partial derivative of P_t(theta_t | X_t), for each time t and term k
+
+  #summand <- crossprod(diag(as.vector(pdc)), m.mat)    # t_i  x k
+  summand <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    summand[,k] <- m.mat[,k] * as.vector(pdc)
+  }
+
+  # cumulative sum of summand, by patient_id  # t_i x k
+  cmlsum <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    cmlsum[,k] <- ave(summand[,k], id, FUN=cumsum)
+  }
+
+  ## multiply by model weights (weights are normalised here so we can use `sum` later, not `weighted.mean`)
+  normweights <- weights / ave(weights, time, FUN=sum) # t_i x 1
+
+  #wgtcmlsum <- crossprod(diag(normweights), cmlsum ) # t_i x k
+  wgtcmlsum <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    wgtcmlsum[,k] <- cmlsum[,k] * normweights
+  }
+
+  # partial derivative of cumulative incidence at t
+  partial_derivative <- rowsum(wgtcmlsum, time)
+
+  variance <- rowSums(crossprod(t(partial_derivative), vcov) * partial_derivative) # t x 1
+
+  variance
+}
+
+#test<-cmlinc_variance(plrmod3, vcov3, mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)
+
+ccf <-  function(data, vax1_az){
+
+  # g-formula to get marginalised / adjusted incidence / survival curves
+
+  vaxtype <- vax1_az
+
+  ccf <- data_plr %>%
+    mutate(vax1_az=vaxtype) %>%
+    select(
+      patient_id,
+      tstop,
+      tstop_calendar,
+      vax1_az,
+      sample_weights,
+      all_of(all.vars(formula(plrmod3)))
+    ) %>%
+    mutate(
+      prob0 = predict(plrmod0, newdata=., type="response"),
+      prob1 = predict(plrmod1, newdata=., type="response"),
+      prob2 = predict(plrmod2, newdata=., type="response"),
+      prob3 = predict(plrmod3, newdata=., type="response")
+    ) %>%
+    arrange(tstop)
+
+  curves <- ccf %>%
+    #marginalise over all patients
+    group_by(tstop) %>%
+    summarise(
+      prob0 = weighted.mean(prob0, sample_weights),
+      prob1 = weighted.mean(prob1, sample_weights),
+      prob2 = weighted.mean(prob2, sample_weights),
+      prob3 = weighted.mean(prob3, sample_weights),
+    ) %>%
+    ungroup() %>%
+    mutate(
+      mean.survival0 = cumprod(1-prob0),
+      mean.survival1 = cumprod(1-prob1),
+      mean.survival2 = cumprod(1-prob2),
+      mean.survival3 = cumprod(1-prob3),
+      mean.survivalse0 = sqrt(cmlinc_variance(plrmod0, vcov0, ccf, ccf$patient_id, ccf$tstop, ccf$sample_weights)),
+      mean.survivalse1 = sqrt(cmlinc_variance(plrmod1, vcov1, ccf, ccf$patient_id, ccf$tstop, ccf$sample_weights)),
+      mean.survivalse2 = sqrt(cmlinc_variance(plrmod2, vcov2, ccf, ccf$patient_id, ccf$tstop, ccf$sample_weights)),
+      mean.survivalse3 = sqrt(cmlinc_variance(plrmod3, vcov3, ccf, ccf$patient_id, ccf$tstop, ccf$sample_weights))
+    ) %>%
+    select(-starts_with("prob")) %>%
+    pivot_longer(
+      cols=c(starts_with("mean.")),
+      names_to=c(".value", "model"),
+      names_pattern="mean.(\\w+)(\\d+$)"
+    ) %>%
+    arrange(model, tstop) %>%
+    group_by(model) %>%
+    mutate(
+      survival.ll = pmax(0, survival+qnorm(0.025)*survivalse) - pmax(0, survival+qnorm(0.975)*survivalse - 1),
+      survival.ul = pmin(1, survival+qnorm(0.975)*survivalse) + pmin(0, survival+qnorm(0.025)*survivalse),
+      haz = (lag(survival,n=1,default=1)-survival)/survival
+    ) %>%
+    ungroup() %>%
+    add_row(
+      model = c("0", "1", "2", "3"),
+      tstop = 0,
+      survivalse = 0,
+      survival = 1,
+      survival.ll = 1,
+      survival.ul = 1,
+      haz = 0
+    ) %>%
+    mutate(
+      vax1_az = vaxtype
+    ) %>%
+    arrange(model, tstop)
+
+}
+
+survival_pfizer <- ccf(data_plr, vax1_az=0)
+survival_az <- ccf(data_plr, vax1_az=1)
+
+curves <-
+  bind_rows(survival_az, survival_pfizer) %>%
+  mutate(
+    model = as.integer(model),
+    vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2")
+  ) %>%
+  left_join(
+    tidy_plr_ns %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
   )
 
 if(removeobs) rm(plrmod0, plrmod1, plrmod2, plrmod3)
 
-curves <- bind_rows(survival_az, survival_pfizer) %>%
-  #marginalise over all patients
-  group_by(vax1_az, tstop) %>%
-  summarise(
-    outcome_prob0=weighted.mean(outcome_prob0, sample_weights),
-    outcome_prob1=weighted.mean(outcome_prob1, sample_weights),
-    outcome_prob2=weighted.mean(outcome_prob2, sample_weights),
-    outcome_prob3=weighted.mean(outcome_prob3, sample_weights),
-  ) %>%
-  pivot_longer(
-    cols=starts_with("outcome_prob"),
-    names_to="model",
-    names_pattern="outcome_prob(\\d+$)",
-    values_to="outcome_prob"
-  ) %>%
-  arrange(model, vax1_az, tstop) %>%
-  group_by(model, vax1_az) %>%
-  mutate(
-    survival = cumprod(1-outcome_prob),
-    haz = (lag(survival,n=1,default=1)-survival)/survival
-  ) %>%
-  ungroup() %>%
-  add_row(
-    model = rep(c("0", "1", "2", "3"), each=2),
-    vax1_az = rep(c(0L, 1L), times=4),
-    tstop=0,
-    outcome_prob =0,
-    survival = 1,
-    haz = 0
-  ) %>%
-  mutate(
-    model = as.integer(model),
-    vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2"),
-  ) %>%
-  left_join(
-    tidy_plr_ns %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
-  ) %>%
-  arrange(model, vax1_az, tstop)
-
-
-
-cml_inc <- ggplot(curves %>% filter(model=="3"))+
-  geom_step(aes(x=tstop, y=1-survival, group=vax1_az_descr, colour=vax1_az_descr))+
+survival <- ggplot(curves %>% filter(model=="3"))+
+  geom_step(aes(x=tstop, y=survival, group=vax1_az_descr, colour=vax1_az_descr))+
+  geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=survival.ll, ymax=survival.ul, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
   scale_x_continuous(
     breaks = seq(0,7*52,by=14),
     expand = expansion(0)
@@ -468,22 +536,24 @@ cml_inc <- ggplot(curves %>% filter(model=="3"))+
     expand = expansion(0)
   )+
   scale_colour_brewer(type="qual", palette="Set2")+
+  scale_fill_brewer(type="qual", palette="Set2", guide="none")+
   labs(
     x="Days since first dose",
-    y="Cumulative risk",
-    colour=NULL
+    y="Adjusted survival",
+    colour=NULL,
+    fill=NULL
   )+
   theme_bw()+
   theme(
-    legend.position=c(0.05,.95),
-    legend.justification = c(0,1),
+    legend.position=c(.05,.05),
+    legend.justification = c(0,0),
     axis.text.x.top=element_text(hjust=0)
   )
 
-write_rds(curves, here("output", "models", outcome, timescale, glue("reportplr_cmlinccurves_ns.rds")), compress="gz")
+write_rds(curves, here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.rds")), compress="gz")
 
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_ns.svg")), cml_inc, width=20, height=15, units="cm")
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_ns.png")), cml_inc, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.svg")), cml_inc, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.png")), cml_inc, width=20, height=15, units="cm")
 
 
 ## hazard ratios derived from survival curves
