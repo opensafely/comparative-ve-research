@@ -249,7 +249,7 @@ plr_process <- function(plrmod, number, cluster, splinetype){
 plrmod0 <- parglm(
   formula = formula0_pw,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -261,11 +261,12 @@ summary0 <- plr_process(
 )
 if(removeobs){remove(plrmod0)}
 
+
 ## model 1 - minimally adjusted vaccination effect model, stratification by region only
 plrmod1 <- parglm(
   formula = formula1_pw,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -281,7 +282,7 @@ if(removeobs){remove(plrmod1)}
 plrmod2 <- parglm(
   formula = formula2_pw,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -297,7 +298,7 @@ if(removeobs){remove(plrmod2)}
 plrmod3 <- parglm(
   formula = formula3_pw,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -332,7 +333,7 @@ write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("m
 plrmod0 <- parglm(
   formula = formula0_ns,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -347,7 +348,7 @@ if(removeobs){remove(plrmod0)}
 plrmod1 <- parglm(
   formula = formula1_ns,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -362,7 +363,7 @@ if(removeobs){remove(plrmod1)}
 plrmod2 <- parglm(
   formula = formula2_ns,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
@@ -377,7 +378,7 @@ if(removeobs){remove(plrmod2)}
 plrmod3 <- parglm(
   formula = formula3_ns,
   data = data_plr,
-  weights = data_plr$sample_weights,
+  weights = sample_weights,
   family = binomial,
   control = parglmparams,
   na.action = "na.fail",
