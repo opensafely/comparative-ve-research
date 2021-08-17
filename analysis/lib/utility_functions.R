@@ -258,19 +258,36 @@ tidy_custom.glm  <- function(model, conf.int=TRUE, conf.level=0.95, exponentiate
   output
 }
 
-plr.predict <- function(model, clcov, newdata){
+plr.predict <- function(model, clcov, newdata, type=c("link", "response")){
+
   # from https://stackoverflow.com/questions/3790116/using-clustered-covariance-matrix-in-predict-lm
+
   if(missing(newdata)){ newdata <- model$model }
-  tt <- terms(model)
+  tt <- terms(model) # this helpfully grabs the correct spline basis from the model, rather than recalculating based on `newdata`
   Terms <- delete.response(tt)
   m.mat <- model.matrix(Terms, data=newdata)
   m.coef <- model$coef
-  fit <- as.vector(m.mat %*% model$coef)
-  se.fit <- sqrt( rowSums(m.mat * (m.mat %*% clcov)) )
-  return(list(fit=fit, se.fit=se.fit))
+
+  nu <- as.vector(m.mat %*% m.coef) # n x 1
+
+  if(type=="link"){
+    fit <- nu
+    fit.se <- sqrt( rowSums(m.mat * (m.mat %*% clcov)) )
+  }
+
+  if(type=="response"){
+
+    logit2nu <- (exp(nu)/((1+exp(nu))^2)) # n x 1
+    deriv_nu <- t(m.mat) * c(logit2nu)  # k x n
+
+    stopifnot("term indices are not aligned" = rownames(clcov)==names(deriv_nu))
+
+    fit <- plogis(nu)
+    fit.se <- sqrt(rowSums((t(deriv_nu) %*% vcov) * t(deriv_nu)))
+  }
+
+  return(list(fit=fit, fit.se=fit.se))
 }
-
-
 
 
 # functions for IRR confidence intervals ----
