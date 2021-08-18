@@ -24,7 +24,7 @@ args <- commandArgs(trailingOnly=TRUE)
 if(length(args)==0){
   # use for interactive testing
   removeobs <- FALSE
-  outcome <- "test"
+  outcome <- "admitted"
   timescale <- "timesincevax"
 } else {
   removeobs <- TRUE
@@ -201,7 +201,7 @@ if(timescale=="timesincevax"){
   #   )
 
   # as per https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf
-  # only need interaction term (not * but :) because follow time is stratified by timesincevax_pw, so there's no baseline
+  # only need interaction term (: but not *) because follow time is stratified by timesincevax_pw, so there's no baseline
   formula_vaxonly <- Surv(tstart, tstop, ind_outcome) ~ vax1_az:strata(timesincevax_pw)
   formula_spacetime <- . ~ . + strata(region) * ns(vax1_day, 3)
 }
