@@ -69,7 +69,7 @@ Study participants are followed up from vaccination date until the first of:
 
 Those vaccinated as part of England's national vaccination programme (for example not including vaccine trial participants) are asked whether they work in health or social care. This information is sent to OpenSAFELY-TPP from NHS Digital's COVID-19 data store.
 
-Note -- many of those flagged as HCWs do not have a vaccination record, which shouldn't be the case if the question was asked as part of the vaccination process.
+Note -- many of those flagged as HCWs do not have a vaccination record, which shouldn't be the case if the question was asked as part of the vaccination process. This needs further investigation.
 
 ## Study measures
 
@@ -88,27 +88,26 @@ The vaccination brand, BNT162b2 or ChAdOx1. This is available in the GP record d
 
 The aim is to estimate comparative vaccine effectiveness, i.e., the relative hazard of each outcome for ChAdOx1 versus BNT162b2 vaccine recipients. The effect is permitted to vary by time since vaccination, to account for the potential differences in vaccine protection over time between the two brands. 
 
-Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, NHS region, clinically “at risk” (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All variables are ascertained as at the time of vaccination. 
+Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, NHS region, clinically “at risk” (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All characteristics are ascertained as at the time of vaccination. 
 
-NHS regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest (primarily driven by changes in local infection rates). 
-
+NHS regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest, for example due to changes in local infection rates. 
 
 ### Time-dependent Cox models
-Time-dependent Cox models are used to estimate the time-varying effects for each vaccine type. Two time-scales are used for triangulation:
-
-* On the *calendar time-scale*, time zero is `r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")`, and people only contribute follow-up time once they have been vaccinated (i.e., delayed study entry). Vaccine type, time since vaccination in weekly intervals, and the interaction between these two terms are included to estimate time-varying vaccine effects for each vaccine type. In `R`'s `coxph` function, this is modelled using `vaccine_type*week_since_first_dose`
-
-* On the *treatment time-scale*, time zero is the date of vaccination. Date of vaccination is included as an additional baseline covariate using a restricted cubic spline with knots at the first and second tertile, plus boundary knots. Here, follow-up time is stratified into weekly intervals with the vaccine-specific effect estimated within each time-strata. In `R`'s `coxph` function, this is modelled using `vaccine_type:strata(week_since_first_dose)`.
+Time-dependent Cox models are used to estimate the time-varying effects for each vaccine type. Time zero is the date of vaccination, i.e., using a treatment time-scale. Outcome events occurring on the same day as vaccination are included in follow-up. Date of vaccination is included as an additional baseline covariate using a restricted cubic spline with knots at the first and second tertile, plus boundary knots. Here, follow-up time is stratified into weekly intervals with the vaccine-specific effect estimated within each time-strata. In `R`'s `coxph` function, this is modelled using `vaccine_type:strata(week_since_first_dose)`.
 
 ### Pooled Logistic Regression models
 
-We emulate the Cox models described above using pooled logistic regression (PLR), with the outcome risk estimated at daily intervals. This serves two purposes. Firstly, a continuous-time estimate of comparative effectiveness, as opposed to the piecewise-linear approximation above, can be obtained using flexible parametric splines. Secondly, the absolute cumulative risk of each outcome of interest for each vaccine type, marginalised over the population, can be obtained using the parametric g-formula. These models include a restricted cubic spline with 3 degrees of freedom on the timescale of interest, interacted with vaccine type. Cumulative risk is then calculated as the average risk for each day of follow-up predicted by the PLR model, under the (complimentary counterfactual) assumptions that every patient received the BNT162b2 vaccine or that every patient received the ChAdOx1 vaccine.
+We emulate the Cox model described above using pooled logistic regression (PLR), with the outcome risk estimated at daily intervals. These models include a restricted cubic spline with 3 degrees of freedom on the log of the timescale (time since vaccination), interacted with vaccine type. The PLR models serve two purposes. Firstly, a continuous-time estimate of comparative effectiveness, as opposed to the piecewise-linear approximation above, is obtained. Secondly, the risk-adjusted survival rates for each vaccine type are obtained using the parametric g-formula. This is the average risk for each day of follow-up predicted by the PLR model, under the (complimentary counterfactual) assumption that every patient received the BNT162b2 vaccine or that every patient received the ChAdOx1 vaccine. 
 
-The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the ouotcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the average cumulative risk. 
+Confidence intervals for the risk-adjusted survival rates are calculated using the delta method (i.e, a first-order Taylor series approximation of the variance of the cumulative incidence).
+
+The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the outcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the risk-adjusted survival curves. 
+
+
 
 # Results
 
-Note all counts below 6 are redacted and Kaplan-Meier survival estimates are rounded for disclosure control.
+Note all counts below 6 are redacted and survival estimates are rounded for disclosure control.
 
 ## Flowchart
 
@@ -148,6 +147,13 @@ flowchart %>%
 read_rds(here("output", "descriptive", "tables", "table1.rds"))
 ```
 
+## Vaccination dates
+
+```{r, vaxdate, echo=FALSE, message=FALSE, warning=FALSE, out.width='80%', results='asis'}
+  vaxdate_plot <- read_rds(here("output", "descriptive", "vaxdate", "plot_vaxdate_stack.rds"))
+  print(vaxdate_plot)
+  cat("  \n\n")
+```
 
 ## Event rates
 
@@ -159,156 +165,72 @@ read_rds(here("output", "descriptive", "tables", "table_irr.rds"))
 
 The plots below show:
 
-* Unadjusted Kaplan-Meier curves
-* *ChAdOx1* versus *BNT162b2* piecewise-linear hazard ratios estimated using the Cox models
-* *ChAdOx1* versus *BNT162b2* continuous hazard ratios estimated using the PLR models
-* Marginalised cumulative risk for *ChAdOx1* and *BNT162b2* estimated using the PLR models
+* *ChAdOx1* versus *BNT162b2* hazard ratio splines
+* Risk-adjusted survival curves for *ChAdOx1* and *BNT162b2*
 
 
-```{r, curves, echo=FALSE, message=FALSE, warning=FALSE, out.width='80%', results='asis'}
+```{r, curves, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=6, results='asis'}
 
-print_plots_km <- function(outcome){
+plots_spline <- function(outcome){
 
-  km_image <- here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.png"))
-  
-  km_plot <- read_rds(here("output", "descriptive", "km", glue("plot_survival_ci_{outcome}.rds")))
-  
-  
-  print(km_plot)
-  cat("  \n\n")
-  
-}
-
-print_plots_effects <- function(outcome, modeltype){
-
-  suffix <- if(modeltype=="plr"){
-    "_pw"
-  } else{
-    ""
-  }
-  
-  calendar_effects <- read_rds(here("output", "models", outcome, "calendar", glue("report{modeltype}_effects{suffix}.rds"))) %>%
-    mutate(timescale = "Calendar time")
-  timesincevax_effects <- read_rds(here("output", "models", outcome, "timesincevax", glue("report{modeltype}_effects{suffix}.rds"))) %>%
-    mutate(timescale = "Vaccinated time")
-  
-  tidy_effects <- bind_rows(calendar_effects, timesincevax_effects)
-  
-  plot_effects <-
-    ggplot(data = tidy_effects) +
-    geom_point(aes(y=exp(estimate), x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
-    geom_linerange(aes(ymin=exp(conf.low), ymax=exp(conf.high), x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
-    geom_hline(aes(yintercept=1), colour='grey')+
-    facet_grid(cols=vars(timescale))+
-    scale_x_continuous(breaks=unique(tidy_effects$term_left), limits=c(min(tidy_effects$term_left), max(tidy_effects$term_right)+1), expand = c(0, 0))+
-    scale_y_log10(
-    breaks=c(0.1, 0.125, 0.25, 0.33, 0.5, 0.75, 1, 1.33, 2, 3, 4, 8,10),
-    sec.axis = dup_axis(name="favours\n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
-  )+
-    scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=2))+
-    labs(
-      y="Hazard ratio",#\nChAdOx1 / BNT162b2",
-      x="Days since vaccination",
-      colour=NULL
-     ) +
-    theme_bw()+
-    theme(
-      panel.border = element_blank(),
-      axis.line.y = element_line(colour = "black"),
-  
-      panel.grid.minor.x = element_blank(),
-      panel.grid.minor.y = element_blank(),
-      strip.background = element_blank(),
-      strip.placement = "outside",
-      strip.text.y.left = element_text(angle = 0),
-  
-      panel.spacing = unit(0.8, "lines"),
-  
-      plot.title = element_text(hjust = 0),
-      plot.title.position = "plot",
-      plot.caption.position = "plot",
-      plot.caption = element_text(hjust = 0, face= "italic"),
-  
-      legend.position = "bottom"
-     ) +
-   NULL
-  
-  print(plot_effects)
-  cat("  \n\n")
-}
-
-
-
-print_plots_spline <- function(outcome){
-
-  calendar_effects <- read_rds(here("output", "models", outcome, "calendar", glue("reportplr_effects_ns.rds"))) %>%
-    mutate(timescale = "Calendar time")
   timesincevax_effects <- read_rds(here("output", "models", outcome, "timesincevax", glue("reportplr_effects_ns.rds"))) %>%
-    mutate(timescale = "Vaccinated time")
-  
-  spline <- bind_rows(calendar_effects, timesincevax_effects)
+    mutate(
+      timescale = "Vaccinated time",
+      model_name = fct_inorder(str_wrap(model_name, 15))
+    )
   
   plot_spline <-
-    ggplot(spline)+
+    ggplot(timesincevax_effects)+
     geom_hline(aes(yintercept=1), colour='grey')+
-    geom_line(aes(x=tstop-1, y=hr, colour=model_name))+
-    geom_ribbon(aes(x=tstop-1, ymin=hr.ll, ymax=hr.ul, fill=model_name), alpha=0.2, colour="transparent")+
-    facet_grid(cols=vars(timescale))+
+    geom_line(aes(x=tstop-1, y=hr))+
+    geom_ribbon(aes(x=tstop-1, ymin=hr.ll, ymax=hr.ul), alpha=0.2, colour="transparent")+
+    facet_grid(cols=vars(model_name))+
     scale_x_continuous(
       breaks = seq(0,7*52,by=14),
       expand = expansion(0)
     )+
     scale_y_log10(
-      breaks=c(1/8, 1/6, 0.25, 0.33, 0.5, 0.67, 1, 1.5, 2, 3, 4, 6, 8),
-      sec.axis = dup_axis(name="favours\n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
+      breaks=c(0.125, 0.167, 0.25, 0.33, 0.5, 0.67, 1, 1.5, 2, 3, 4, 6, 8),
+      sec.axis = dup_axis(name="Lower hazard after \n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
     )+
-    scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
-    scale_fill_brewer(type="qual", palette="Set2", guide="none")+
     labs(
       x = "Days since first dose",
-      y = "Hazard ratio",
-      colour = NULL, fill=NULL
+      y = "Hazard ratio"
     )+
     theme_bw()+
     theme(
       panel.border = element_blank(),
       axis.line.y = element_line(colour = "black"),
-  
+
+      panel.grid.minor.x = element_blank(),
       panel.grid.minor.y = element_blank(),
       strip.background = element_blank(),
-      strip.placement = "outside",
-      strip.text.y.left = element_text(angle = 0),
-  
+
       panel.spacing = unit(0.8, "lines"),
-  
+
       plot.title = element_text(hjust = 0),
       plot.title.position = "plot",
       plot.caption.position = "plot",
-      plot.caption = element_text(hjust = 0, face= "italic"),
-  
-      legend.position = "bottom"
+      plot.caption = element_text(hjust = 0, face= "italic")
+
      ) +
    NULL
-  
-  print(plot_spline)
-  cat("  \n\n")
+  plot_spline
+  #print(plot_spline)
+  #cat("  \n\n")
 }
 
 
-print_plots_cmlinc <- function(outcome){
+plots_adjsurv <- function(outcome){
 
-  
-  calendar_curve <- read_rds(here("output", "models", outcome, "calendar", glue("reportplr_cmlinccurves_ns.rds"))) %>%
-    mutate(timescale = "Calendar time")
-  timesincevax_curve <- read_rds(here("output", "models", outcome, "timesincevax", glue("reportplr_cmlinccurves_ns.rds"))) %>%
+  timesincevax_curve <- read_rds(here("output", "models", outcome, "timesincevax", glue("reportplr_adjustedsurvival_ns.rds"))) %>%
     mutate(timescale = "Vaccinated time")
   
-  curves <- bind_rows(calendar_curve, timesincevax_curve)
-  
-  plot_cmlinc <-
-    ggplot(curves %>% filter(model=="3"))+
-    geom_step(aes(x=tstop, y=1-survival, group=vax1_az_descr, colour=vax1_az_descr))+
-    facet_grid(cols=vars(timescale))+
+  plot_adjsurv <-
+    ggplot(timesincevax_curve)+
+    geom_step(aes(x=tstop, y=survival, group=vax1_az_descr, colour=vax1_az_descr))+
+    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=survival.ll, ymax=survival.ul, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
+    facet_grid(cols=vars(model_name))+
     scale_x_continuous(
       breaks = seq(0,7*52,by=14),
       expand = expansion(0)
@@ -320,93 +242,52 @@ print_plots_cmlinc <- function(outcome){
     scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
     labs(
       x="Days since first dose",
-      y="Cumulative risk",
+      y="Adjusted survival",
       colour=NULL
     )+
     theme_bw()+
     theme(
-      legend.position=c(0.05,.95),
-      legend.justification = c(0,1),
+      legend.position="bottom",
+      legend.direction = "horizontal",
       axis.text.x.top=element_text(hjust=0),
-      
+
       panel.border = element_blank(),
       axis.line.y = element_line(colour = "black"),
-  
+
       panel.grid.minor.x = element_blank(),
       panel.grid.minor.y = element_blank(),
       strip.background = element_blank(),
-      strip.placement = "outside",
-      strip.text.y.left = element_text(angle = 0),
-  
+      strip.text = element_blank(),
+
       panel.spacing = unit(0.8, "lines"),
 
     )+
     NULL
-
+  plot_adjsurv
   
-  print(plot_cmlinc)
-  cat("  \n\n")
+  #print(plot_adjsurv)
+  #cat("  \n\n")
 }
-
 
 cat("  \n\n")
 print(glue("### SARS-CoV-2 test"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("test")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("test", "cox")
-print(glue("#### PLR"), "  \n")
-print_plots_effects("test", "plr")
-print_plots_spline("test")
-print_plots_cmlinc("test")
+wrap_plots(plots_spline("test"), plots_adjsurv("test"), nrow=2) 
 
 cat("  \n\n")
 print(glue("### SARS-CoV-2 positive test"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("postest")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("postest", "cox")
-print(glue("#### PLR, peicewise"), "  \n")
-print_plots_effects("postest", "plr")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("postest")
-print_plots_cmlinc("postest")
+wrap_plots(plots_spline("postest"), plots_adjsurv("postest"), nrow=2)
 
 cat("  \n\n")
 print(glue("### A&E attendance"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("emergency")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("emergency", "cox")
-print(glue("#### PLR, peicewise"), "  \n")
-print_plots_effects("emergency", "plr")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("emergency")
-print_plots_cmlinc("emergency")
+wrap_plots(plots_spline("emergency"), plots_adjsurv("emergency"), nrow=2)
 
 cat("  \n\n")
 print(glue("### Any unplanned hospital admission"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("admitted")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("admitted", "cox")
-print(glue("#### PLR, peicewise"), "  \n")
-print_plots_effects("admitted", "plr")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("admitted")
-print_plots_cmlinc("admitted")
+wrap_plots(plots_spline("admitted"), plots_adjsurv("admitted"), nrow=2)
 
 
 cat("  \n\n")
 print(glue("### COVID-19 hospital admission"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("covidadmitted")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("covidadmitted", "cox")
-print(glue("#### PLR, peicewise"), "  \n")
-print_plots_effects("covidadmitted", "plr")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("covidadmitted")
-print_plots_cmlinc("covidadmitted")
+wrap_plots(plots_spline("covidadmitted"), plots_adjsurv("covidadmitted"), nrow=2)
 
 ```
