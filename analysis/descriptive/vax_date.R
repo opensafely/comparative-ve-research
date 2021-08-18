@@ -42,70 +42,45 @@ cumulvax <- data_cohort %>%
   summarise(
     n=n()
   ) %>%
+  ungroup() %>%
+  add_row(
+    vax1_type_descr = unique(.$vax1_type_descr),
+    vax1_date = min(.$vax1_date) - 1,
+    n=0,
+    .before=1
+  ) %>%
   group_by(vax1_type_descr) %>%
-  arrange(vax1_date) %>%
   mutate(
     cumuln = cumsum(n)
-  )
+  ) %>%
+  arrange(vax1_type_descr, vax1_date)
 
 
 plot_stack <-
   ggplot(cumulvax)+
   geom_area(
     aes(
-      x=vax1_date, y=cumuln,
+      x=vax1_date+1, y=cumuln,
       group=vax1_type_descr,
       fill=vax1_type_descr
     ),
     alpha=0.5
   )+
   scale_x_date(
-    breaks = seq(min(cumulvax$vax1_date),max(cumulvax$vax1_date)+1,by=14),
-    limits = c(lubridate::floor_date((min(cumulvax$vax1_date)), "1 month"), NA),
+    breaks = seq(min(cumulvax$vax1_date),max(cumulvax$vax1_date)+1,by=14)+1,
+    limits = c(lubridate::floor_date(min(cumulvax$vax1_date), "1 month"), NA),
     labels = scales::date_format("%d/%m"),
     expand = expansion(0),
     sec.axis = sec_axis(
       trans = ~as.Date(.),
       breaks=as.Date(seq(floor_date(min(cumulvax$vax1_date), "month"), ceiling_date(max(cumulvax$vax1_date), "month"),by="month")),
-      labels = scales::date_format("%b %y")
+      labels = scales::date_format("%B %y")
     )
   )+
   scale_fill_brewer(type="qual", palette="Set1")+
   labs(
     x="Date",
-    y="Vaccination status",
-    colour=NULL,
-    fill=NULL,
-    alpha=NULL
-  ) +
-  theme_minimal()+
-  theme(legend.position = "bottom")
-
-
-plot_step <-
-  ggplot(cumulvax)+
-  geom_step(
-    aes(
-      x=vax1_date, y=cumuln,
-      group=vax1_type_descr,
-      colour=vax1_type_descr
-    )
-  )+
-  scale_x_date(
-    breaks = seq(min(cumulvax$vax1_date),max(cumulvax$vax1_date)+1,by=14),
-    limits = c(lubridate::floor_date((min(cumulvax$vax1_date)), "1 month"), NA),
-    labels = scales::date_format("%d/%m"),
-    expand = expansion(0),
-    sec.axis = sec_axis(
-      trans = ~as.Date(.),
-      breaks=as.Date(seq(floor_date(min(cumulvax$vax1_date), "month"), ceiling_date(max(cumulvax$vax1_date), "month"),by="month")),
-      labels = scales::date_format("%b %y")
-    )
-  )+
-  scale_colour_brewer(type="qual", palette="Set1")+
-  labs(
-    x="Date",
-    y="Vaccination status",
+    y="Vaccinated, n",
     colour=NULL,
     fill=NULL,
     alpha=NULL
@@ -116,6 +91,44 @@ plot_step <-
     legend.position = "bottom"
   )
 
+
+plot_step <-
+  ggplot(cumulvax)+
+  geom_step(
+    aes(
+      x=vax1_date+1, y=cumuln,
+      group=vax1_type_descr,
+      colour=vax1_type_descr
+    )
+  )+
+  scale_x_date(
+    breaks = seq(min(cumulvax$vax1_date),max(cumulvax$vax1_date)+1,by=14)+1,
+    limits = c(lubridate::floor_date((min(cumulvax$vax1_date)), "1 month"), NA),
+    labels = scales::date_format("%d/%m"),
+    expand = expansion(0),
+    sec.axis = sec_axis(
+      trans = ~as.Date(.),
+      breaks=as.Date(seq(floor_date(min(cumulvax$vax1_date), "month"), ceiling_date(max(cumulvax$vax1_date), "month"),by="month")),
+      labels = scales::date_format("%B %y")
+    )
+  )+
+  scale_colour_brewer(type="qual", palette="Set1")+
+  labs(
+    x="Date",
+    y="Vaccinated, n",
+    colour=NULL,
+    fill=NULL,
+    alpha=NULL
+  ) +
+  theme_minimal()+
+  theme(
+    axis.text.x.top=element_text(hjust=0),
+    legend.position = "bottom"
+  )
+
+
+write_rds(plot_step, here("output", "descriptive", "vaxdate", "plot_vaxdate_step.rds"))
+write_rds(plot_stack, here("output", "descriptive", "vaxdate", "plot_vaxdate_stack.rds"))
 
 ggsave(plot_step, filename="plot_vaxdate_step.png", path=here("output", "descriptive", "vaxdate"))
 ggsave(plot_stack, filename="plot_vaxdate_stack.png", path=here("output", "descriptive", "vaxdate"))
