@@ -117,6 +117,13 @@ defaults_list <- list(
 ## actions ----
 actions_list <- splice(
 
+  comment("# # # # # # # # # # # # # # # # # # #",
+          "DO NOT EDIT project.yaml DIRECTLY",
+          "This file is created by create-project.R",
+          "Edit and run create-project.R to update the project.yaml",
+          "# # # # # # # # # # # # # # # # # # #"
+          ),
+
 
   comment("# # # # # # # # # # # # # # # # # # #", "Temp second dose info", "# # # # # # # # # # # # # # # # # # #"),
   action(
@@ -297,6 +304,9 @@ actions_list <- splice(
     name = "descr_vaxdate",
     run = "r:latest analysis/descriptive/vax_date.R",
     needs = list("design", "data_selection"),
+    highly_sensitive = list(
+      rds = "output/descriptive/vaxdate/*.rds"
+    ),
     moderately_sensitive = list(
       png = "output/descriptive/vaxdate/*.png"
     )
@@ -372,7 +382,7 @@ actions_list <- splice(
   # action_model("covidcc", "calendar", "plr", 50000),
   # action_report("covidcc", "calendar", "plr"),
 
-  comment("# # # # # # # # # # # # # # # # # # #", "Report", "# # # # # # # # # # # # # # # # # # #"),
+  comment("# # # # # # # # # # # # # # # # # # #", "Reports", "# # # # # # # # # # # # # # # # # # #"),
 
   action(
     name = "rmd_report",
@@ -383,15 +393,11 @@ actions_list <- splice(
     needs = splice(
       "design", "data_selection",
       "descr_table1", "descr_irr",
-      "descr_km",
+      "descr_km", "descr_vaxdate",
       as.list(
-        glue_data(
-             .x = expand_grid(
-               outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
-               modeltype = c("cox", "plr"),
-               timescale = c("timesincevax", "calendar")
-             ),
-             "report_{outcome}_{timescale}_{modeltype}"
+        glue(
+             outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
+             "report_{outcome}_timesincevax_plr"
         )
       )
     ),
@@ -403,29 +409,30 @@ actions_list <- splice(
   ),
 
   action(
-    name = "rmd_report_vaxtime",
+    name = "rmd_report_timescales",
     run = glue(
       "r:latest -e {q}",
-      q = single_quote('rmarkdown::render("analysis/report/effectiveness_report_vaccinatedtime.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )')
+      q = single_quote('rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )')
     ),
     needs = splice(
       "design", "data_selection",
       "descr_table1", "descr_irr",
-      "descr_km",
+      "descr_km", "descr_vaxdate",
       as.list(
         glue_data(
           .x = expand_grid(
-            outcome = c("test", "postest", "emergency", "covidadmitted"),
-            modeltype = c("cox", "plr")
+            outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
+            modeltype = c("cox", "plr"),
+            timescale = c("timesincevax", "calendar")
           ),
-          "report_{outcome}_timesincevax_{modeltype}"
+          "report_{outcome}_{timescale}_{modeltype}"
         )
       )
     ),
     moderately_sensitive = list(
-      html = "output/report/effectiveness_report_vaccinatedtime.html",
-      md = "output/report/effectiveness_report_vaccinatedtime.md",
-      figures = "output/report/figures-vaxtime/*.png"
+      html = "output/report/effectiveness_report_comparetimescales.html",
+      md = "output/report/effectiveness_report_comparetimescales.md",
+      figures = "output/report/figures_timescales/*.png"
     )
   )
 
