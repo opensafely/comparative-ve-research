@@ -159,11 +159,20 @@ formula_outcome <- outcome_event ~ 1
 if(timescale=="calendar"){
   formula_timescale <- . ~ . + ns(tstop_calendar, 3) # spline for timescale only
   formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
+
+  formula_timesincevax_pw <- . ~ . + vax1_az * timesincevax_pw
+  formula_timesincevax_ns <- . ~ . + vax1_az * ns(log(tstop), 3)
+
 }
 if(timescale=="timesincevax"){
   formula_timescale <- . ~ . + ns(log(tstop), 3) # spline for timescale only
   formula_spacetime <- . ~ . + ns(vax1_day, 3)*region # spline for space-time adjustments
+
+  formula_timesincevax_pw <- . ~ . + vax1_az + vax1_az:timesincevax_pw
+  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:ns(log(tstop), 3)
+
 }
+
 
 ## NOTE
 # calendar-time PLR models are still probably wrong!
@@ -173,7 +182,6 @@ if(timescale=="timesincevax"){
 
 ### piecewise formulae ----
 ### estimand
-formula_timesincevax_pw <- . ~ . + vax1_az*timesincevax_pw
 formula_vaxonly_pw <- formula_outcome  %>% update(formula_timesincevax_pw) %>% update(formula_timescale)
 
 formula0_pw <- formula_vaxonly_pw
@@ -183,7 +191,6 @@ formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formu
 
 ### natural cubic spline formulae ----
 ### estimands
-formula_timesincevax_ns <- . ~ . + vax1_az*ns(log(tstop), 3)
 formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% update(formula_timescale)
 
 formula0_ns <- formula_vaxonly_ns
