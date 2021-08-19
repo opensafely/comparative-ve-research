@@ -220,7 +220,7 @@ actions_list <- splice(
     needs = list("extract"),
     highly_sensitive = list(
       processed = "output/data/data_processed.rds",
-      diagnoses = "output/data/data_disagnoses.rds"
+      diagnoses = "output/data/data_diagnoses.rds"
     )
   ),
 

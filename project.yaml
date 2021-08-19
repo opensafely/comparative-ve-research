@@ -102,7 +102,7 @@ actions:
     outputs:
       highly_sensitive:
         processed: output/data/data_processed.rds
-        diagnoses: output/data/data_disagnoses.rds
+        diagnoses: output/data/data_diagnoses.rds
 
   data_properties:
     run: r:latest analysis/process/data_properties.R output/data/data_processed.rds
