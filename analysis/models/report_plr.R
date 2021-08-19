@@ -63,21 +63,24 @@ formula_outcome <- outcome_event ~ 1
 
 # mimicing timescale / stratification in simple cox models
 if(timescale=="calendar"){
-  formula_timescale <- . ~ . + ns(tstop_calendar, 3) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
+  formula_timescale_pw <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
+  formula_timescale_ns <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az * timesincevax_pw
-  formula_timesincevax_ns <- . ~ . + vax1_az * ns(log(tstop), 3)
+  formula_timesincevax_ns <- . ~ . + vax1_az * ns(tstop, 4)
 
 }
 if(timescale=="timesincevax"){
-  formula_timescale <- . ~ . + ns(log(tstop), 3) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(vax1_day, 3)*region # spline for space-time adjustments
+  formula_timescale_pw <- . ~ . + timesincevax_pw # spline for timescale only
+  formula_timescale_ns <- . ~ . + ns(tstop, 4) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(vax1_day, 4)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az + vax1_az:timesincevax_pw
-  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:ns(log(tstop), 3)
+  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:ns(tstop, 4)
 
 }
+
 
 ## NOTE
 # calendar-time PLR models are still probably wrong!
@@ -87,7 +90,7 @@ if(timescale=="timesincevax"){
 
 ### piecewise formulae ----
 ### estimand
-formula_vaxonly_pw <- formula_outcome  %>% update(formula_timesincevax_pw) %>% update(formula_timescale)
+formula_vaxonly_pw <- formula_outcome  %>% update(formula_timesincevax_pw) %>% update(formula_timescale_pw)
 
 formula0_pw <- formula_vaxonly_pw
 formula1_pw <- formula_vaxonly_pw %>% update(formula_spacetime)
@@ -96,7 +99,7 @@ formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formu
 
 ### natural cubic spline formulae ----
 ### estimands
-formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% update(formula_timescale)
+formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% update(formula_timescale_ns)
 
 formula0_ns <- formula_vaxonly_ns
 formula1_ns <- formula_vaxonly_ns %>% update(formula_spacetime)
@@ -315,7 +318,7 @@ get_HRspline <- function(.data, model, vcov, df){
   distinctX0 <- mat0[match(tstop_distinct, tstop),]
   distinctX1 <- mat1[match(tstop_distinct, tstop),]
 
-  term_index <- str_detect(names(coef(model)), fixed("ns(log(tstop),")) | str_detect(names(coef(model)), fixed("vax1_az"))
+  term_index <- str_detect(names(coef(model)), fixed("ns(tstop,")) | str_detect(names(coef(model)), fixed("vax1_az"))
 
   partialX0 <- distinctX0[,term_index]
   partialX1 <- distinctX1[,term_index]
