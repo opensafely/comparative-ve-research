@@ -8,6 +8,18 @@
     * [output/data_properties/data_processed_skim.txt](output/data_properties/data_processed_skim.txt)
     * [output/data_properties/data_processed_tabulate.txt](output/data_properties/data_processed_tabulate.txt)
   * output/descriptive
+    * output/descriptive/diagnoses
+      * [output/descriptive/diagnoses/diagnosis_freq7.png](output/descriptive/diagnoses/diagnosis_freq7.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq1.png](output/descriptive/diagnoses/plot_diagnosis_freq1.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq14.png](output/descriptive/diagnoses/plot_diagnosis_freq14.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq2.png](output/descriptive/diagnoses/plot_diagnosis_freq2.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq3.png](output/descriptive/diagnoses/plot_diagnosis_freq3.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq4.png](output/descriptive/diagnoses/plot_diagnosis_freq4.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq5.png](output/descriptive/diagnoses/plot_diagnosis_freq5.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq6.png](output/descriptive/diagnoses/plot_diagnosis_freq6.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq7.png](output/descriptive/diagnoses/plot_diagnosis_freq7.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_freq8.png](output/descriptive/diagnoses/plot_diagnosis_freq8.png)
+      * [output/descriptive/diagnoses/plot_diagnosis_surv.png](output/descriptive/diagnoses/plot_diagnosis_surv.png)
     * output/descriptive/km
       * [output/descriptive/km/plot_survival_admitted.png](output/descriptive/km/plot_survival_admitted.png)
       * [output/descriptive/km/plot_survival_admitted.svg](output/descriptive/km/plot_survival_admitted.svg)
@@ -54,6 +66,9 @@
       * [output/descriptive/tables/table1_regions.html](output/descriptive/tables/table1_regions.html)
       * [output/descriptive/tables/table_irr.csv](output/descriptive/tables/table_irr.csv)
       * [output/descriptive/tables/table_irr.html](output/descriptive/tables/table_irr.html)
+    * output/descriptive/vaxdate
+      * [output/descriptive/vaxdate/plot_vaxdate_stack.png](output/descriptive/vaxdate/plot_vaxdate_stack.png)
+      * [output/descriptive/vaxdate/plot_vaxdate_step.png](output/descriptive/vaxdate/plot_vaxdate_step.png)
   * output/hcw
     * [output/hcw/table1.csv](output/hcw/table1.csv)
     * [output/hcw/table1.html](output/hcw/table1.html)
