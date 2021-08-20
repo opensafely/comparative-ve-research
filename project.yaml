@@ -190,6 +190,7 @@ actions:
     run: r:latest analysis/descriptive/diagnoses.R
     needs:
     - design
+    - data_process
     - data_selection
     outputs:
       moderately_sensitive:
