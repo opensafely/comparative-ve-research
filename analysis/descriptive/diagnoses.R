@@ -205,7 +205,7 @@ plot_freq <- function(day){
     #scale_y_discrete(breaks=)
     scale_fill_brewer(type="qual", palette="Set1")+
     scale_y_discrete(position = "right")+
-    scale_x_continuous(labels = ~abs(.))+
+    scale_x_continuous(labels = abs)+
     labs(
       y=NULL,
       x="Proportion",
@@ -237,6 +237,7 @@ ggsave(plot_freq(6), filename=here("output", "descriptive", "diagnoses", "plot_d
 ggsave(plot_freq(7), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq7.png"))
 ggsave(plot_freq(8), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq8.png"))
 ggsave(plot_freq(14), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq14.png"))
+
 
 ## plot diagnosis-specific survival-curves ----
 
