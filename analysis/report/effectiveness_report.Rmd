@@ -190,7 +190,7 @@ plots_spline <- function(outcome){
       expand = expansion(0)
     )+
     scale_y_log10(
-      breaks=c(0.125, 0.167, 0.25, 0.33, 0.5, 0.67, 1, 1.5, 2, 3, 4, 6, 8),
+      breaks=c(0.125, 0.167, 0.25, 0.333, 0.5, 0.667, 1, 1.5, 2, 3, 4, 6, 8),
       sec.axis = dup_axis(name="Lower hazard after \n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
     )+
     labs(
@@ -236,7 +236,8 @@ plots_adjsurv <- function(outcome){
       expand = expansion(0)
     )+
     scale_y_continuous(
-      expand = expansion(0)
+      expand = expansion(0),
+      limits = c(NA,1L)
     )+
     scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
     scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
@@ -245,7 +246,7 @@ plots_adjsurv <- function(outcome){
       y="Adjusted survival",
       colour=NULL
     )+
-    theme_bw()+
+    theme_minimal()+
     theme(
       legend.position="bottom",
       legend.direction = "horizontal",
@@ -253,6 +254,7 @@ plots_adjsurv <- function(outcome){
 
       panel.border = element_blank(),
       axis.line.y = element_line(colour = "black"),
+      axis.line.x.top = element_line(colour = "black"),
 
       panel.grid.minor.x = element_blank(),
       panel.grid.minor.y = element_blank(),
