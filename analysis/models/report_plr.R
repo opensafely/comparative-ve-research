@@ -128,7 +128,7 @@ effectsplr <- tidy_plr_pw %>%
     pw=fct_inorder(pw),
     term_left = as.numeric(str_extract(pw, "^\\d+"))-1,
     term_right = as.numeric(str_extract(pw, "\\d+$"))-1,
-    term_right = if_else(is.na(term_right), max(term_left, na.rm=TRUE)+6, term_right),
+    term_right = if_else(is.na(term_right), lastfupday, term_right),
     term_midpoint = term_left + (term_right+1-term_left)/2
   )
 

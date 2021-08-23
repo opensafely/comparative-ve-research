@@ -82,7 +82,10 @@ formula_all_rhsvars <- update(1 ~ 1, formula_exposure) %>%
   update(formula_secular) %>%
   update(formula_secular_region)
 
-postvaxcuts <- c(0, 7, 14, 21, 28, 35, 42)
+postvaxcuts <- c(0, 7, 14, 21, 28, 35, 42, 70)
+
+lastfupday <- 14*7
+
 
 list_formula <- lst(
   formula_exposure,
@@ -91,7 +94,8 @@ list_formula <- lst(
   formula_secular,
   formula_secular_region,
   formula_all_rhsvars,
-  postvaxcuts
+  postvaxcuts,
+  lastfupday
 )
 
 write_rds(list_formula, here("output", "data", "metadata_formulas.rds"))

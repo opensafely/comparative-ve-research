@@ -61,7 +61,7 @@ data_tte <- data_cohort %>%
     vax1_type,
     end_date,
 
-    censor_date = pmin(vax1_date - 1 + (7*14), end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     # time to last follow up day
     tte_enddate = tte(vax1_date-1, end_date, end_date),
