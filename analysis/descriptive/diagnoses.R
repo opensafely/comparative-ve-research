@@ -30,14 +30,6 @@ gbl_vars <- jsonlite::fromJSON(
 )
 #list2env(gbl_vars, globalenv())
 
-
-## import metadata ----
-var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
-
-list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
-list2env(list_formula, globalenv())
-metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
-
 ## create output directory ----
 fs::dir_create(here("output", "descriptive", "diagnoses"))
 
@@ -57,8 +49,8 @@ diagnoses <- set_names(lookup$diagnosis_short, lookup$diagnosis_long)
 
 ## Import processed data ----
 
-data_cohort <- read_rds(here::here("output", "data", "data_cohort.rds"))
-data_diagnoses <- read_rds(here::here("output", "data", "data_diagnoses.rds")) %>%
+data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
+data_diagnoses <- read_rds(here("output", "data", "data_diagnoses.rds")) %>%
   filter(patient_id %in% data_cohort$patient_id)
 rm(data_cohort)
 
@@ -72,78 +64,126 @@ data_diagnoses <- data_diagnoses %>%
   )
 
 
-## plot diagnosis frequencies ----
 
-get_freqs <- function(day){
-
-  data_wide <- data_diagnoses %>%
-    filter(tte_emergency<=day & ind_emergency==1) %>%
-    mutate(
-      emergency_diagnosis_list=str_split(emergency_diagnosis, "; "),
-      dummy_val=1L
-    ) %>%
-    unnest_longer(col="emergency_diagnosis_list") %>%
-    pivot_wider(
-      id_cols=-emergency_diagnosis_list,
-      names_from=emergency_diagnosis_list,
-      names_prefix = "diag_",
-      values_from=dummy_val,
-      values_fill=0L
-    )
-
-
-  diag_freq <-
-    data_wide %>%
-    group_by(vax1_type_descr) %>%
-    select(starts_with("diag_")) %>%
-    summarise(
-      across(
-        starts_with("diag_"),
-        .fns=list(n=sum, pct=mean),
-        .names="{.col}.{.fn}",
-        na.rm=TRUE
+diag_freq <-
+  data_diagnoses %>%
+  group_by(vax1_type_descr) %>%
+  summarise(
+    across(
+      matches("emergency_(.)+_date$"),
+      list(
+        day1 = ~sum(!is.na(.x) & tte_emergency <=1),
+        day2 = ~sum(!is.na(.x) & tte_emergency <=2),
+        day3 = ~sum(!is.na(.x) & tte_emergency <=3),
+        day4 = ~sum(!is.na(.x) & tte_emergency <=4),
+        day5 = ~sum(!is.na(.x) & tte_emergency <=5),
+        day6 = ~sum(!is.na(.x) & tte_emergency <=6),
+        day7 = ~sum(!is.na(.x) & tte_emergency <=7),
+        day8 = ~sum(!is.na(.x) & tte_emergency <=8),
+        day14 = ~sum(!is.na(.x) & tte_emergency <=14)
       )
-    ) %>%
-    pivot_longer(
-      cols=starts_with("diag_"),
-      names_prefix="diag_",
-      names_to=c("diagnosis", ".value"),
-      names_sep="\\."
-    ) %>%
-    mutate(
-      diagnosis_short = factor(diagnosis, levels=diagnoses),
-      diagnosis_long = fct_recode(diagnosis_short,  !!!diagnoses)
-    ) %>%
-    arrange(vax1_type_descr, diagnosis_long)
-
-  vax_freq <-
-    data_wide %>%
-    count(vax1_type_descr, name="n_vax") %>%
-    add_count(wt=n_vax, name="n_total") %>%
-    mutate(
-      pct_vax=n_vax/n_total
     )
+  ) %>%
+  pivot_longer(
+    cols=-vax1_type_descr,
+    names_pattern="emergency_(.+)_date_day(\\d+)",
+    names_to= c("diagnosis", "day"),
+    values_to="n"
+  ) %>% mutate(
+    diagnosis_short = factor(diagnosis, levels=diagnoses),
+    diagnosis_long = fct_recode(diagnosis_short,  !!!diagnoses)
+  )
+
+vax_freq <-
+  data_diagnoses %>%
+  count(vax1_type_descr, name="n_vax") %>%
+  add_count(wt=n_vax, name="n_total") %>%
+  mutate(
+    pct_vax=n_vax/n_total
+  )
 
 
-  freq <- diag_freq %>%
-    left_join(vax_freq, by="vax1_type_descr") %>%
-    mutate(day = day)
+freqs <- diag_freq %>%
+  left_join(vax_freq, by="vax1_type_descr") %>%
+  mutate(
+    n=if_else(between(n,1,5), 3L, n), # rounding
+    pct=n/n_vax,
+    day=as.numeric(day)
+  )
 
-  freq
-}
 
-
-freqs <- bind_rows(
-  get_freqs(1),
-  get_freqs(2),
-  get_freqs(3),
-  get_freqs(4),
-  get_freqs(5),
-  get_freqs(6),
-  get_freqs(7),
-  get_freqs(8),
-  get_freqs(14)
-)
+## plot diagnosis frequencies ----
+#
+# get_freqs <- function(day){
+#
+#   data_wide <- data_diagnoses %>%
+#     filter(tte_emergency<=day & ind_emergency==1) %>%
+#     mutate(
+#       emergency_diagnosis_list=str_split(emergency_diagnosis, "; "),
+#       dummy_val=1L
+#     ) %>%
+#     unnest_longer(col="emergency_diagnosis_list") %>%
+#     pivot_wider(
+#       id_cols=-emergency_diagnosis_list,
+#       names_from=emergency_diagnosis_list,
+#       names_prefix = "diag_",
+#       values_from=dummy_val,
+#       values_fill=0L
+#     )
+#
+#
+#   diag_freq <-
+#     data_wide %>%
+#     group_by(vax1_type_descr) %>%
+#     select(starts_with("diag_")) %>%
+#     summarise(
+#       across(
+#         starts_with("diag_"),
+#         .fns=list(n=sum, pct=mean),
+#         .names="{.col}.{.fn}",
+#         na.rm=TRUE
+#       )
+#     ) %>%
+#     pivot_longer(
+#       cols=starts_with("diag_"),
+#       names_prefix="diag_",
+#       names_to=c("diagnosis", ".value"),
+#       names_sep="\\."
+#     ) %>%
+#     mutate(
+#       diagnosis_short = factor(diagnosis, levels=diagnoses),
+#       diagnosis_long = fct_recode(diagnosis_short,  !!!diagnoses)
+#     ) %>%
+#     arrange(vax1_type_descr, diagnosis_long)
+#
+#   vax_freq <-
+#     data_wide %>%
+#     count(vax1_type_descr, name="n_vax") %>%
+#     add_count(wt=n_vax, name="n_total") %>%
+#     mutate(
+#       pct_vax=n_vax/n_total
+#     )
+#
+#
+#   freq <- diag_freq %>%
+#     left_join(vax_freq, by="vax1_type_descr") %>%
+#     mutate(day = day)
+#
+#   freq
+# }
+#
+#
+# freqs <- bind_rows(
+#   get_freqs(1),
+#   get_freqs(2),
+#   get_freqs(3),
+#   get_freqs(4),
+#   get_freqs(5),
+#   get_freqs(6),
+#   get_freqs(7),
+#   get_freqs(8),
+#   get_freqs(14)
+# )
 
 plot_freq <- function(day){
   dayy <- day
@@ -154,23 +194,23 @@ plot_freq <- function(day){
   plot_freqs <-
     freqs_day %>%
     mutate(
-      day_name = glue("Proportion of attendance diagnoses\nafter {day} days"),
+      day_name = glue("Proportion of attendance diagnoses\nafter {dayy} days"),
       n=if_else(vax1_type_descr==first(vax1_type_descr), n, -n),
       pct=if_else(vax1_type_descr==first(vax1_type_descr), pct, -pct),
       vax1_type_descr = paste0(vax1_type_descr, " (N = ", n_vax, ")")
     ) %>%
     ggplot()+
-    geom_bar(aes(x=pct, y=diagnosis_long, fill=vax1_type_descr), width=freqs_day$pct_vax, stat = "identity")+
+    geom_bar(aes(x=pct, y=fct_rev(diagnosis_long), fill=vax1_type_descr), width=freqs_day$pct_vax, stat = "identity")+
     geom_vline(aes(xintercept=0), colour = "black")+
     #scale_y_discrete(breaks=)
     scale_fill_brewer(type="qual", palette="Set1")+
     scale_y_discrete(position = "right")+
-    scale_x_continuous(breaks=seq(-1,1,0.1), labels = abs(seq(-1,1,0.1)))+
+    scale_x_continuous(labels = ~abs(.))+
     labs(
       y=NULL,
       x="Proportion",
       fill=NULL,
-      title = glue("Post-vaccination emergency attendances after {day} days"),
+      title = glue("Post-vaccination emergency attendances after {dayy} days"),
       subtitle= "There may be multiple diagnoses per attendance"
     )+
     theme_minimal()+
@@ -186,8 +226,6 @@ plot_freq <- function(day){
   plot_freqs
 
 }
-
-
 
 
 ggsave(plot_freq(1), filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_freq1.png"))
@@ -262,7 +300,8 @@ for(diagnosis in names(surv_list)){
 surv_long <- bind_rows(surv_list) %>%
   mutate(
     diagnosis_short = factor(diagnosis, levels=diagnoses),
-    diagnosis_long = fct_recode(diagnosis,  !!!diagnoses)
+    diagnosis_long = fct_recode(diagnosis,  !!!diagnoses),
+    diagnosis_wrap = fct_relabel(diagnosis_long, ~str_wrap(., 15)),
   )
 
 surv_plot <-
@@ -271,7 +310,7 @@ surv_plot <-
   ggplot(aes(group=vax1_type_descr, colour=vax1_type_descr, fill=vax1_type_descr)) +
   geom_step(aes(x=time, y=surv))+
   geom_rect(aes(xmin=time, xmax=leadtime, ymin=surv.ll, ymax=surv.ul), alpha=0.1, colour="transparent")+
-  facet_wrap(facets=vars(diagnosis_long))+
+  facet_wrap(facets=vars(diagnosis_wrap))+
   scale_color_brewer(type="qual", palette="Set1", na.value="grey")+
   scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
   scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
