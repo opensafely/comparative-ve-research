@@ -326,7 +326,6 @@ study = StudyDefinition(
   # ADMIN AND DEMOGRAPHICS
   ###############################################################################
   
-  
   has_follow_up_previous_6weeks=patients.registered_with_one_practice_between(
     start_date="covid_vax_any_1_date - 42 days",
     end_date="covid_vax_any_1_date",
