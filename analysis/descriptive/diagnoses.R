@@ -61,6 +61,9 @@ data_diagnoses <- data_diagnoses %>%
     censor_date = pmin(vax1_date - 1 + (7*14), end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
     tte_emergency = tte(vax1_date-1, emergency_date, censor_date, na.censor=FALSE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
+    vax1_week = lubridate::floor_date(vax1_date, unit="week", week_start=1),
+    vax1_month = format(vax1_date, "%b-%y"),
+    all=""
   )
 
 
@@ -202,7 +205,6 @@ plot_freq <- function(day){
     ggplot()+
     geom_bar(aes(x=pct, y=fct_rev(diagnosis_long), fill=vax1_type_descr), width=freqs_day$pct_vax, stat = "identity")+
     geom_vline(aes(xintercept=0), colour = "black")+
-    #scale_y_discrete(breaks=)
     scale_fill_brewer(type="qual", palette="Set1")+
     scale_y_discrete(position = "right")+
     scale_x_continuous(labels = abs)+
@@ -246,7 +248,7 @@ ceiling_any <- function(x, to=1){
   ceiling(plyr::round_any(x/to, 1/100000000))*to
 }
 
-survobj <- function(.data, diagnosis, threshold){
+survobj <- function(.data, diagnosis, group, threshold){
 
   dat <- .data %>%
     mutate(
@@ -258,7 +260,7 @@ survobj <- function(.data, diagnosis, threshold){
   unique_times <- unique(c(dat[[".time"]]))
 
   dat_surv <- dat %>%
-    group_by(across(all_of("vax1_type_descr"))) %>%
+    group_by(across(all_of(c("vax1_type_descr", group)))) %>%
     transmute(
       .time, .indicator
     )
@@ -272,19 +274,65 @@ survobj <- function(.data, diagnosis, threshold){
       }),
       surv_obj_tidy = map(surv_obj, ~tidy_surv(.x, addtimezero = TRUE)),
     ) %>%
-    select("vax1_type_descr", n_events, surv_obj_tidy) %>%
+    select("vax1_type_descr", all_of(group), n_events, surv_obj_tidy) %>%
     unnest(surv_obj_tidy)
 
   dat_surv_rounded <- dat_surv1 %>%
     mutate(
-      # Use ceiling not round. This is slightly biased upwards,
-      # but means there's no disclosure risk at the boundaries (0 and 1) where masking would otherwise be threshold/2
       surv = ceiling_any(surv, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
       surv.ll = ceiling_any(surv.ll, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
       surv.ul = ceiling_any(surv.ul, 1/floor(max(n.risk, na.rm=TRUE)/(threshold+1))),
     )
   dat_surv_rounded
 }
+
+surv_list <- vector("list", length(diagnoses))
+names(surv_list) <- diagnoses
+
+for(diagnosis in names(surv_list)){
+  surv_list[[diagnosis]] <-
+    survobj(data_diagnoses, diagnosis, "vax1_month", 0) %>%
+    mutate(diagnosis = diagnosis)
+}
+
+surv_long_month <- bind_rows(surv_list) %>%
+  mutate(
+    diagnosis_short = factor(diagnosis, levels=diagnoses),
+    diagnosis_long = fct_recode(diagnosis,  !!!diagnoses),
+    diagnosis_wrap = fct_relabel(diagnosis_long, ~str_wrap(., 15)),
+  )
+
+surv_plot_month <-
+  surv_long_month %>%
+  filter(time <= 14) %>%
+  ggplot(aes(group=vax1_type_descr, colour=vax1_type_descr, fill=vax1_type_descr)) +
+  geom_step(aes(x=time, y=surv))+
+  geom_rect(aes(xmin=time, xmax=leadtime, ymin=surv.ll, ymax=surv.ul), alpha=0.1, colour="transparent")+
+  facet_grid(rows=vars(diagnosis_wrap), cols=vars(vax1_month))+
+  scale_color_brewer(type="qual", palette="Set1", na.value="grey")+
+  scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+  scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
+  coord_cartesian(xlim=c(0, NA))+
+  labs(
+    x="Days since vaccination",
+    y="1 - emergency attendance rate",
+    colour=NULL,
+    fill=NULL,
+    title=NULL
+  )+
+  theme_minimal(base_size=9)+
+  theme(
+    legend.position = "bottom",
+    axis.line.x = element_line(colour = "black"),
+    panel.grid.minor.x = element_blank(),
+    strip.text.y = element_text(angle = 0)
+  )
+
+ggsave(
+  surv_plot_month,
+  filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_surv_by_month.png"),
+  units="cm", width=15, height=30
+)
 
 
 
@@ -294,7 +342,7 @@ names(surv_list) <- diagnoses
 
 for(diagnosis in names(surv_list)){
   surv_list[[diagnosis]] <-
-    survobj(data_diagnoses, diagnosis, 0) %>%
+    survobj(data_diagnoses, diagnosis, "all", 0) %>%
     mutate(diagnosis = diagnosis)
 }
 
@@ -311,7 +359,7 @@ surv_plot <-
   ggplot(aes(group=vax1_type_descr, colour=vax1_type_descr, fill=vax1_type_descr)) +
   geom_step(aes(x=time, y=surv))+
   geom_rect(aes(xmin=time, xmax=leadtime, ymin=surv.ll, ymax=surv.ul), alpha=0.1, colour="transparent")+
-  facet_wrap(facets=vars(diagnosis_wrap))+
+  facet_wrap(vars(diagnosis_wrap))+
   scale_color_brewer(type="qual", palette="Set1", na.value="grey")+
   scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
   scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
@@ -325,19 +373,17 @@ surv_plot <-
   )+
   theme_minimal(base_size=9)+
   theme(
+    legend.position = "bottom",
     axis.line.x = element_line(colour = "black"),
-    panel.grid.minor.x = element_blank()
+    panel.grid.minor.x = element_blank(),
+    strip.text.y = element_text(angle = 0)
   )
 
-ggsave(surv_plot, filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_surv.png"))
-
-
-
-
-
-
-
-
+ggsave(
+  surv_plot,
+  filename=here("output", "descriptive", "diagnoses", "plot_diagnosis_surv.png"),
+  units="cm", width=15, height=15
+)
 
 
 
