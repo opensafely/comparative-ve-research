@@ -82,9 +82,6 @@ data_tte <- data_cohort %>%
 
     vax1_type_descr,
 
-    vax1_dateweek = floor_date(covid_vax_1_date, unit = "weeks", week_start = 1),
-    vax2_dateweek = floor_date(covid_vax_2_date, unit = "weeks", week_start = 1),
-
     censor_date = pmin(end_date, dereg_date, death_date, na.rm=TRUE),
 
     # time to last follow up day
