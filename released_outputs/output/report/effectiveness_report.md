@@ -1,4 +1,4 @@
-﻿Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers
+Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers
 ================
 
 Introduction
@@ -83,7 +83,7 @@ Flowchart
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#mynjtanbqe .gt_table {
+#kmmzozxwfv .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -108,7 +108,7 @@ Flowchart
   border-left-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_heading {
+#kmmzozxwfv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -120,7 +120,7 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_title {
+#kmmzozxwfv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -130,7 +130,7 @@ Flowchart
   border-bottom-width: 0;
 }
 
-#mynjtanbqe .gt_subtitle {
+#kmmzozxwfv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -140,13 +140,13 @@ Flowchart
   border-top-width: 0;
 }
 
-#mynjtanbqe .gt_bottom_border {
+#kmmzozxwfv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_col_headings {
+#kmmzozxwfv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -161,7 +161,7 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_col_heading {
+#kmmzozxwfv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -181,7 +181,7 @@ Flowchart
   overflow-x: hidden;
 }
 
-#mynjtanbqe .gt_column_spanner_outer {
+#kmmzozxwfv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -193,15 +193,15 @@ Flowchart
   padding-right: 4px;
 }
 
-#mynjtanbqe .gt_column_spanner_outer:first-child {
+#kmmzozxwfv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mynjtanbqe .gt_column_spanner_outer:last-child {
+#kmmzozxwfv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mynjtanbqe .gt_column_spanner {
+#kmmzozxwfv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -213,7 +213,7 @@ Flowchart
   width: 100%;
 }
 
-#mynjtanbqe .gt_group_heading {
+#kmmzozxwfv .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -235,7 +235,7 @@ Flowchart
   vertical-align: middle;
 }
 
-#mynjtanbqe .gt_empty_group_heading {
+#kmmzozxwfv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -250,15 +250,15 @@ Flowchart
   vertical-align: middle;
 }
 
-#mynjtanbqe .gt_from_md > :first-child {
+#kmmzozxwfv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mynjtanbqe .gt_from_md > :last-child {
+#kmmzozxwfv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mynjtanbqe .gt_row {
+#kmmzozxwfv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -277,7 +277,7 @@ Flowchart
   overflow-x: hidden;
 }
 
-#mynjtanbqe .gt_stub {
+#kmmzozxwfv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -289,7 +289,7 @@ Flowchart
   padding-left: 12px;
 }
 
-#mynjtanbqe .gt_summary_row {
+#kmmzozxwfv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -299,7 +299,7 @@ Flowchart
   padding-right: 5px;
 }
 
-#mynjtanbqe .gt_first_summary_row {
+#kmmzozxwfv .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -309,7 +309,7 @@ Flowchart
   border-top-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_grand_summary_row {
+#kmmzozxwfv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -319,7 +319,7 @@ Flowchart
   padding-right: 5px;
 }
 
-#mynjtanbqe .gt_first_grand_summary_row {
+#kmmzozxwfv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -329,11 +329,11 @@ Flowchart
   border-top-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_striped {
+#kmmzozxwfv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mynjtanbqe .gt_table_body {
+#kmmzozxwfv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -342,7 +342,7 @@ Flowchart
   border-bottom-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_footnotes {
+#kmmzozxwfv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -356,13 +356,13 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_footnote {
+#kmmzozxwfv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#mynjtanbqe .gt_sourcenotes {
+#kmmzozxwfv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -376,41 +376,41 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#mynjtanbqe .gt_sourcenote {
+#kmmzozxwfv .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#mynjtanbqe .gt_left {
+#kmmzozxwfv .gt_left {
   text-align: left;
 }
 
-#mynjtanbqe .gt_center {
+#kmmzozxwfv .gt_center {
   text-align: center;
 }
 
-#mynjtanbqe .gt_right {
+#kmmzozxwfv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mynjtanbqe .gt_font_normal {
+#kmmzozxwfv .gt_font_normal {
   font-weight: normal;
 }
 
-#mynjtanbqe .gt_font_bold {
+#kmmzozxwfv .gt_font_bold {
   font-weight: bold;
 }
 
-#mynjtanbqe .gt_font_italic {
+#kmmzozxwfv .gt_font_italic {
   font-style: italic;
 }
 
-#mynjtanbqe .gt_super {
+#kmmzozxwfv .gt_super {
   font-size: 65%;
 }
 
-#mynjtanbqe .gt_footnote_marks {
+#kmmzozxwfv .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
@@ -429,45 +429,45 @@ Flowchart
 <tbody class="gt_table_body">
     <tr>
       <td class="gt_row gt_left">All vaccinated HCWs aged 16-65</td>
-      <td class="gt_row gt_right">504,673</td>
+      <td class="gt_row gt_right">505,086</td>
       <td class="gt_row gt_right">-</td>
       <td class="gt_row gt_right">-</td>
       <td class="gt_row gt_right">100.0&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">with no missing demographic information</td>
-      <td class="gt_row gt_right">456,395</td>
-      <td class="gt_row gt_right">48,278</td>
+      <td class="gt_row gt_right">456,818</td>
+      <td class="gt_row gt_right">48,268</td>
       <td class="gt_row gt_right">9.6&percnt;</td>
       <td class="gt_row gt_right">90.4&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">who are not clinically extremely vulnerable</td>
-      <td class="gt_row gt_right">440,591</td>
-      <td class="gt_row gt_right">15,804</td>
+      <td class="gt_row gt_right">441,018</td>
+      <td class="gt_row gt_right">15,800</td>
       <td class="gt_row gt_right">3.5&percnt;</td>
       <td class="gt_row gt_right">87.3&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">with vaccination on or before recruitment end date</td>
-      <td class="gt_row gt_right">382,100</td>
-      <td class="gt_row gt_right">58,491</td>
-      <td class="gt_row gt_right">13.3&percnt;</td>
-      <td class="gt_row gt_right">75.7&percnt;</td>
+      <td class="gt_row gt_right">383,100</td>
+      <td class="gt_row gt_right">57,918</td>
+      <td class="gt_row gt_right">13.1&percnt;</td>
+      <td class="gt_row gt_right">75.8&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">with vaccination on or after recruitment start date</td>
-      <td class="gt_row gt_right">315,811</td>
-      <td class="gt_row gt_right">66,289</td>
-      <td class="gt_row gt_right">17.3&percnt;</td>
-      <td class="gt_row gt_right">62.6&percnt;</td>
+      <td class="gt_row gt_right">316,451</td>
+      <td class="gt_row gt_right">66,649</td>
+      <td class="gt_row gt_right">17.4&percnt;</td>
+      <td class="gt_row gt_right">62.7&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">with Pfizer/BNT or Oxford/AZ vaccine</td>
-      <td class="gt_row gt_right">315,809</td>
+      <td class="gt_row gt_right">316,449</td>
       <td class="gt_row gt_right">2</td>
       <td class="gt_row gt_right">0.0&percnt;</td>
-      <td class="gt_row gt_right">62.6&percnt;</td>
+      <td class="gt_row gt_right">62.7&percnt;</td>
     </tr>
 
 </tbody>
@@ -482,7 +482,7 @@ Baseline demographics
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ljetxsnbmw .gt_table {
+#oqsvuodllh .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -507,7 +507,7 @@ Baseline demographics
   border-left-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_heading {
+#oqsvuodllh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -519,7 +519,7 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_title {
+#oqsvuodllh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -529,7 +529,7 @@ Baseline demographics
   border-bottom-width: 0;
 }
 
-#ljetxsnbmw .gt_subtitle {
+#oqsvuodllh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -539,13 +539,13 @@ Baseline demographics
   border-top-width: 0;
 }
 
-#ljetxsnbmw .gt_bottom_border {
+#oqsvuodllh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_col_headings {
+#oqsvuodllh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -560,7 +560,7 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_col_heading {
+#oqsvuodllh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -580,7 +580,7 @@ Baseline demographics
   overflow-x: hidden;
 }
 
-#ljetxsnbmw .gt_column_spanner_outer {
+#oqsvuodllh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -592,15 +592,15 @@ Baseline demographics
   padding-right: 4px;
 }
 
-#ljetxsnbmw .gt_column_spanner_outer:first-child {
+#oqsvuodllh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ljetxsnbmw .gt_column_spanner_outer:last-child {
+#oqsvuodllh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ljetxsnbmw .gt_column_spanner {
+#oqsvuodllh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -612,7 +612,7 @@ Baseline demographics
   width: 100%;
 }
 
-#ljetxsnbmw .gt_group_heading {
+#oqsvuodllh .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -634,7 +634,7 @@ Baseline demographics
   vertical-align: middle;
 }
 
-#ljetxsnbmw .gt_empty_group_heading {
+#oqsvuodllh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -649,15 +649,15 @@ Baseline demographics
   vertical-align: middle;
 }
 
-#ljetxsnbmw .gt_from_md > :first-child {
+#oqsvuodllh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ljetxsnbmw .gt_from_md > :last-child {
+#oqsvuodllh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ljetxsnbmw .gt_row {
+#oqsvuodllh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -676,7 +676,7 @@ Baseline demographics
   overflow-x: hidden;
 }
 
-#ljetxsnbmw .gt_stub {
+#oqsvuodllh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,7 +688,7 @@ Baseline demographics
   padding-left: 12px;
 }
 
-#ljetxsnbmw .gt_summary_row {
+#oqsvuodllh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -698,7 +698,7 @@ Baseline demographics
   padding-right: 5px;
 }
 
-#ljetxsnbmw .gt_first_summary_row {
+#oqsvuodllh .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -708,7 +708,7 @@ Baseline demographics
   border-top-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_grand_summary_row {
+#oqsvuodllh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -718,7 +718,7 @@ Baseline demographics
   padding-right: 5px;
 }
 
-#ljetxsnbmw .gt_first_grand_summary_row {
+#oqsvuodllh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -728,11 +728,11 @@ Baseline demographics
   border-top-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_striped {
+#oqsvuodllh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ljetxsnbmw .gt_table_body {
+#oqsvuodllh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -741,7 +741,7 @@ Baseline demographics
   border-bottom-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_footnotes {
+#oqsvuodllh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -755,13 +755,13 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_footnote {
+#oqsvuodllh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ljetxsnbmw .gt_sourcenotes {
+#oqsvuodllh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -775,41 +775,41 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#ljetxsnbmw .gt_sourcenote {
+#oqsvuodllh .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ljetxsnbmw .gt_left {
+#oqsvuodllh .gt_left {
   text-align: left;
 }
 
-#ljetxsnbmw .gt_center {
+#oqsvuodllh .gt_center {
   text-align: center;
 }
 
-#ljetxsnbmw .gt_right {
+#oqsvuodllh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ljetxsnbmw .gt_font_normal {
+#oqsvuodllh .gt_font_normal {
   font-weight: normal;
 }
 
-#ljetxsnbmw .gt_font_bold {
+#oqsvuodllh .gt_font_bold {
   font-weight: bold;
 }
 
-#ljetxsnbmw .gt_font_italic {
+#oqsvuodllh .gt_font_italic {
   font-style: italic;
 }
 
-#ljetxsnbmw .gt_super {
+#oqsvuodllh .gt_super {
   font-size: 65%;
 }
 
-#ljetxsnbmw .gt_footnote_marks {
+#oqsvuodllh .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
@@ -818,8 +818,8 @@ Baseline demographics
 <thead class="gt_col_headings">
     <tr>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>BNT162b2</strong>, N = 252,265</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>ChAdOx1</strong>, N = 63,544</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>BNT162b2</strong>, N = 252,403</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>ChAdOx1</strong>, N = 64,046</th>
     </tr>
 
 </thead>
@@ -831,28 +831,28 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">18-30</td>
-      <td class="gt_row gt_center">40,863 (16%)</td>
-      <td class="gt_row gt_center">10,349 (16%)</td>
+      <td class="gt_row gt_center">40,901 (16%)</td>
+      <td class="gt_row gt_center">10,415 (16%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">30s</td>
-      <td class="gt_row gt_center">59,326 (24%)</td>
-      <td class="gt_row gt_center">14,586 (23%)</td>
+      <td class="gt_row gt_center">59,361 (24%)</td>
+      <td class="gt_row gt_center">14,685 (23%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">40s</td>
-      <td class="gt_row gt_center">64,384 (26%)</td>
-      <td class="gt_row gt_center">16,131 (25%)</td>
+      <td class="gt_row gt_center">64,401 (26%)</td>
+      <td class="gt_row gt_center">16,247 (25%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">50s</td>
-      <td class="gt_row gt_center">67,550 (27%)</td>
-      <td class="gt_row gt_center">17,352 (27%)</td>
+      <td class="gt_row gt_center">67,586 (27%)</td>
+      <td class="gt_row gt_center">17,518 (27%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">60-64</td>
-      <td class="gt_row gt_center">20,142 (8.0%)</td>
-      <td class="gt_row gt_center">5,126 (8.1%)</td>
+      <td class="gt_row gt_center">20,154 (8.0%)</td>
+      <td class="gt_row gt_center">5,181 (8.1%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Sex</td>
@@ -861,13 +861,13 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Female</td>
-      <td class="gt_row gt_center">199,455 (79%)</td>
-      <td class="gt_row gt_center">48,807 (77%)</td>
+      <td class="gt_row gt_center">199,567 (79%)</td>
+      <td class="gt_row gt_center">49,200 (77%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Male</td>
-      <td class="gt_row gt_center">52,810 (21%)</td>
-      <td class="gt_row gt_center">14,737 (23%)</td>
+      <td class="gt_row gt_center">52,836 (21%)</td>
+      <td class="gt_row gt_center">14,846 (23%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Ethnicity</td>
@@ -876,28 +876,28 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">White</td>
-      <td class="gt_row gt_center">210,758 (84%)</td>
-      <td class="gt_row gt_center">53,691 (84%)</td>
+      <td class="gt_row gt_center">210,869 (84%)</td>
+      <td class="gt_row gt_center">54,156 (85%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Black</td>
-      <td class="gt_row gt_center">8,480 (3.4%)</td>
-      <td class="gt_row gt_center">3,147 (5.0%)</td>
+      <td class="gt_row gt_center">8,486 (3.4%)</td>
+      <td class="gt_row gt_center">3,158 (4.9%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">South Asian</td>
-      <td class="gt_row gt_center">23,048 (9.1%)</td>
-      <td class="gt_row gt_center">4,664 (7.3%)</td>
+      <td class="gt_row gt_center">23,059 (9.1%)</td>
+      <td class="gt_row gt_center">4,680 (7.3%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Mixed</td>
-      <td class="gt_row gt_center">3,853 (1.5%)</td>
-      <td class="gt_row gt_center">999 (1.6%)</td>
+      <td class="gt_row gt_center">3,847 (1.5%)</td>
+      <td class="gt_row gt_center">1,004 (1.6%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Other</td>
-      <td class="gt_row gt_center">6,126 (2.4%)</td>
-      <td class="gt_row gt_center">1,043 (1.6%)</td>
+      <td class="gt_row gt_center">6,142 (2.4%)</td>
+      <td class="gt_row gt_center">1,048 (1.6%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">IMD</td>
@@ -906,28 +906,28 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1 most deprived</td>
-      <td class="gt_row gt_center">36,726 (15%)</td>
-      <td class="gt_row gt_center">10,216 (16%)</td>
+      <td class="gt_row gt_center">36,736 (15%)</td>
+      <td class="gt_row gt_center">10,276 (16%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
-      <td class="gt_row gt_center">47,094 (19%)</td>
-      <td class="gt_row gt_center">11,942 (19%)</td>
+      <td class="gt_row gt_center">47,143 (19%)</td>
+      <td class="gt_row gt_center">12,086 (19%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">3</td>
-      <td class="gt_row gt_center">55,616 (22%)</td>
-      <td class="gt_row gt_center">13,592 (21%)</td>
+      <td class="gt_row gt_center">55,643 (22%)</td>
+      <td class="gt_row gt_center">13,725 (21%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">4</td>
-      <td class="gt_row gt_center">57,318 (23%)</td>
-      <td class="gt_row gt_center">14,205 (22%)</td>
+      <td class="gt_row gt_center">57,359 (23%)</td>
+      <td class="gt_row gt_center">14,320 (22%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">5 least deprived</td>
-      <td class="gt_row gt_center">55,511 (22%)</td>
-      <td class="gt_row gt_center">13,589 (21%)</td>
+      <td class="gt_row gt_center">55,522 (22%)</td>
+      <td class="gt_row gt_center">13,639 (21%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Region</td>
@@ -936,43 +936,43 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">North East and Yorkshire</td>
-      <td class="gt_row gt_center">53,288 (21%)</td>
-      <td class="gt_row gt_center">16,361 (26%)</td>
+      <td class="gt_row gt_center">53,300 (21%)</td>
+      <td class="gt_row gt_center">16,366 (26%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">East of England</td>
-      <td class="gt_row gt_center">62,172 (25%)</td>
-      <td class="gt_row gt_center">11,816 (19%)</td>
+      <td class="gt_row gt_center">62,176 (25%)</td>
+      <td class="gt_row gt_center">11,822 (18%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Midlands</td>
-      <td class="gt_row gt_center">50,327 (20%)</td>
-      <td class="gt_row gt_center">16,730 (26%)</td>
+      <td class="gt_row gt_center">50,406 (20%)</td>
+      <td class="gt_row gt_center">17,205 (27%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">South West</td>
-      <td class="gt_row gt_center">35,978 (14%)</td>
-      <td class="gt_row gt_center">5,038 (7.9%)</td>
+      <td class="gt_row gt_center">35,988 (14%)</td>
+      <td class="gt_row gt_center">5,041 (7.9%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">North West</td>
-      <td class="gt_row gt_center">23,535 (9.3%)</td>
-      <td class="gt_row gt_center">7,841 (12%)</td>
+      <td class="gt_row gt_center">23,565 (9.3%)</td>
+      <td class="gt_row gt_center">7,851 (12%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">London</td>
-      <td class="gt_row gt_center">10,360 (4.1%)</td>
-      <td class="gt_row gt_center">2,143 (3.4%)</td>
+      <td class="gt_row gt_center">10,365 (4.1%)</td>
+      <td class="gt_row gt_center">2,144 (3.3%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">South East</td>
-      <td class="gt_row gt_center">16,605 (6.6%)</td>
-      <td class="gt_row gt_center">3,615 (5.7%)</td>
+      <td class="gt_row gt_center">16,603 (6.6%)</td>
+      <td class="gt_row gt_center">3,617 (5.6%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Day of vaccination</td>
       <td class="gt_row gt_center">12 (7, 18)</td>
-      <td class="gt_row gt_center">20 (13, 33)</td>
+      <td class="gt_row gt_center">19 (13, 33)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Body Mass Index</td>
@@ -981,58 +981,53 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Not obese</td>
-      <td class="gt_row gt_center">197,762 (78%)</td>
-      <td class="gt_row gt_center">48,307 (76%)</td>
+      <td class="gt_row gt_center">197,789 (78%)</td>
+      <td class="gt_row gt_center">48,666 (76%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Obese I (30-34.9)</td>
-      <td class="gt_row gt_center">31,056 (12%)</td>
-      <td class="gt_row gt_center">8,524 (13%)</td>
+      <td class="gt_row gt_center">31,093 (12%)</td>
+      <td class="gt_row gt_center">8,605 (13%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Obese II (35-39.9)</td>
-      <td class="gt_row gt_center">14,239 (5.6%)</td>
-      <td class="gt_row gt_center">4,010 (6.3%)</td>
+      <td class="gt_row gt_center">14,277 (5.7%)</td>
+      <td class="gt_row gt_center">4,047 (6.3%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">Obese III (40+)</td>
-      <td class="gt_row gt_center">9,208 (3.7%)</td>
-      <td class="gt_row gt_center">2,703 (4.3%)</td>
+      <td class="gt_row gt_center">9,244 (3.7%)</td>
+      <td class="gt_row gt_center">2,728 (4.3%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Heart failure</td>
-      <td class="gt_row gt_center">629 (0.2%)</td>
-      <td class="gt_row gt_center">197 (0.3%)</td>
+      <td class="gt_row gt_center">630 (0.2%)</td>
+      <td class="gt_row gt_center">200 (0.3%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Other heart disease</td>
-      <td class="gt_row gt_center">4,627 (1.8%)</td>
-      <td class="gt_row gt_center">1,279 (2.0%)</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left">Dialysis</td>
-      <td class="gt_row gt_center">17 (&lt;0.1%)</td>
-      <td class="gt_row gt_center">[REDACTED] (&lt;0.1%)</td>
+      <td class="gt_row gt_center">4,629 (1.8%)</td>
+      <td class="gt_row gt_center">1,294 (2.0%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Diabetes</td>
-      <td class="gt_row gt_center">13,913 (5.5%)</td>
-      <td class="gt_row gt_center">3,766 (5.9%)</td>
+      <td class="gt_row gt_center">13,918 (5.5%)</td>
+      <td class="gt_row gt_center">3,806 (5.9%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Chronic liver disease</td>
       <td class="gt_row gt_center">645 (0.3%)</td>
-      <td class="gt_row gt_center">230 (0.4%)</td>
+      <td class="gt_row gt_center">231 (0.4%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">COPD</td>
-      <td class="gt_row gt_center">1,291 (0.5%)</td>
-      <td class="gt_row gt_center">346 (0.5%)</td>
+      <td class="gt_row gt_center">1,290 (0.5%)</td>
+      <td class="gt_row gt_center">347 (0.5%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Other respiratory conditions</td>
       <td class="gt_row gt_center">740 (0.3%)</td>
-      <td class="gt_row gt_center">232 (0.4%)</td>
+      <td class="gt_row gt_center">236 (0.4%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Lung Cancer</td>
@@ -1042,32 +1037,32 @@ Baseline demographics
     <tr>
       <td class="gt_row gt_left">Haematological cancer</td>
       <td class="gt_row gt_center">435 (0.2%)</td>
-      <td class="gt_row gt_center">116 (0.2%)</td>
+      <td class="gt_row gt_center">119 (0.2%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Cancer excl. lung, haemo</td>
-      <td class="gt_row gt_center">6,532 (2.6%)</td>
-      <td class="gt_row gt_center">1,614 (2.5%)</td>
+      <td class="gt_row gt_center">6,538 (2.6%)</td>
+      <td class="gt_row gt_center">1,627 (2.5%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Immunosuppressed</td>
-      <td class="gt_row gt_center">5,400 (2.1%)</td>
-      <td class="gt_row gt_center">1,288 (2.0%)</td>
+      <td class="gt_row gt_center">5,402 (2.1%)</td>
+      <td class="gt_row gt_center">1,292 (2.0%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Other neurological conditions</td>
       <td class="gt_row gt_center">1,229 (0.5%)</td>
-      <td class="gt_row gt_center">326 (0.5%)</td>
+      <td class="gt_row gt_center">331 (0.5%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Learning disabilities</td>
-      <td class="gt_row gt_center">361 (0.1%)</td>
-      <td class="gt_row gt_center">102 (0.2%)</td>
+      <td class="gt_row gt_center">360 (0.1%)</td>
+      <td class="gt_row gt_center">104 (0.2%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Serious mental illness</td>
-      <td class="gt_row gt_center">1,603 (0.6%)</td>
-      <td class="gt_row gt_center">536 (0.8%)</td>
+      <td class="gt_row gt_center">1,604 (0.6%)</td>
+      <td class="gt_row gt_center">538 (0.8%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Morbidity count</td>
@@ -1076,28 +1071,28 @@ Baseline demographics
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">0</td>
-      <td class="gt_row gt_center">201,866 (80%)</td>
-      <td class="gt_row gt_center">49,863 (78%)</td>
+      <td class="gt_row gt_center">201,930 (80%)</td>
+      <td class="gt_row gt_center">50,236 (78%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">1</td>
-      <td class="gt_row gt_center">41,348 (16%)</td>
-      <td class="gt_row gt_center">11,052 (17%)</td>
+      <td class="gt_row gt_center">41,413 (16%)</td>
+      <td class="gt_row gt_center">11,161 (17%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">2</td>
-      <td class="gt_row gt_center">8,005 (3.2%)</td>
-      <td class="gt_row gt_center">2,311 (3.6%)</td>
+      <td class="gt_row gt_center">8,009 (3.2%)</td>
+      <td class="gt_row gt_center">2,328 (3.6%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left" style="text-align: left; text-indent: 10px;">3+</td>
-      <td class="gt_row gt_center">1,046 (0.4%)</td>
-      <td class="gt_row gt_center">318 (0.5%)</td>
+      <td class="gt_row gt_center">1,051 (0.4%)</td>
+      <td class="gt_row gt_center">321 (0.5%)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Prior SARS-CoV-2 infection</td>
-      <td class="gt_row gt_center">27,185 (11%)</td>
-      <td class="gt_row gt_center">8,995 (14%)</td>
+      <td class="gt_row gt_center">27,205 (11%)</td>
+      <td class="gt_row gt_center">9,054 (14%)</td>
     </tr>
 
 </tbody>
@@ -1117,7 +1112,7 @@ Event rates
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#runjkhwbxf .gt_table {
+#hqwhlpgqio .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1142,7 +1137,7 @@ Event rates
   border-left-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_heading {
+#hqwhlpgqio .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1154,7 +1149,7 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_title {
+#hqwhlpgqio .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1164,7 +1159,7 @@ Event rates
   border-bottom-width: 0;
 }
 
-#runjkhwbxf .gt_subtitle {
+#hqwhlpgqio .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1174,13 +1169,13 @@ Event rates
   border-top-width: 0;
 }
 
-#runjkhwbxf .gt_bottom_border {
+#hqwhlpgqio .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_col_headings {
+#hqwhlpgqio .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1195,7 +1190,7 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_col_heading {
+#hqwhlpgqio .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1215,7 +1210,7 @@ Event rates
   overflow-x: hidden;
 }
 
-#runjkhwbxf .gt_column_spanner_outer {
+#hqwhlpgqio .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1227,15 +1222,15 @@ Event rates
   padding-right: 4px;
 }
 
-#runjkhwbxf .gt_column_spanner_outer:first-child {
+#hqwhlpgqio .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#runjkhwbxf .gt_column_spanner_outer:last-child {
+#hqwhlpgqio .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#runjkhwbxf .gt_column_spanner {
+#hqwhlpgqio .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1247,7 +1242,7 @@ Event rates
   width: 100%;
 }
 
-#runjkhwbxf .gt_group_heading {
+#hqwhlpgqio .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1269,7 +1264,7 @@ Event rates
   vertical-align: middle;
 }
 
-#runjkhwbxf .gt_empty_group_heading {
+#hqwhlpgqio .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1284,15 +1279,15 @@ Event rates
   vertical-align: middle;
 }
 
-#runjkhwbxf .gt_from_md > :first-child {
+#hqwhlpgqio .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#runjkhwbxf .gt_from_md > :last-child {
+#hqwhlpgqio .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#runjkhwbxf .gt_row {
+#hqwhlpgqio .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1311,7 +1306,7 @@ Event rates
   overflow-x: hidden;
 }
 
-#runjkhwbxf .gt_stub {
+#hqwhlpgqio .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1323,7 +1318,7 @@ Event rates
   padding-left: 12px;
 }
 
-#runjkhwbxf .gt_summary_row {
+#hqwhlpgqio .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1333,7 +1328,7 @@ Event rates
   padding-right: 5px;
 }
 
-#runjkhwbxf .gt_first_summary_row {
+#hqwhlpgqio .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1343,7 +1338,7 @@ Event rates
   border-top-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_grand_summary_row {
+#hqwhlpgqio .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1353,7 +1348,7 @@ Event rates
   padding-right: 5px;
 }
 
-#runjkhwbxf .gt_first_grand_summary_row {
+#hqwhlpgqio .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1363,11 +1358,11 @@ Event rates
   border-top-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_striped {
+#hqwhlpgqio .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#runjkhwbxf .gt_table_body {
+#hqwhlpgqio .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1376,7 +1371,7 @@ Event rates
   border-bottom-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_footnotes {
+#hqwhlpgqio .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1390,13 +1385,13 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_footnote {
+#hqwhlpgqio .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#runjkhwbxf .gt_sourcenotes {
+#hqwhlpgqio .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1410,41 +1405,41 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#runjkhwbxf .gt_sourcenote {
+#hqwhlpgqio .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#runjkhwbxf .gt_left {
+#hqwhlpgqio .gt_left {
   text-align: left;
 }
 
-#runjkhwbxf .gt_center {
+#hqwhlpgqio .gt_center {
   text-align: center;
 }
 
-#runjkhwbxf .gt_right {
+#hqwhlpgqio .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#runjkhwbxf .gt_font_normal {
+#hqwhlpgqio .gt_font_normal {
   font-weight: normal;
 }
 
-#runjkhwbxf .gt_font_bold {
+#hqwhlpgqio .gt_font_bold {
   font-weight: bold;
 }
 
-#runjkhwbxf .gt_font_italic {
+#hqwhlpgqio .gt_font_italic {
   font-style: italic;
 }
 
-#runjkhwbxf .gt_super {
+#hqwhlpgqio .gt_super {
   font-size: 65%;
 }
 
-#runjkhwbxf .gt_footnote_marks {
+#hqwhlpgqio .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
@@ -1477,74 +1472,83 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">3.72</td>
-      <td class="gt_row gt_right">17,441 /  4,682</td>
-      <td class="gt_row gt_right">3.39</td>
-      <td class="gt_row gt_right">3,998 /  1,181</td>
-      <td class="gt_row gt_right">0.91</td>
-      <td class="gt_row gt_right">(0.88-0.94)</td>
+      <td class="gt_row gt_right">17,435 /  4,685</td>
+      <td class="gt_row gt_right">3.37</td>
+      <td class="gt_row gt_right">4,007 /  1,190</td>
+      <td class="gt_row gt_right">0.90</td>
+      <td class="gt_row gt_right">(0.87-0.94)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">2.51</td>
-      <td class="gt_row gt_right">11,041 /  4,395</td>
-      <td class="gt_row gt_right">1.72</td>
-      <td class="gt_row gt_right">1,933 /  1,123</td>
-      <td class="gt_row gt_right">0.69</td>
+      <td class="gt_row gt_right">11,043 /  4,397</td>
+      <td class="gt_row gt_right">1.71</td>
+      <td class="gt_row gt_right">1,938 /  1,132</td>
+      <td class="gt_row gt_right">0.68</td>
       <td class="gt_row gt_right">(0.65-0.72)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">1.56</td>
-      <td class="gt_row gt_right">6,601 /  4,222</td>
+      <td class="gt_row gt_right">6,602 /  4,225</td>
       <td class="gt_row gt_right">1.20</td>
-      <td class="gt_row gt_right">1,307 /  1,091</td>
+      <td class="gt_row gt_right">1,316 /  1,100</td>
       <td class="gt_row gt_right">0.77</td>
       <td class="gt_row gt_right">(0.72-0.81)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">1.13</td>
-      <td class="gt_row gt_right">4,650 /  4,103</td>
+      <td class="gt_row gt_right">4,654 /  4,106</td>
       <td class="gt_row gt_right">0.99</td>
-      <td class="gt_row gt_right">1,062 /  1,067</td>
+      <td class="gt_row gt_right">1,069 /  1,076</td>
       <td class="gt_row gt_right">0.88</td>
       <td class="gt_row gt_right">(0.82-0.94)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">0.94</td>
-      <td class="gt_row gt_right">3,745 /  3,997</td>
+      <td class="gt_row gt_right">3,750 /  4,000</td>
       <td class="gt_row gt_right">0.83</td>
-      <td class="gt_row gt_right">866 /  1,047</td>
+      <td class="gt_row gt_right">874 /  1,056</td>
       <td class="gt_row gt_right">0.88</td>
       <td class="gt_row gt_right">(0.82-0.95)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.87</td>
-      <td class="gt_row gt_right">3,405 /  3,904</td>
+      <td class="gt_row gt_right">3,405 /  3,906</td>
       <td class="gt_row gt_right">0.73</td>
-      <td class="gt_row gt_right">752 /  1,028</td>
+      <td class="gt_row gt_right">756 /  1,037</td>
       <td class="gt_row gt_right">0.84</td>
       <td class="gt_row gt_right">(0.77-0.91)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
-      <td class="gt_row gt_right">0.71</td>
-      <td class="gt_row gt_right">12,055 / 16,897</td>
-      <td class="gt_row gt_right">0.75</td>
-      <td class="gt_row gt_right">3,377 /  4,502</td>
-      <td class="gt_row gt_right">1.05</td>
-      <td class="gt_row gt_right">(1.01-1.09)</td>
+      <td class="gt_row gt_left">43-70</td>
+      <td class="gt_row gt_right">0.72</td>
+      <td class="gt_row gt_right">10,160 / 14,126</td>
+      <td class="gt_row gt_right">0.78</td>
+      <td class="gt_row gt_right">2,913 /  3,745</td>
+      <td class="gt_row gt_right">1.08</td>
+      <td class="gt_row gt_right">(1.04-1.13)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.68</td>
+      <td class="gt_row gt_right">1,903 /  2,780</td>
+      <td class="gt_row gt_right">0.62</td>
+      <td class="gt_row gt_right">496 /    800</td>
+      <td class="gt_row gt_right">0.91</td>
+      <td class="gt_row gt_right">(0.82-1.00)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">1.40</td>
-      <td class="gt_row gt_right">58,938 / 42,200</td>
+      <td class="gt_row gt_right">58,952 / 42,225</td>
       <td class="gt_row gt_right">1.20</td>
-      <td class="gt_row gt_right">13,295 / 11,039</td>
+      <td class="gt_row gt_right">13,369 / 11,136</td>
       <td class="gt_row gt_right">0.86</td>
-      <td class="gt_row gt_right">(0.85-0.88)</td>
+      <td class="gt_row gt_right">(0.84-0.88)</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="7" class="gt_group_heading">Positive SARS-CoV-2 test</td>
@@ -1552,74 +1556,83 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">0.36</td>
-      <td class="gt_row gt_right">1,721 /  4,821</td>
+      <td class="gt_row gt_right">1,722 /  4,824</td>
       <td class="gt_row gt_right">0.23</td>
-      <td class="gt_row gt_right">280 /  1,215</td>
-      <td class="gt_row gt_right">0.65</td>
-      <td class="gt_row gt_right">(0.57-0.73)</td>
+      <td class="gt_row gt_right">280 /  1,225</td>
+      <td class="gt_row gt_right">0.64</td>
+      <td class="gt_row gt_right">(0.56-0.73)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">0.39</td>
-      <td class="gt_row gt_right">1,855 /  4,778</td>
-      <td class="gt_row gt_right">0.24</td>
-      <td class="gt_row gt_right">284 /  1,208</td>
-      <td class="gt_row gt_right">0.61</td>
-      <td class="gt_row gt_right">(0.53-0.69)</td>
+      <td class="gt_row gt_right">1,857 /  4,781</td>
+      <td class="gt_row gt_right">0.23</td>
+      <td class="gt_row gt_right">284 /  1,218</td>
+      <td class="gt_row gt_right">0.60</td>
+      <td class="gt_row gt_right">(0.53-0.68)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">0.14</td>
-      <td class="gt_row gt_right">660 /  4,751</td>
+      <td class="gt_row gt_right">659 /  4,754</td>
       <td class="gt_row gt_right">0.14</td>
-      <td class="gt_row gt_right">170 /  1,203</td>
+      <td class="gt_row gt_right">171 /  1,212</td>
       <td class="gt_row gt_right">1.02</td>
       <td class="gt_row gt_right">(0.85-1.21)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">0.07</td>
-      <td class="gt_row gt_right">351 /  4,730</td>
+      <td class="gt_row gt_right">350 /  4,733</td>
       <td class="gt_row gt_right">0.07</td>
-      <td class="gt_row gt_right">80 /  1,200</td>
-      <td class="gt_row gt_right">0.90</td>
-      <td class="gt_row gt_right">(0.70-1.15)</td>
+      <td class="gt_row gt_right">80 /  1,209</td>
+      <td class="gt_row gt_right">0.89</td>
+      <td class="gt_row gt_right">(0.69-1.14)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">252 /  4,696</td>
+      <td class="gt_row gt_right">252 /  4,698</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">63 /  1,196</td>
-      <td class="gt_row gt_right">0.98</td>
-      <td class="gt_row gt_right">(0.73-1.30)</td>
+      <td class="gt_row gt_right">63 /  1,206</td>
+      <td class="gt_row gt_right">0.97</td>
+      <td class="gt_row gt_right">(0.73-1.29)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">240 /  4,661</td>
+      <td class="gt_row gt_right">240 /  4,664</td>
       <td class="gt_row gt_right">0.04</td>
-      <td class="gt_row gt_right">53 /  1,191</td>
-      <td class="gt_row gt_right">0.86</td>
-      <td class="gt_row gt_right">(0.63-1.17)</td>
+      <td class="gt_row gt_right">54 /  1,200</td>
+      <td class="gt_row gt_right">0.87</td>
+      <td class="gt_row gt_right">(0.64-1.18)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.02</td>
-      <td class="gt_row gt_right">485 / 21,038</td>
+      <td class="gt_row gt_right">422 / 17,449</td>
       <td class="gt_row gt_right">0.03</td>
-      <td class="gt_row gt_right">146 /  5,447</td>
-      <td class="gt_row gt_right">1.16</td>
-      <td class="gt_row gt_right">(0.96-1.40)</td>
+      <td class="gt_row gt_right">129 /  4,483</td>
+      <td class="gt_row gt_right">1.19</td>
+      <td class="gt_row gt_right">(0.97-1.45)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.02</td>
+      <td class="gt_row gt_right">64 /  3,598</td>
+      <td class="gt_row gt_right">0.02</td>
+      <td class="gt_row gt_right">19 /  1,011</td>
+      <td class="gt_row gt_right">1.06</td>
+      <td class="gt_row gt_right">(0.60-1.79)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.11</td>
-      <td class="gt_row gt_right">5,564 / 49,476</td>
+      <td class="gt_row gt_right">5,566 / 49,500</td>
       <td class="gt_row gt_right">0.08</td>
-      <td class="gt_row gt_right">1,076 / 12,660</td>
-      <td class="gt_row gt_right">0.76</td>
-      <td class="gt_row gt_right">(0.71-0.81)</td>
+      <td class="gt_row gt_right">1,080 / 12,765</td>
+      <td class="gt_row gt_right">0.75</td>
+      <td class="gt_row gt_right">(0.70-0.80)</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="7" class="gt_group_heading">A&amp;E attendance</td>
@@ -1627,72 +1640,81 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">0.20</td>
-      <td class="gt_row gt_right">963 /  4,824</td>
+      <td class="gt_row gt_right">965 /  4,826</td>
       <td class="gt_row gt_right">0.27</td>
-      <td class="gt_row gt_right">329 /  1,214</td>
-      <td class="gt_row gt_right">1.36</td>
-      <td class="gt_row gt_right">(1.19-1.54)</td>
+      <td class="gt_row gt_right">334 /  1,224</td>
+      <td class="gt_row gt_right">1.37</td>
+      <td class="gt_row gt_right">(1.20-1.55)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">0.21</td>
-      <td class="gt_row gt_right">1,014 /  4,802</td>
+      <td class="gt_row gt_right">1,013 /  4,805</td>
       <td class="gt_row gt_right">0.18</td>
-      <td class="gt_row gt_right">213 /  1,208</td>
-      <td class="gt_row gt_right">0.83</td>
-      <td class="gt_row gt_right">(0.72-0.97)</td>
+      <td class="gt_row gt_right">217 /  1,218</td>
+      <td class="gt_row gt_right">0.85</td>
+      <td class="gt_row gt_right">(0.73-0.98)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">0.20</td>
-      <td class="gt_row gt_right">959 /  4,781</td>
+      <td class="gt_row gt_right">958 /  4,784</td>
       <td class="gt_row gt_right">0.23</td>
-      <td class="gt_row gt_right">275 /  1,203</td>
+      <td class="gt_row gt_right">276 /  1,212</td>
       <td class="gt_row gt_right">1.14</td>
       <td class="gt_row gt_right">(0.99-1.30)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">0.19</td>
-      <td class="gt_row gt_right">921 /  4,751</td>
+      <td class="gt_row gt_right">926 /  4,753</td>
       <td class="gt_row gt_right">0.20</td>
-      <td class="gt_row gt_right">236 /  1,197</td>
+      <td class="gt_row gt_right">239 /  1,206</td>
       <td class="gt_row gt_right">1.02</td>
       <td class="gt_row gt_right">(0.88-1.17)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">0.20</td>
-      <td class="gt_row gt_right">950 /  4,704</td>
+      <td class="gt_row gt_right">953 /  4,707</td>
       <td class="gt_row gt_right">0.22</td>
-      <td class="gt_row gt_right">265 /  1,190</td>
+      <td class="gt_row gt_right">267 /  1,199</td>
       <td class="gt_row gt_right">1.10</td>
       <td class="gt_row gt_right">(0.96-1.26)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.19</td>
-      <td class="gt_row gt_right">889 /  4,657</td>
+      <td class="gt_row gt_right">891 /  4,659</td>
       <td class="gt_row gt_right">0.22</td>
-      <td class="gt_row gt_right">257 /  1,181</td>
-      <td class="gt_row gt_right">1.14</td>
-      <td class="gt_row gt_right">(0.99-1.31)</td>
+      <td class="gt_row gt_right">258 /  1,190</td>
+      <td class="gt_row gt_right">1.13</td>
+      <td class="gt_row gt_right">(0.98-1.30)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.21</td>
-      <td class="gt_row gt_right">4,378 / 20,828</td>
+      <td class="gt_row gt_right">3,549 / 17,305</td>
       <td class="gt_row gt_right">0.24</td>
-      <td class="gt_row gt_right">1,263 /  5,351</td>
-      <td class="gt_row gt_right">1.12</td>
-      <td class="gt_row gt_right">(1.05-1.20)</td>
+      <td class="gt_row gt_right">1,037 /  4,411</td>
+      <td class="gt_row gt_right">1.15</td>
+      <td class="gt_row gt_right">(1.07-1.23)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.24</td>
+      <td class="gt_row gt_right">830 /  3,531</td>
+      <td class="gt_row gt_right">0.24</td>
+      <td class="gt_row gt_right">240 /    985</td>
+      <td class="gt_row gt_right">1.04</td>
+      <td class="gt_row gt_right">(0.89-1.20)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.20</td>
-      <td class="gt_row gt_right">10,074 / 49,347</td>
+      <td class="gt_row gt_right">10,085 / 49,370</td>
       <td class="gt_row gt_right">0.23</td>
-      <td class="gt_row gt_right">2,838 / 12,544</td>
+      <td class="gt_row gt_right">2,868 / 12,646</td>
       <td class="gt_row gt_right">1.11</td>
       <td class="gt_row gt_right">(1.06-1.16)</td>
     </tr>
@@ -1702,72 +1724,81 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">0.04</td>
-      <td class="gt_row gt_right">200 /  4,830</td>
+      <td class="gt_row gt_right">199 /  4,833</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">66 /  1,217</td>
+      <td class="gt_row gt_right">66 /  1,226</td>
       <td class="gt_row gt_right">1.31</td>
-      <td class="gt_row gt_right">(0.98-1.74)</td>
+      <td class="gt_row gt_right">(0.97-1.74)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">281 /  4,823</td>
+      <td class="gt_row gt_right">281 /  4,825</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">56 /  1,214</td>
+      <td class="gt_row gt_right">56 /  1,224</td>
       <td class="gt_row gt_right">0.79</td>
-      <td class="gt_row gt_right">(0.58-1.06)</td>
+      <td class="gt_row gt_right">(0.58-1.05)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">248 /  4,815</td>
+      <td class="gt_row gt_right">248 /  4,818</td>
       <td class="gt_row gt_right">0.07</td>
-      <td class="gt_row gt_right">87 /  1,212</td>
-      <td class="gt_row gt_right">1.39</td>
-      <td class="gt_row gt_right">(1.08-1.79)</td>
+      <td class="gt_row gt_right">87 /  1,222</td>
+      <td class="gt_row gt_right">1.38</td>
+      <td class="gt_row gt_right">(1.07-1.77)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">277 /  4,798</td>
+      <td class="gt_row gt_right">277 /  4,801</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">60 /  1,210</td>
-      <td class="gt_row gt_right">0.86</td>
-      <td class="gt_row gt_right">(0.64-1.14)</td>
+      <td class="gt_row gt_right">61 /  1,220</td>
+      <td class="gt_row gt_right">0.87</td>
+      <td class="gt_row gt_right">(0.65-1.15)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">0.05</td>
-      <td class="gt_row gt_right">249 /  4,764</td>
+      <td class="gt_row gt_right">249 /  4,767</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">71 /  1,207</td>
-      <td class="gt_row gt_right">1.13</td>
-      <td class="gt_row gt_right">(0.85-1.47)</td>
+      <td class="gt_row gt_right">71 /  1,216</td>
+      <td class="gt_row gt_right">1.12</td>
+      <td class="gt_row gt_right">(0.85-1.46)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">264 /  4,729</td>
+      <td class="gt_row gt_right">265 /  4,732</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">71 /  1,201</td>
-      <td class="gt_row gt_right">1.06</td>
-      <td class="gt_row gt_right">(0.80-1.38)</td>
+      <td class="gt_row gt_right">71 /  1,211</td>
+      <td class="gt_row gt_right">1.05</td>
+      <td class="gt_row gt_right">(0.79-1.37)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">1,241 / 21,330</td>
+      <td class="gt_row gt_right">1,010 / 17,690</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">344 /  5,492</td>
-      <td class="gt_row gt_right">1.08</td>
-      <td class="gt_row gt_right">(0.95-1.21)</td>
+      <td class="gt_row gt_right">280 /  4,519</td>
+      <td class="gt_row gt_right">1.09</td>
+      <td class="gt_row gt_right">(0.95-1.24)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.06</td>
+      <td class="gt_row gt_right">231 /  3,648</td>
+      <td class="gt_row gt_right">0.06</td>
+      <td class="gt_row gt_right">65 /  1,020</td>
+      <td class="gt_row gt_right">1.01</td>
+      <td class="gt_row gt_right">(0.75-1.33)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">2,760 / 50,090</td>
+      <td class="gt_row gt_right">2,760 / 50,114</td>
       <td class="gt_row gt_right">0.06</td>
-      <td class="gt_row gt_right">755 / 12,753</td>
+      <td class="gt_row gt_right">757 / 12,858</td>
       <td class="gt_row gt_right">1.07</td>
       <td class="gt_row gt_right">(0.99-1.16)</td>
     </tr>
@@ -1777,73 +1808,82 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,832</td>
+      <td class="gt_row gt_right">-- /  4,835</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,217</td>
+      <td class="gt_row gt_right">-- /  1,227</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">0.02</td>
-      <td class="gt_row gt_right">82 /  4,828</td>
+      <td class="gt_row gt_right">82 /  4,831</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,216</td>
+      <td class="gt_row gt_right">-- /  1,226</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">24 /  4,824</td>
+      <td class="gt_row gt_right">24 /  4,827</td>
       <td class="gt_row gt_right">0.01</td>
-      <td class="gt_row gt_right">10 /  1,215</td>
-      <td class="gt_row gt_right">1.65</td>
-      <td class="gt_row gt_right">(0.71-3.59)</td>
+      <td class="gt_row gt_right">10 /  1,225</td>
+      <td class="gt_row gt_right">1.64</td>
+      <td class="gt_row gt_right">(0.70-3.56)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">7 /  4,812</td>
+      <td class="gt_row gt_right">7 /  4,815</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,214</td>
+      <td class="gt_row gt_right">-- /  1,224</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,783</td>
+      <td class="gt_row gt_right">-- /  4,786</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,212</td>
+      <td class="gt_row gt_right">0 /  1,222</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">(NA-21.01)</td>
+      <td class="gt_row gt_right">(NA-20.86)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,753</td>
+      <td class="gt_row gt_right">-- /  4,756</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,208</td>
+      <td class="gt_row gt_right">-- /  1,217</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
-      <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">7 / 21,516</td>
-      <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">6 /  5,543</td>
-      <td class="gt_row gt_right">3.33</td>
-      <td class="gt_row gt_right">(0.92-11.56)</td>
+      <td class="gt_row gt_left">43-70</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">-- / 17,825</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">-- /  4,556</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">&ndash;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">-- /  3,699</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">-- /  1,034</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">129 / 50,348</td>
+      <td class="gt_row gt_right">129 / 50,373</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">25 / 12,826</td>
-      <td class="gt_row gt_right">0.76</td>
+      <td class="gt_row gt_right">25 / 12,931</td>
+      <td class="gt_row gt_right">0.75</td>
       <td class="gt_row gt_right">(0.47-1.17)</td>
     </tr>
     <tr class="gt_group_heading_row">
@@ -1852,72 +1892,81 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,832</td>
+      <td class="gt_row gt_right">-- /  4,835</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,217</td>
+      <td class="gt_row gt_right">-- /  1,227</td>
       <td class="gt_row gt_right">Inf</td>
       <td class="gt_row gt_right">(0.10-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">9 /  4,829</td>
+      <td class="gt_row gt_right">9 /  4,831</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,216</td>
+      <td class="gt_row gt_right">0 /  1,226</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">(NA-2.01)</td>
+      <td class="gt_row gt_right">(NA-2.00)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,826</td>
+      <td class="gt_row gt_right">-- /  4,829</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,215</td>
+      <td class="gt_row gt_right">-- /  1,225</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,814</td>
+      <td class="gt_row gt_right">-- /  4,817</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,215</td>
+      <td class="gt_row gt_right">-- /  1,224</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,785</td>
+      <td class="gt_row gt_right">0 /  4,788</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,212</td>
+      <td class="gt_row gt_right">0 /  1,222</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,755</td>
+      <td class="gt_row gt_right">0 /  4,758</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,208</td>
+      <td class="gt_row gt_right">0 /  1,218</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 / 21,527</td>
+      <td class="gt_row gt_right">0 / 17,834</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  5,545</td>
+      <td class="gt_row gt_right">0 /  4,558</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">(NA-NA)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  3,702</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  1,035</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">11 / 50,368</td>
+      <td class="gt_row gt_right">11 / 50,392</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- / 12,828</td>
+      <td class="gt_row gt_right">-- / 12,934</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
@@ -1927,72 +1976,81 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,832</td>
+      <td class="gt_row gt_right">-- /  4,835</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,217</td>
+      <td class="gt_row gt_right">-- /  1,227</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,829</td>
+      <td class="gt_row gt_right">0 /  4,831</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,216</td>
+      <td class="gt_row gt_right">0 /  1,226</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,826</td>
+      <td class="gt_row gt_right">-- /  4,829</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,215</td>
+      <td class="gt_row gt_right">-- /  1,225</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,814</td>
+      <td class="gt_row gt_right">0 /  4,817</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,215</td>
+      <td class="gt_row gt_right">0 /  1,224</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,785</td>
+      <td class="gt_row gt_right">0 /  4,788</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,212</td>
+      <td class="gt_row gt_right">-- /  1,222</td>
       <td class="gt_row gt_right">Inf</td>
       <td class="gt_row gt_right">(0.10-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,755</td>
+      <td class="gt_row gt_right">0 /  4,758</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,208</td>
+      <td class="gt_row gt_right">0 /  1,218</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 / 21,528</td>
+      <td class="gt_row gt_right">0 / 17,834</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  5,545</td>
+      <td class="gt_row gt_right">0 /  4,558</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">(NA-NA)</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  3,702</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  1,035</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- / 50,370</td>
+      <td class="gt_row gt_right">-- / 50,394</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- / 12,829</td>
+      <td class="gt_row gt_right">-- / 12,934</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
@@ -2002,72 +2060,81 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,832</td>
+      <td class="gt_row gt_right">0 /  4,835</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,217</td>
+      <td class="gt_row gt_right">0 /  1,227</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,829</td>
+      <td class="gt_row gt_right">-- /  4,831</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,216</td>
+      <td class="gt_row gt_right">-- /  1,226</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,826</td>
+      <td class="gt_row gt_right">-- /  4,829</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,215</td>
+      <td class="gt_row gt_right">-- /  1,225</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,814</td>
+      <td class="gt_row gt_right">-- /  4,817</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,215</td>
+      <td class="gt_row gt_right">0 /  1,224</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">(NA-9.59)</td>
+      <td class="gt_row gt_right">(NA-9.52)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,785</td>
+      <td class="gt_row gt_right">-- /  4,788</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,212</td>
+      <td class="gt_row gt_right">0 /  1,222</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">(NA-21.01)</td>
+      <td class="gt_row gt_right">(NA-20.86)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,755</td>
+      <td class="gt_row gt_right">0 /  4,758</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,208</td>
+      <td class="gt_row gt_right">0 /  1,218</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">8 / 21,528</td>
+      <td class="gt_row gt_right">8 / 17,834</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  5,545</td>
+      <td class="gt_row gt_right">-- /  4,558</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  3,702</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  1,035</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">(NA-NA)</td>
+    </tr>
+    <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">16 / 50,370</td>
+      <td class="gt_row gt_right">17 / 50,394</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- / 12,829</td>
+      <td class="gt_row gt_right">-- / 12,934</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
@@ -2077,72 +2144,81 @@ Event rates
     <tr>
       <td class="gt_row gt_left">1-7</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,832</td>
+      <td class="gt_row gt_right">0 /  4,835</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,217</td>
+      <td class="gt_row gt_right">0 /  1,227</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">8-14</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,829</td>
+      <td class="gt_row gt_right">-- /  4,831</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,216</td>
+      <td class="gt_row gt_right">-- /  1,226</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">15-21</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,826</td>
+      <td class="gt_row gt_right">-- /  4,829</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,215</td>
+      <td class="gt_row gt_right">-- /  1,225</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">22-28</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,814</td>
+      <td class="gt_row gt_right">-- /  4,817</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,215</td>
+      <td class="gt_row gt_right">0 /  1,224</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">(NA-9.59)</td>
+      <td class="gt_row gt_right">(NA-9.52)</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">29-35</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  4,785</td>
+      <td class="gt_row gt_right">-- /  4,788</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  1,212</td>
+      <td class="gt_row gt_right">-- /  1,222</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">36-42</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  4,755</td>
+      <td class="gt_row gt_right">0 /  4,758</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">0 /  1,208</td>
+      <td class="gt_row gt_right">0 /  1,218</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">(NA-NA)</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">43+</td>
+      <td class="gt_row gt_left">43-70</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">8 / 21,528</td>
+      <td class="gt_row gt_right">8 / 17,834</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- /  5,545</td>
+      <td class="gt_row gt_right">-- /  4,558</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
     <tr>
+      <td class="gt_row gt_left">71+</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  3,702</td>
+      <td class="gt_row gt_right">0.00</td>
+      <td class="gt_row gt_right">0 /  1,035</td>
+      <td class="gt_row gt_right">&ndash;</td>
+      <td class="gt_row gt_right">(NA-NA)</td>
+    </tr>
+    <tr>
       <td class="gt_row gt_left">All</td>
       <td class="gt_row gt_right">0.00</td>
-      <td class="gt_row gt_right">17 / 50,370</td>
+      <td class="gt_row gt_right">18 / 50,394</td>
       <td class="gt_row gt_right">&ndash;</td>
-      <td class="gt_row gt_right">-- / 12,829</td>
+      <td class="gt_row gt_right">-- / 12,934</td>
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
