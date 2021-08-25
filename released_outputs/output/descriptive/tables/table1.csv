@@ -1,48 +1,55 @@
-variable,**Characteristic**,"**BNT162b2**, N = 259,753","**ChAdOx1**, N = 93,133"
+variable,**Characteristic**,"**BNT162b2**, N = 252,403","**ChAdOx1**, N = 64,046"
 ageband,Age,NA,NA
-ageband,18-30,"43,041 (17%)","16,336 (18%)"
-ageband,30s,"61,683 (24%)","21,698 (23%)"
-ageband,40s,"65,951 (25%)","22,369 (24%)"
-ageband,50s,"68,659 (26%)","25,255 (27%)"
-ageband,60-64,"20,419 (7.9%)","7,475 (8.0%)"
+ageband,18-30,"40,901 (16%)","10,415 (16%)"
+ageband,30s,"59,361 (24%)","14,685 (23%)"
+ageband,40s,"64,401 (26%)","16,247 (25%)"
+ageband,50s,"67,586 (27%)","17,518 (27%)"
+ageband,60-64,"20,154 (8.0%)","5,181 (8.1%)"
 sex,Sex,NA,NA
-sex,Female,"205,383 (79%)","72,291 (78%)"
-sex,Male,"54,370 (21%)","20,842 (22%)"
+sex,Female,"199,567 (79%)","49,200 (77%)"
+sex,Male,"52,836 (21%)","14,846 (23%)"
 ethnicity_combined,Ethnicity,NA,NA
-ethnicity_combined,White,"215,843 (83%)","76,557 (82%)"
-ethnicity_combined,Black,"9,119 (3.5%)","5,536 (5.9%)"
-ethnicity_combined,South Asian,"24,299 (9.4%)","7,596 (8.2%)"
-ethnicity_combined,Mixed,"4,053 (1.6%)","1,691 (1.8%)"
-ethnicity_combined,Other,"6,439 (2.5%)","1,753 (1.9%)"
+ethnicity_combined,White,"210,869 (84%)","54,156 (85%)"
+ethnicity_combined,Black,"8,486 (3.4%)","3,158 (4.9%)"
+ethnicity_combined,South Asian,"23,059 (9.1%)","4,680 (7.3%)"
+ethnicity_combined,Mixed,"3,847 (1.5%)","1,004 (1.6%)"
+ethnicity_combined,Other,"6,142 (2.4%)","1,048 (1.6%)"
 imd_Q5,IMD,NA,NA
-imd_Q5,1 most deprived,"38,245 (15%)","15,962 (17%)"
-imd_Q5,2,"48,701 (19%)","18,059 (19%)"
-imd_Q5,3,"57,202 (22%)","19,950 (21%)"
-imd_Q5,4,"58,798 (23%)","20,244 (22%)"
-imd_Q5,5 least deprived,"56,807 (22%)","18,918 (20%)"
-vax1_day,Day of vaccination,"39 (34, 46)","60 (44, 92)"
+imd_Q5,1 most deprived,"36,736 (15%)","10,276 (16%)"
+imd_Q5,2,"47,143 (19%)","12,086 (19%)"
+imd_Q5,3,"55,643 (22%)","13,725 (21%)"
+imd_Q5,4,"57,359 (23%)","14,320 (22%)"
+imd_Q5,5 least deprived,"55,522 (22%)","13,639 (21%)"
+region,Region,NA,NA
+region,North East and Yorkshire,"53,300 (21%)","16,366 (26%)"
+region,East of England,"62,176 (25%)","11,822 (18%)"
+region,Midlands,"50,406 (20%)","17,205 (27%)"
+region,South West,"35,988 (14%)","5,041 (7.9%)"
+region,North West,"23,565 (9.3%)","7,851 (12%)"
+region,London,"10,365 (4.1%)","2,144 (3.3%)"
+region,South East,"16,603 (6.6%)","3,617 (5.6%)"
+vax1_day,Day of vaccination,"12 (7, 18)","19 (13, 33)"
 bmi,Body Mass Index,NA,NA
-bmi,Not obese,"204,084 (79%)","71,677 (77%)"
-bmi,Obese I (30-34.9),"31,768 (12%)","12,207 (13%)"
-bmi,Obese II (35-39.9),"14,573 (5.6%)","5,536 (5.9%)"
-bmi,Obese III (40+),"9,328 (3.6%)","3,713 (4.0%)"
-heart_failure,Heart failure,637 (0.2%),252 (0.3%)
-other_heart_disease,Other heart disease,"4,702 (1.8%)","1,690 (1.8%)"
-dialysis,Dialysis,17 (<0.1%),8 (<0.1%)
-diabetes,Diabetes,"14,135 (5.4%)","4,852 (5.2%)"
-chronic_liver_disease,Chronic liver disease,659 (0.3%),321 (0.3%)
-current_copd,COPD,"1,319 (0.5%)",470 (0.5%)
-other_resp_conditions,Other respiratory conditions,753 (0.3%),309 (0.3%)
-lung_cancer,Lung Cancer,53 (<0.1%),14 (<0.1%)
-haematological_cancer,Haematological cancer,443 (0.2%),171 (0.2%)
-cancer_excl_lung_and_haem,"Cancer excl. lung, haemo","6,650 (2.6%)","2,279 (2.4%)"
-any_immunosuppression,Immunosuppressed,"5,494 (2.1%)","1,820 (2.0%)"
-other_neuro_conditions,Other neurological conditions,"1,255 (0.5%)",451 (0.5%)
-LD_incl_DS_and_CP,Learning disabilities,372 (0.1%),165 (0.2%)
-psychosis_schiz_bipolar,Serious mental illness,"1,631 (0.6%)",902 (1.0%)
+bmi,Not obese,"197,789 (78%)","48,666 (76%)"
+bmi,Obese I (30-34.9),"31,093 (12%)","8,605 (13%)"
+bmi,Obese II (35-39.9),"14,277 (5.7%)","4,047 (6.3%)"
+bmi,Obese III (40+),"9,244 (3.7%)","2,728 (4.3%)"
+heart_failure,Heart failure,630 (0.2%),200 (0.3%)
+other_heart_disease,Other heart disease,"4,629 (1.8%)","1,294 (2.0%)"
+diabetes,Diabetes,"13,918 (5.5%)","3,806 (5.9%)"
+chronic_liver_disease,Chronic liver disease,645 (0.3%),231 (0.4%)
+current_copd,COPD,"1,290 (0.5%)",347 (0.5%)
+other_resp_conditions,Other respiratory conditions,740 (0.3%),236 (0.4%)
+lung_cancer,Lung Cancer,53 (<0.1%),9 (<0.1%)
+haematological_cancer,Haematological cancer,435 (0.2%),119 (0.2%)
+cancer_excl_lung_and_haem,"Cancer excl. lung, haemo","6,538 (2.6%)","1,627 (2.5%)"
+any_immunosuppression,Immunosuppressed,"5,402 (2.1%)","1,292 (2.0%)"
+other_neuro_conditions,Other neurological conditions,"1,229 (0.5%)",331 (0.5%)
+LD_incl_DS_and_CP,Learning disabilities,360 (0.1%),104 (0.2%)
+psychosis_schiz_bipolar,Serious mental illness,"1,604 (0.6%)",538 (0.8%)
 multimorb,Morbidity count,NA,NA
-multimorb,0,"208,363 (80%)","74,130 (80%)"
-multimorb,1,"42,241 (16%)","15,607 (17%)"
-multimorb,2,"8,094 (3.1%)","2,998 (3.2%)"
-multimorb,3+,"1,055 (0.4%)",398 (0.4%)
-prior_covid_infection,Prior SARS-CoV-2 infection,"28,823 (11%)","15,096 (16%)"
+multimorb,0,"201,930 (80%)","50,236 (78%)"
+multimorb,1,"41,413 (16%)","11,161 (17%)"
+multimorb,2,"8,009 (3.2%)","2,328 (3.6%)"
+multimorb,3+,"1,051 (0.4%)",321 (0.5%)
+prior_covid_infection,Prior SARS-CoV-2 infection,"27,205 (11%)","9,054 (14%)"
