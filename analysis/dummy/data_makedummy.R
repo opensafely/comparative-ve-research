@@ -240,7 +240,7 @@ sim_list = list(
   heart_failure = bn_node( ~rbernoulli(n=1, p = 0.05)),
   other_heart_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
   diabetes = bn_node( ~rbernoulli(n=1, p = 0.05)),
-  dialysis = bn_node( ~rbernoulli(n=1, p = 0.05)),
+  chronic_kidney_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
   chronic_liver_disease = bn_node( ~rbernoulli(n=1, p = 0.05)),
   current_copd = bn_node( ~rbernoulli(n=1, p = 0.05)),
   LD_incl_DS_and_CP = bn_node( ~rbernoulli(n=1, p = 0.05)),

@@ -119,7 +119,7 @@ var_labels <- list(
   heart_failure ~ "Heart failure",
   other_heart_disease ~ "Other heart disease",
 
-  dialysis ~ "Dialysis",
+  #chronic_kidney_disease ~ "Chronic kidney disease",
   diabetes ~ "Diabetes",
   chronic_liver_disease ~ "Chronic liver disease",
 

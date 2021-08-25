@@ -756,19 +756,43 @@ study = StudyDefinition(
     on_or_before="covid_vax_any_1_date - 1 days",
     return_expectations={"incidence": 0.01},
   ),
-  dialysis=patients.with_these_clinical_events(
-    codelists.dialysis,
-    on_or_before="index_date",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
   chronic_liver_disease=patients.with_these_clinical_events(
     codelists.chronic_liver_disease,
     on_or_before="covid_vax_any_1_date - 1 days",
     returning="binary_flag",
     return_expectations={"incidence": 0.01},
   ),
+  chronic_kidney_disease=patients.satisfying(
+    """
+      ckd OR
+      (ckd15_date AND ckd35_date >= ckd15_date)
+      """,
   
+    # Chronic kidney disease codes - all stages
+    ckd15_date=patients.with_these_clinical_events(
+      codelists.ckd15,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  
+    # Chronic kidney disease codes-stages 3 - 5
+    ckd35_date=patients.with_these_clinical_events(
+      codelists.ckd35,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  
+    # Chronic kidney disease diagnostic codes
+    ckd=patients.with_these_clinical_events(
+      codelists.ckd_cov,
+      returning="binary_flag",
+      on_or_before="covid_vax_any_1_date - 1 day",
+    ),
+  ),
   current_copd=patients.with_these_clinical_events(
     codelists.current_copd,
     on_or_before="covid_vax_any_1_date - 1 days",

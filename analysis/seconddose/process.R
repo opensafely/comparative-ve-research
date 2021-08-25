@@ -169,20 +169,6 @@ data_processed <- data_extract %>%
     vax1_day = as.integer(floor((vax1_date - start_date_az))+1), # day 0 is the day before "start_date"
     vax1_week = as.integer(floor((vax1_date - start_date_az)/7)+1), # week 1 is days 1-7.
 
-
-    # jcvi_cat = fct_case_when(
-    #   care_home_combined | age_mar>=80 | hscworker  ~ "1 & 2",
-    #   age_mar>=75 ~ "3",
-    #   age_mar>=70 | cev ~ "4",
-    #   age_mar>=65 ~ "5",
-    #   between(age_mar, 16,64.999) & cv ~ "6",
-    #   age_mar >= 60 ~ "7",
-    #   age_mar >= 55 ~ "8",
-    #   age_mar >= 50 ~ "9",
-    #   TRUE ~ "10"
-    # )
-
-
   ) %>%
   droplevels()
 
