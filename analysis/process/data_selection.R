@@ -21,6 +21,12 @@ args <- commandArgs(trailingOnly=TRUE)
 ## create output directories ----
 fs::dir_create(here("output", "data"))
 
+
+# import globally defined repo variables from
+gbl_vars <- jsonlite::read_json(
+  path=here("analysis", "global-variables.json")
+)
+
 ## Import processed data ----
 
 data_processed <- read_rds(here("output", "data", "data_processed.rds"))
@@ -64,13 +70,10 @@ write_rds(data_cohort, here("output", "data", "data_cohort.rds"), compress="gz")
 
 data_flowchart <- data_criteria %>%
   transmute(
-    c0_all = TRUE,
+    c0_all = vax1_azpfizer & vax1_afterstartdate & vax1_beforelastvaxdate,
     #c1_1yearfup = c0_all & (has_follow_up_previous_year),
     c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
-    c2_notcev = c1_notmissing & not_cev,
-    c3_lastvaxdate = c2_notcev & vax1_beforelastvaxdate,
-    c4_startdate = c3_lastvaxdate & vax1_afterstartdate,
-    c5_azpfizer = c4_startdate & vax1_azpfizer
+    c2_notcev = c1_notmissing & not_cev
   ) %>%
   summarise(
     across(.fns=sum)
@@ -87,12 +90,12 @@ data_flowchart <- data_criteria %>%
     pct_step = n / lag(n),
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
-      crit == "c0" ~ "All vaccinated HCWs aged 16-65",
+      crit == "c0" ~ "All HCWs aged 18-64\n  receiving first dose of BNT162b2 or ChAdOx1\n  between 4 January and 28 February 2021",
       crit == "c1" ~ "  with no missing demographic information",
       crit == "c2" ~ "  who are not clinically extremely vulnerable",
-      crit == "c3" ~ "  with vaccination on or before recruitment end date",
-      crit == "c4" ~ "  with vaccination on or after recruitment start date",
-      crit == "c5" ~ "  with Pfizer/BNT or Oxford/AZ vaccine",
+      #crit == "c3" ~ "  with vaccination on or before recruitment end date",
+      #crit == "c4" ~ "  with vaccination on or after recruitment start date",
+      #crit == "c5" ~ "  with Pfizer/BNT or Oxford/AZ vaccine",
       TRUE ~ NA_character_
     )
   )

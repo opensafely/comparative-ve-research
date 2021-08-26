@@ -116,6 +116,7 @@ actions:
   data_selection:
     run: r:latest analysis/process/data_selection.R
     needs:
+    - design
     - data_process
     outputs:
       highly_sensitive:

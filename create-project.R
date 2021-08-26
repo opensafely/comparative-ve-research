@@ -237,7 +237,7 @@ actions_list <- splice(
   action(
     name = "data_selection",
     run = "r:latest analysis/process/data_selection.R",
-    needs = list("data_process"),
+    needs = list("design", "data_process"),
     highly_sensitive = list(
       data_allvax = "output/data/data_cohort_allvax.rds",
       data = "output/data/data_cohort.rds"
