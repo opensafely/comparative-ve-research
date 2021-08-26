@@ -1,14 +1,16 @@
 ---
 title: "Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers"
 output:
-  github_document:
-    keep_html: TRUE
+  html_document:
+    self_contained: TRUE
+    keep_md: TRUE
   #  code_folding: hide
     #keep_md: yes
   #pdf_document: default
   # md_document:
   #   variant: gfm
-  #html_document
+  github_document:
+    keep_html: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -39,43 +41,35 @@ gbl_vars <- jsonlite::fromJSON(
 
 # Introduction
 
-This study compares the effectiveness of the *BNT162b2* mRNA (Pfizer-BioNTech) and *ChAdOx1* (Oxford-AstraZeneca) vaccines amongst health and social care workers (HCWs). 
-This group was chosen as they were prioritised for vaccination due to high occupational exposure and during the period where both vaccines were available (`r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")` onwards) it is expected that the actual vaccine brand received will not be strongly influenced by other determinants of COVID-19-related outcomes (i.e., approximately random treatment allocation and therefore reduced confounding).
+The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised clinical trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 vaccine (*ChAdOx1*). To date, there have been no RCTs that have directly compared these two vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same cohort. The concurrent roll-out of BNT162b2 and ChAdOx1 within the same UK population provides an opportunity to emulate such a trial using observational data.
 
+COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease. Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used (`r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")` onwards). This study assessed the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP database covering around 40% of England's population. 
 
 The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research). 
-
 
 # Methods
 
 ## Study population
 
-People meeting the following criteria are included:
+Vaccinated HCWs were included in the study if: 
 
-* HCWs who have received at least one dose of BNT162b2 or ChAdOx1. 
-* Registered at a GP practice using TPP's SystmOne clinical information system on the day of vaccination.
-* Aged 18-65.
-* Vaccinated on or after `r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")`, when both vaccine brands were being administered. 
-* Not Clinically Extremely Vulnerable (CEV), as set out by government guidance, at the time of vaccination.
+* registered at a GP practice using TPP's SystmOne clinical information system on the day of they received their first dose of BNT162b2 or ChAdOx1; 
+* the date of vaccination was between `r format(as.Date(gbl_vars$start_date_az), "%d %B")` and `r format(as.Date(gbl_vars$lastvax_date), "%d %B %Y")` (`r as.Date(gbl_vars$lastvax_date) - as.Date(gbl_vars$start_date_az)` days), a period when both vaccines were being administered widely;
+* aged between 18 and 64 inclusive; 
+* not classed as Clinically Extremely Vulnerable, as set out by government guidance, at the time of vaccination; 
+* information on sex, ethnicity, deprivation, and geographical region was known.
 
-Study participants are followed up from vaccination date until the first of:
+Study participants were followed up for 14 weeks from the date of the first dose, or until the first of: 
 
-* The outcome of interest
-* Death or deregistration
-* Second vaccine dose
-* The study end date, `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`
+* death or deregistration;
+* Second vaccine dose;
+* The study end date, `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`.
 
 ### Identifying vaccinated HCWs
 
 Those vaccinated as part of England's national vaccination programme (for example not including vaccine trial participants) are asked whether they work in health or social care. This information is sent to OpenSAFELY-TPP from NHS Digital's COVID-19 data store.
 
 Note -- many of those flagged as HCWs do not have a vaccination record, which shouldn't be the case if the question was asked as part of the vaccination process. This needs further investigation.
-
-## Study measures
-
-### Exposure
-
-The vaccination brand, BNT162b2 or ChAdOx1. This is available in the GP record directly, via the National Immunisation Management System (NIMS).
 
 ### Outcomes
 
@@ -102,7 +96,6 @@ We emulate the Cox model described above using pooled logistic regression (PLR),
 Confidence intervals for the risk-adjusted survival rates are calculated using the delta method (i.e, a first-order Taylor series approximation of the variance of the cumulative incidence).
 
 The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the outcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the risk-adjusted survival curves. 
-
 
 
 # Results
@@ -293,3 +286,4 @@ print(glue("### COVID-19 hospital admission"), "  \n")
 wrap_plots(plots_spline("covidadmitted"), plots_adjsurv("covidadmitted"), nrow=2)
 
 ```
+

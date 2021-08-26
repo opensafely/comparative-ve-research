@@ -715,7 +715,7 @@ actions:
 
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",  knit_root_dir
-      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )'
+      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
     needs:
     - design
     - data_selection
@@ -732,7 +732,6 @@ actions:
       moderately_sensitive:
         html: output/report/effectiveness_report.html
         md: output/report/effectiveness_report.md
-        figures: output/report/figures/*.png
 
   rmd_report_timescales:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir
