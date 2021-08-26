@@ -1,33 +1,46 @@
-Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers
-================
+---
+title: "Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers"
+output:
+  html_document:
+    self_contained: TRUE
+    keep_md: TRUE
+  #  code_folding: hide
+    #keep_md: yes
+  #pdf_document: default
+  # md_document:
+  #   variant: gfm
+  github_document:
+    keep_html: TRUE
+---
 
-Introduction
-============
 
-This study compares the effectiveness of the *BNT162b2* mRNA (Pfizer-BioNTech) and *ChAdOx1* (Oxford-AstraZeneca) vaccines amongst health and social care workers (HCWs). This group was chosen as they were prioritised for vaccination due to high occupational exposure and during the period where both vaccines were available (04 January 2021 onwards) it is expected that the actual vaccine brand received will not be strongly influenced by other determinants of COVID-19-related outcomes (i.e., approximately random treatment allocation and therefore reduced confounding).
 
-The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research).
 
-Methods
-=======
+# Introduction
 
-Study population
-----------------
+The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised clinical trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 vaccine (*ChAdOx1*). To date, there have been no RCTs that have directly compared these two vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same cohort. The concurrent roll-out of BNT162b2 and ChAdOx1 within the same UK population provides an opportunity to emulate such a trial using observational data.
 
-People meeting the following criteria are included:
+COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease. Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used (04 January 2021 onwards). This study assessed the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP database covering around 40% of England's population. 
 
--   HCWs who have received at least one dose of BNT162b2 or ChAdOx1.
--   Registered at a GP practice using TPP's SystmOne clinical information system on the day of vaccination.
--   Aged 18-65.
--   Vaccinated on or after 04 January 2021, when both vaccine brands were being administered.
--   Not Clinically Extremely Vulnerable (CEV), as set out by government guidance, at the time of vaccination.
+The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research). 
 
-Study participants are followed up from vaccination date until the first of:
+# Methods
 
--   The outcome of interest
--   Death or deregistration
--   Second vaccine dose
--   The study end date, 25 April 2021
+## Study population
+
+Vaccinated HCWs were included in the study if: 
+
+* registered at a GP practice using TPP's SystmOne clinical information system on the day of they received their first dose of BNT162b2 or ChAdOx1; 
+* the date of vaccination was between 04 January and 28 February 2021 (55 days), a period when both vaccines were being administered widely;
+* aged between 18 and 64 inclusive; 
+* not classed as Clinically Extremely Vulnerable, as set out by government guidance, at the time of vaccination; 
+* information on sex, ethnicity, deprivation, and geographical region was known.
+
+Study participants were followed up for 14 weeks from the date of the first dose, or until the first of: 
+
+* death or deregistration;
+* Second vaccine dose;
+* The study end date, 25 April 2021.
 
 ### Identifying vaccinated HCWs
 
@@ -35,55 +48,45 @@ Those vaccinated as part of England's national vaccination programme (for exampl
 
 Note -- many of those flagged as HCWs do not have a vaccination record, which shouldn't be the case if the question was asked as part of the vaccination process. This needs further investigation.
 
-Study measures
---------------
-
-### Exposure
-
-The vaccination brand, BNT162b2 or ChAdOx1. This is available in the GP record directly, via the National Immunisation Management System (NIMS).
-
 ### Outcomes
 
--   SARS-CoV-2 infection, as identified via SGSS records. Both PCR and LFT tests are included.
--   Unplanned COVID-19-related hospitalisation via HES records. ICD-10 codes are used to identify COVID-19-related admissions.
--   Unplanned COVID-19-related ICU admission via HES records. ICD-10 codes are used to identify COVID-19-related admissions.
--   COVID-19-related death via death registration records. With COVID-19 ICD-10 codes anywhere on the death certificate (i.e., as an underlying or contributing cause of death)
+* SARS-CoV-2 infection, as identified via SGSS records. Both PCR and LFT tests are included.
+* Unplanned COVID-19-related hospitalisation via HES records. ICD-10 codes are used to identify COVID-19-related admissions. 
+* Unplanned COVID-19-related ICU admission via HES records. ICD-10 codes are used to identify COVID-19-related admissions. 
+* COVID-19-related death via death registration records. With COVID-19 ICD-10 codes anywhere on the death certificate (i.e., as an underlying or contributing cause of death)
 
-Statistical Analysis
---------------------
+## Statistical Analysis
 
-The aim is to estimate comparative vaccine effectiveness, i.e., the relative hazard of each outcome for ChAdOx1 versus BNT162b2 vaccine recipients. The effect is permitted to vary by time since vaccination, to account for the potential differences in vaccine protection over time between the two brands.
+The aim is to estimate comparative vaccine effectiveness, i.e., the relative hazard of each outcome for ChAdOx1 versus BNT162b2 vaccine recipients. The effect is permitted to vary by time since vaccination, to account for the potential differences in vaccine protection over time between the two brands. 
 
-Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, NHS region, clinically “at risk” (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All characteristics are ascertained as at the time of vaccination.
+Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, NHS region, clinically “at risk” (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All characteristics are ascertained as at the time of vaccination. 
 
-NHS regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest, for example due to changes in local infection rates.
+NHS regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest, for example due to changes in local infection rates. 
 
 ### Time-dependent Cox models
-
 Time-dependent Cox models are used to estimate the time-varying effects for each vaccine type. Time zero is the date of vaccination, i.e., using a treatment time-scale. Outcome events occurring on the same day as vaccination are included in follow-up. Date of vaccination is included as an additional baseline covariate using a restricted cubic spline with knots at the first and second tertile, plus boundary knots. Here, follow-up time is stratified into weekly intervals with the vaccine-specific effect estimated within each time-strata. In `R`'s `coxph` function, this is modelled using `vaccine_type:strata(week_since_first_dose)`.
 
 ### Pooled Logistic Regression models
 
-We emulate the Cox model described above using pooled logistic regression (PLR), with the outcome risk estimated at daily intervals. These models include a restricted cubic spline with 3 degrees of freedom on the log of the timescale (time since vaccination), interacted with vaccine type. The PLR models serve two purposes. Firstly, a continuous-time estimate of comparative effectiveness, as opposed to the piecewise-linear approximation above, is obtained. Secondly, the risk-adjusted survival rates for each vaccine type are obtained using the parametric g-formula. This is the average risk for each day of follow-up predicted by the PLR model, under the (complimentary counterfactual) assumption that every patient received the BNT162b2 vaccine or that every patient received the ChAdOx1 vaccine.
+We emulate the Cox model described above using pooled logistic regression (PLR), with the outcome risk estimated at daily intervals. These models include a restricted cubic spline with 3 degrees of freedom on the log of the timescale (time since vaccination), interacted with vaccine type. The PLR models serve two purposes. Firstly, a continuous-time estimate of comparative effectiveness, as opposed to the piecewise-linear approximation above, is obtained. Secondly, the risk-adjusted survival rates for each vaccine type are obtained using the parametric g-formula. This is the average risk for each day of follow-up predicted by the PLR model, under the (complimentary counterfactual) assumption that every patient received the BNT162b2 vaccine or that every patient received the ChAdOx1 vaccine. 
 
 Confidence intervals for the risk-adjusted survival rates are calculated using the delta method (i.e, a first-order Taylor series approximation of the variance of the cumulative incidence).
 
-The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the outcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the risk-adjusted survival curves.
+The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the outcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the risk-adjusted survival curves. 
 
-Results
-=======
+
+# Results
 
 Note all counts below 6 are redacted and survival estimates are rounded for disclosure control.
 
-Flowchart
----------
+## Flowchart
 
-<!--html_preserve-->
-<style>html {
+
+<!--html_preserve--><style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#kmmzozxwfv .gt_table {
+#sugaixmjfz .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -108,7 +111,7 @@ Flowchart
   border-left-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_heading {
+#sugaixmjfz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -120,7 +123,7 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_title {
+#sugaixmjfz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -130,7 +133,7 @@ Flowchart
   border-bottom-width: 0;
 }
 
-#kmmzozxwfv .gt_subtitle {
+#sugaixmjfz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -140,13 +143,13 @@ Flowchart
   border-top-width: 0;
 }
 
-#kmmzozxwfv .gt_bottom_border {
+#sugaixmjfz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_col_headings {
+#sugaixmjfz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -161,7 +164,7 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_col_heading {
+#sugaixmjfz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -181,7 +184,7 @@ Flowchart
   overflow-x: hidden;
 }
 
-#kmmzozxwfv .gt_column_spanner_outer {
+#sugaixmjfz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -193,15 +196,15 @@ Flowchart
   padding-right: 4px;
 }
 
-#kmmzozxwfv .gt_column_spanner_outer:first-child {
+#sugaixmjfz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kmmzozxwfv .gt_column_spanner_outer:last-child {
+#sugaixmjfz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kmmzozxwfv .gt_column_spanner {
+#sugaixmjfz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -213,7 +216,7 @@ Flowchart
   width: 100%;
 }
 
-#kmmzozxwfv .gt_group_heading {
+#sugaixmjfz .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -235,7 +238,7 @@ Flowchart
   vertical-align: middle;
 }
 
-#kmmzozxwfv .gt_empty_group_heading {
+#sugaixmjfz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -250,15 +253,15 @@ Flowchart
   vertical-align: middle;
 }
 
-#kmmzozxwfv .gt_from_md > :first-child {
+#sugaixmjfz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kmmzozxwfv .gt_from_md > :last-child {
+#sugaixmjfz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kmmzozxwfv .gt_row {
+#sugaixmjfz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -277,7 +280,7 @@ Flowchart
   overflow-x: hidden;
 }
 
-#kmmzozxwfv .gt_stub {
+#sugaixmjfz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -289,7 +292,7 @@ Flowchart
   padding-left: 12px;
 }
 
-#kmmzozxwfv .gt_summary_row {
+#sugaixmjfz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -299,7 +302,7 @@ Flowchart
   padding-right: 5px;
 }
 
-#kmmzozxwfv .gt_first_summary_row {
+#sugaixmjfz .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -309,7 +312,7 @@ Flowchart
   border-top-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_grand_summary_row {
+#sugaixmjfz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -319,7 +322,7 @@ Flowchart
   padding-right: 5px;
 }
 
-#kmmzozxwfv .gt_first_grand_summary_row {
+#sugaixmjfz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -329,11 +332,11 @@ Flowchart
   border-top-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_striped {
+#sugaixmjfz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kmmzozxwfv .gt_table_body {
+#sugaixmjfz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -342,7 +345,7 @@ Flowchart
   border-bottom-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_footnotes {
+#sugaixmjfz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -356,13 +359,13 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_footnote {
+#sugaixmjfz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#kmmzozxwfv .gt_sourcenotes {
+#sugaixmjfz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -376,47 +379,48 @@ Flowchart
   border-right-color: #D3D3D3;
 }
 
-#kmmzozxwfv .gt_sourcenote {
+#sugaixmjfz .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#kmmzozxwfv .gt_left {
+#sugaixmjfz .gt_left {
   text-align: left;
 }
 
-#kmmzozxwfv .gt_center {
+#sugaixmjfz .gt_center {
   text-align: center;
 }
 
-#kmmzozxwfv .gt_right {
+#sugaixmjfz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kmmzozxwfv .gt_font_normal {
+#sugaixmjfz .gt_font_normal {
   font-weight: normal;
 }
 
-#kmmzozxwfv .gt_font_bold {
+#sugaixmjfz .gt_font_bold {
   font-weight: bold;
 }
 
-#kmmzozxwfv .gt_font_italic {
+#sugaixmjfz .gt_font_italic {
   font-style: italic;
 }
 
-#kmmzozxwfv .gt_super {
+#sugaixmjfz .gt_super {
   font-size: 65%;
 }
 
-#kmmzozxwfv .gt_footnote_marks {
+#sugaixmjfz .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<table class="gt_table">
-<thead class="gt_col_headings">
+<div id="sugaixmjfz" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
     <tr>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Criteria</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">N</th>
@@ -424,65 +428,44 @@ Flowchart
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">% excluded</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">% remaining</th>
     </tr>
-
-</thead>
-<tbody class="gt_table_body">
+  </thead>
+  <tbody class="gt_table_body">
     <tr>
-      <td class="gt_row gt_left">All vaccinated HCWs aged 16-65</td>
-      <td class="gt_row gt_right">505,086</td>
+      <td class="gt_row gt_left">All HCWs aged 18-64
+  receiving first dose of BNT162b2 or ChAdOx1
+  between 4 January and 28 February 2021</td>
+      <td class="gt_row gt_right">361,005</td>
       <td class="gt_row gt_right">-</td>
       <td class="gt_row gt_right">-</td>
       <td class="gt_row gt_right">100.0&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">with no missing demographic information</td>
-      <td class="gt_row gt_right">456,818</td>
-      <td class="gt_row gt_right">48,268</td>
+      <td class="gt_row gt_right">326,336</td>
+      <td class="gt_row gt_right">34,669</td>
       <td class="gt_row gt_right">9.6&percnt;</td>
       <td class="gt_row gt_right">90.4&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">who are not clinically extremely vulnerable</td>
-      <td class="gt_row gt_right">441,018</td>
-      <td class="gt_row gt_right">15,800</td>
-      <td class="gt_row gt_right">3.5&percnt;</td>
-      <td class="gt_row gt_right">87.3&percnt;</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left">with vaccination on or before recruitment end date</td>
-      <td class="gt_row gt_right">383,100</td>
-      <td class="gt_row gt_right">57,918</td>
-      <td class="gt_row gt_right">13.1&percnt;</td>
-      <td class="gt_row gt_right">75.8&percnt;</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left">with vaccination on or after recruitment start date</td>
-      <td class="gt_row gt_right">316,451</td>
-      <td class="gt_row gt_right">66,649</td>
-      <td class="gt_row gt_right">17.4&percnt;</td>
-      <td class="gt_row gt_right">62.7&percnt;</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left">with Pfizer/BNT or Oxford/AZ vaccine</td>
       <td class="gt_row gt_right">316,449</td>
-      <td class="gt_row gt_right">2</td>
-      <td class="gt_row gt_right">0.0&percnt;</td>
-      <td class="gt_row gt_right">62.7&percnt;</td>
+      <td class="gt_row gt_right">9,887</td>
+      <td class="gt_row gt_right">3.0&percnt;</td>
+      <td class="gt_row gt_right">87.7&percnt;</td>
     </tr>
+  </tbody>
+  
+  
+</table></div><!--/html_preserve-->
 
-</tbody>
-</table>
 
-<!--/html_preserve-->
-Baseline demographics
----------------------
+## Baseline demographics
 
-<!--html_preserve-->
-<style>html {
+<!--html_preserve--><style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#oqsvuodllh .gt_table {
+#qzautwskba .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -507,7 +490,7 @@ Baseline demographics
   border-left-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_heading {
+#qzautwskba .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -519,7 +502,7 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_title {
+#qzautwskba .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -529,7 +512,7 @@ Baseline demographics
   border-bottom-width: 0;
 }
 
-#oqsvuodllh .gt_subtitle {
+#qzautwskba .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -539,13 +522,13 @@ Baseline demographics
   border-top-width: 0;
 }
 
-#oqsvuodllh .gt_bottom_border {
+#qzautwskba .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_col_headings {
+#qzautwskba .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -560,7 +543,7 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_col_heading {
+#qzautwskba .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -580,7 +563,7 @@ Baseline demographics
   overflow-x: hidden;
 }
 
-#oqsvuodllh .gt_column_spanner_outer {
+#qzautwskba .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -592,15 +575,15 @@ Baseline demographics
   padding-right: 4px;
 }
 
-#oqsvuodllh .gt_column_spanner_outer:first-child {
+#qzautwskba .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#oqsvuodllh .gt_column_spanner_outer:last-child {
+#qzautwskba .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#oqsvuodllh .gt_column_spanner {
+#qzautwskba .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -612,7 +595,7 @@ Baseline demographics
   width: 100%;
 }
 
-#oqsvuodllh .gt_group_heading {
+#qzautwskba .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -634,7 +617,7 @@ Baseline demographics
   vertical-align: middle;
 }
 
-#oqsvuodllh .gt_empty_group_heading {
+#qzautwskba .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -649,15 +632,15 @@ Baseline demographics
   vertical-align: middle;
 }
 
-#oqsvuodllh .gt_from_md > :first-child {
+#qzautwskba .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#oqsvuodllh .gt_from_md > :last-child {
+#qzautwskba .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#oqsvuodllh .gt_row {
+#qzautwskba .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -676,7 +659,7 @@ Baseline demographics
   overflow-x: hidden;
 }
 
-#oqsvuodllh .gt_stub {
+#qzautwskba .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,7 +671,7 @@ Baseline demographics
   padding-left: 12px;
 }
 
-#oqsvuodllh .gt_summary_row {
+#qzautwskba .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -698,7 +681,7 @@ Baseline demographics
   padding-right: 5px;
 }
 
-#oqsvuodllh .gt_first_summary_row {
+#qzautwskba .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -708,7 +691,7 @@ Baseline demographics
   border-top-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_grand_summary_row {
+#qzautwskba .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -718,7 +701,7 @@ Baseline demographics
   padding-right: 5px;
 }
 
-#oqsvuodllh .gt_first_grand_summary_row {
+#qzautwskba .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -728,11 +711,11 @@ Baseline demographics
   border-top-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_striped {
+#qzautwskba .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#oqsvuodllh .gt_table_body {
+#qzautwskba .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -741,7 +724,7 @@ Baseline demographics
   border-bottom-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_footnotes {
+#qzautwskba .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -755,13 +738,13 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_footnote {
+#qzautwskba .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#oqsvuodllh .gt_sourcenotes {
+#qzautwskba .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -775,55 +758,55 @@ Baseline demographics
   border-right-color: #D3D3D3;
 }
 
-#oqsvuodllh .gt_sourcenote {
+#qzautwskba .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#oqsvuodllh .gt_left {
+#qzautwskba .gt_left {
   text-align: left;
 }
 
-#oqsvuodllh .gt_center {
+#qzautwskba .gt_center {
   text-align: center;
 }
 
-#oqsvuodllh .gt_right {
+#qzautwskba .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#oqsvuodllh .gt_font_normal {
+#qzautwskba .gt_font_normal {
   font-weight: normal;
 }
 
-#oqsvuodllh .gt_font_bold {
+#qzautwskba .gt_font_bold {
   font-weight: bold;
 }
 
-#oqsvuodllh .gt_font_italic {
+#qzautwskba .gt_font_italic {
   font-style: italic;
 }
 
-#oqsvuodllh .gt_super {
+#qzautwskba .gt_super {
   font-size: 65%;
 }
 
-#oqsvuodllh .gt_footnote_marks {
+#qzautwskba .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<table class="gt_table">
-<thead class="gt_col_headings">
+<div id="qzautwskba" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
     <tr>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"><strong>Characteristic</strong></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>BNT162b2</strong>, N = 252,403</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"><strong>ChAdOx1</strong>, N = 64,046</th>
     </tr>
-
-</thead>
-<tbody class="gt_table_body">
+  </thead>
+  <tbody class="gt_table_body">
     <tr>
       <td class="gt_row gt_left">Age</td>
       <td class="gt_row gt_center"></td>
@@ -1094,25 +1077,22 @@ Baseline demographics
       <td class="gt_row gt_center">27,205 (11%)</td>
       <td class="gt_row gt_center">9,054 (14%)</td>
     </tr>
+  </tbody>
+  
+  
+</table></div><!--/html_preserve-->
 
-</tbody>
-</table>
+## Vaccination dates
 
-<!--/html_preserve-->
-Vaccination dates
------------------
+<img src="/workspace/output/report/figures/vaxdate-1.png" width="80%" />  
 
-<img src="/workspace/output/report/figures/vaxdate-1.png" width="80%" />
+## Event rates
 
-Event rates
------------
-
-<!--html_preserve-->
-<style>html {
+<!--html_preserve--><style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#hqwhlpgqio .gt_table {
+#thswjtuoys .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1137,7 +1117,7 @@ Event rates
   border-left-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_heading {
+#thswjtuoys .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1149,7 +1129,7 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_title {
+#thswjtuoys .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1159,7 +1139,7 @@ Event rates
   border-bottom-width: 0;
 }
 
-#hqwhlpgqio .gt_subtitle {
+#thswjtuoys .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1169,13 +1149,13 @@ Event rates
   border-top-width: 0;
 }
 
-#hqwhlpgqio .gt_bottom_border {
+#thswjtuoys .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_col_headings {
+#thswjtuoys .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1190,7 +1170,7 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_col_heading {
+#thswjtuoys .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1210,7 +1190,7 @@ Event rates
   overflow-x: hidden;
 }
 
-#hqwhlpgqio .gt_column_spanner_outer {
+#thswjtuoys .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1222,15 +1202,15 @@ Event rates
   padding-right: 4px;
 }
 
-#hqwhlpgqio .gt_column_spanner_outer:first-child {
+#thswjtuoys .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#hqwhlpgqio .gt_column_spanner_outer:last-child {
+#thswjtuoys .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#hqwhlpgqio .gt_column_spanner {
+#thswjtuoys .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1242,7 +1222,7 @@ Event rates
   width: 100%;
 }
 
-#hqwhlpgqio .gt_group_heading {
+#thswjtuoys .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1264,7 +1244,7 @@ Event rates
   vertical-align: middle;
 }
 
-#hqwhlpgqio .gt_empty_group_heading {
+#thswjtuoys .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1279,15 +1259,15 @@ Event rates
   vertical-align: middle;
 }
 
-#hqwhlpgqio .gt_from_md > :first-child {
+#thswjtuoys .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#hqwhlpgqio .gt_from_md > :last-child {
+#thswjtuoys .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#hqwhlpgqio .gt_row {
+#thswjtuoys .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1306,7 +1286,7 @@ Event rates
   overflow-x: hidden;
 }
 
-#hqwhlpgqio .gt_stub {
+#thswjtuoys .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1318,7 +1298,7 @@ Event rates
   padding-left: 12px;
 }
 
-#hqwhlpgqio .gt_summary_row {
+#thswjtuoys .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1328,7 +1308,7 @@ Event rates
   padding-right: 5px;
 }
 
-#hqwhlpgqio .gt_first_summary_row {
+#thswjtuoys .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1338,7 +1318,7 @@ Event rates
   border-top-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_grand_summary_row {
+#thswjtuoys .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1348,7 +1328,7 @@ Event rates
   padding-right: 5px;
 }
 
-#hqwhlpgqio .gt_first_grand_summary_row {
+#thswjtuoys .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1358,11 +1338,11 @@ Event rates
   border-top-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_striped {
+#thswjtuoys .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#hqwhlpgqio .gt_table_body {
+#thswjtuoys .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1371,7 +1351,7 @@ Event rates
   border-bottom-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_footnotes {
+#thswjtuoys .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1385,13 +1365,13 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_footnote {
+#thswjtuoys .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#hqwhlpgqio .gt_sourcenotes {
+#thswjtuoys .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1405,47 +1385,48 @@ Event rates
   border-right-color: #D3D3D3;
 }
 
-#hqwhlpgqio .gt_sourcenote {
+#thswjtuoys .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#hqwhlpgqio .gt_left {
+#thswjtuoys .gt_left {
   text-align: left;
 }
 
-#hqwhlpgqio .gt_center {
+#thswjtuoys .gt_center {
   text-align: center;
 }
 
-#hqwhlpgqio .gt_right {
+#thswjtuoys .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#hqwhlpgqio .gt_font_normal {
+#thswjtuoys .gt_font_normal {
   font-weight: normal;
 }
 
-#hqwhlpgqio .gt_font_bold {
+#thswjtuoys .gt_font_bold {
   font-weight: bold;
 }
 
-#hqwhlpgqio .gt_font_italic {
+#thswjtuoys .gt_font_italic {
   font-style: italic;
 }
 
-#hqwhlpgqio .gt_super {
+#thswjtuoys .gt_super {
   font-size: 65%;
 }
 
-#hqwhlpgqio .gt_footnote_marks {
+#thswjtuoys .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<table class="gt_table">
-<thead class="gt_col_headings">
+<div id="thswjtuoys" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
     <tr>
       <th class="gt_col_heading gt_center gt_columns_bottom_border" rowspan="2" colspan="1">Time since first dose</th>
       <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="2">
@@ -1463,9 +1444,8 @@ Event rates
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">Incidence</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">Events / person-years</th>
     </tr>
-
-</thead>
-<tbody class="gt_table_body">
+  </thead>
+  <tbody class="gt_table_body">
     <tr class="gt_group_heading_row">
       <td colspan="7" class="gt_group_heading">SARS-CoV-2 test</td>
     </tr>
@@ -2222,35 +2202,43 @@ Event rates
       <td class="gt_row gt_right">&ndash;</td>
       <td class="gt_row gt_right">&ndash;</td>
     </tr>
+  </tbody>
+  
+  
+</table></div><!--/html_preserve-->
 
-</tbody>
-</table>
-
-<!--/html_preserve-->
-Comparative effectiveness
--------------------------
+## Comparative effectiveness
 
 The plots below show:
 
--   *ChAdOx1* versus *BNT162b2* hazard ratio splines
--   Risk-adjusted survival curves for *ChAdOx1* and *BNT162b2*
+* *ChAdOx1* versus *BNT162b2* hazard ratio splines
+* Risk-adjusted survival curves for *ChAdOx1* and *BNT162b2*
+
+
+  
 
 ### SARS-CoV-2 test
+  
 
-<img src="/workspace/output/report/figures/curves-1.png" width="90%" />
+<img src="/workspace/output/report/figures/curves-1.png" width="90%" />  
 
 ### SARS-CoV-2 positive test
+  
 
-<img src="/workspace/output/report/figures/curves-2.png" width="90%" />
+<img src="/workspace/output/report/figures/curves-2.png" width="90%" />  
 
 ### A&E attendance
+  
 
-<img src="/workspace/output/report/figures/curves-3.png" width="90%" />
+<img src="/workspace/output/report/figures/curves-3.png" width="90%" />  
 
 ### Any unplanned hospital admission
+  
 
-<img src="/workspace/output/report/figures/curves-4.png" width="90%" />
+<img src="/workspace/output/report/figures/curves-4.png" width="90%" />  
 
 ### COVID-19 hospital admission
+  
 
 <img src="/workspace/output/report/figures/curves-5.png" width="90%" />
+
