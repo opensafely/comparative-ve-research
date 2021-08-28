@@ -58,24 +58,31 @@ cumulvax <- data_cohort %>%
 
 plot_stack <-
   ggplot(cumulvax)+
-  geom_area(
+  geom_bar(
     aes(
-      x=vax1_date+1, y=cumuln,
+      x=vax1_date+0.5,
+      y=cumuln,
       group=vax1_type_descr,
       fill=vax1_type_descr
     ),
-    alpha=0.5
+    alpha=0.5,
+    position=position_stack(),
+    stat="identity",
+    width=1
   )+
   scale_x_date(
     breaks = seq(min(cumulvax$vax1_date),max(cumulvax$vax1_date)+1,by=14)+1,
     limits = c(lubridate::floor_date(min(cumulvax$vax1_date), "1 month"), NA),
-    labels = scales::date_format("%d/%m"),
-    expand = expansion(0),
+    labels = scales::label_date("%d/%m"),
+    expand = expansion(add=1),
     sec.axis = sec_axis(
       trans = ~as.Date(.),
       breaks=as.Date(seq(floor_date(min(cumulvax$vax1_date), "month"), ceiling_date(max(cumulvax$vax1_date), "month"),by="month")),
-      labels = scales::date_format("%B %y")
+      labels = scales::label_date("%B %y")
     )
+  )+
+  scale_y_continuous(
+    expand = expansion(c(0, NA))
   )+
   scale_fill_brewer(type="qual", palette="Set1")+
   labs(
@@ -88,7 +95,9 @@ plot_stack <-
   theme_minimal()+
   theme(
     axis.text.x.top=element_text(hjust=0),
-    legend.position = "bottom"
+    axis.ticks.x=element_line(),
+    legend.position = c(0.3,0.8),
+    legend.justification = c(1,0)
   )
 
 
@@ -99,17 +108,19 @@ plot_step <-
       x=vax1_date+1, y=cumuln,
       group=vax1_type_descr,
       colour=vax1_type_descr
-    )
+    ),
+    direction = "vh",
+    size=1
   )+
   scale_x_date(
     breaks = seq(min(cumulvax$vax1_date),max(cumulvax$vax1_date)+1,by=14)+1,
     limits = c(lubridate::floor_date((min(cumulvax$vax1_date)), "1 month"), NA),
-    labels = scales::date_format("%d/%m"),
-    expand = expansion(0),
+    labels = scales::label_date("%d/%m"),
+    expand = expansion(add=1),
     sec.axis = sec_axis(
       trans = ~as.Date(.),
       breaks=as.Date(seq(floor_date(min(cumulvax$vax1_date), "month"), ceiling_date(max(cumulvax$vax1_date), "month"),by="month")),
-      labels = scales::date_format("%B %y")
+      labels = scales::label_date("%B %y")
     )
   )+
   scale_colour_brewer(type="qual", palette="Set1")+
@@ -123,7 +134,9 @@ plot_step <-
   theme_minimal()+
   theme(
     axis.text.x.top=element_text(hjust=0),
-    legend.position = "bottom"
+    axis.ticks.x=element_line(),
+    legend.position = c(0.3,0.8),
+    legend.justification = c(1,0)
   )
 
 
