@@ -308,10 +308,11 @@ get_HRspline <- function(.data, model, vcov, df){
   ## function to get AZ/pfizer hazard ratio spline over time since first dose
 
   tstop <- .data$tstop
-  spline <- ns(.data$tstop, df=df)
 
-  mat0 <- model.matrix(model, data = mutate(.data, vax1_az=0))
-  mat1 <- model.matrix(model, data = mutate(.data, vax1_az=1))
+  tt <- terms(model) # this helpfully grabs the correct spline basis from the model, rather than recalculating based on `newdata`
+  Terms <- delete.response(tt)
+  mat0 <- model.matrix(Terms, data=mutate(.data, vax1_az=0))
+  mat1 <- model.matrix(Terms, data=mutate(.data, vax1_az=1))
 
   tstop_distinct <- unique(tstop)
 
@@ -523,7 +524,7 @@ survival_pfizer <- ccf(data_plr, vax1_az=0)
 survival_az <- ccf(data_plr, vax1_az=1)
 
 curves <-
-  bind_rows(survival_az, survival_pfizer) %>%
+  bind_rows(survival_pfizer, survival_az) %>%
   mutate(
     model = as.integer(model),
     vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2")
