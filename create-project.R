@@ -403,8 +403,30 @@ actions_list <- splice(
     ),
     moderately_sensitive = list(
       html = "output/report/effectiveness_report.html",
-      md = "output/report/effectiveness_report.md"#,
-      #figures = "output/report/figures/*.png"
+      md = "output/report/effectiveness_report.md"
+    )
+  ),
+
+  action(
+    name = "rmd_manuscript",
+    run = glue(
+      "r:latest -e {q}",
+      q = single_quote('rmarkdown::render("analysis/report/effectiveness_manuscript.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
+    ),
+    needs = splice(
+      "design", "data_selection",
+      "descr_table1", "descr_irr",
+      "descr_km", "descr_vaxdate",
+      as.list(
+        glue(
+          outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
+          "report_{outcome}_timesincevax_plr"
+        )
+      )
+    ),
+    moderately_sensitive = list(
+      html = "output/report/effectiveness_manuscript.html",
+      md = "output/report/effectiveness_manuscript.md"
     )
   ),
 
@@ -435,6 +457,8 @@ actions_list <- splice(
       figures = "output/report/figures_timescales/*.png"
     )
   )
+
+
 
 )
 

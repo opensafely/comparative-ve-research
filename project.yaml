@@ -734,6 +734,26 @@ actions:
         html: output/report/effectiveness_report.html
         md: output/report/effectiveness_report.md
 
+  rmd_manuscript:
+    run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_manuscript.Rmd",  knit_root_dir
+      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
+    needs:
+    - design
+    - data_selection
+    - descr_table1
+    - descr_irr
+    - descr_km
+    - descr_vaxdate
+    - report_test_timesincevax_plr
+    - report_postest_timesincevax_plr
+    - report_emergency_timesincevax_plr
+    - report_admitted_timesincevax_plr
+    - report_covidadmitted_timesincevax_plr
+    outputs:
+      moderately_sensitive:
+        html: output/report/effectiveness_manuscript.html
+        md: output/report/effectiveness_manuscript.md
+
   rmd_report_timescales:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir
       = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )'
