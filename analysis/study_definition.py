@@ -725,43 +725,157 @@ study = StudyDefinition(
   ############################################################
   ######### CLINICAL CO-MORBIDITIES ##########################
   ############################################################
-  ### THESE CODELISTS ARE AVAILABLE ON CODELISTS.OPENSAFELY.ORG
-  #### AND CAN BE UPDATED. PLEASE REVIEW AND CHECK YOU ARE HAPPY
-  #### WITH THE CODELIST USED #################################
+  # From PRIMIS
   
   
-  chronic_cardiac_disease=patients.with_these_clinical_events(
-    codelists.chronic_cardiac_disease,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01},
-  ),
-  heart_failure=patients.with_these_clinical_events(
-    codelists.heart_failure,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01},
-  ),
-  other_heart_disease=patients.with_these_clinical_events(
-    codelists.other_heart_disease,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01},
+  asthma = patients.satisfying(
+    """
+      astadm OR
+      (ast AND astrxm1 AND astrxm2 AND astrxm3)
+      """,
+    # Asthma Admission codes
+    astadm=patients.with_these_clinical_events(
+      codelists.astadm,
+      returning="binary_flag",
+      on_or_before="covid_vax_any_1_date - 1 day",
+    ),
+    # Asthma Diagnosis code
+    ast = patients.with_these_clinical_events(
+      codelists.ast,
+      returning="binary_flag",
+      on_or_before="covid_vax_any_1_date - 1 day",
+    ),
+    # Asthma systemic steroid prescription code in month 1
+    astrxm1=patients.with_these_medications(
+      codelists.astrx,
+      returning="binary_flag",
+      between=["covid_vax_any_1_date - 31 days", "covid_vax_any_1_date - 1 days"],
+    ),
+    # Asthma systemic steroid prescription code in month 2
+    astrxm2=patients.with_these_medications(
+      codelists.astrx,
+      returning="binary_flag",
+      between=["covid_vax_any_1_date - 61 days", "covid_vax_any_1_date - 32 days"],
+    ),
+    # Asthma systemic steroid prescription code in month 3
+    astrxm3=patients.with_these_medications(
+      codelists.astrx,
+      returning="binary_flag",
+      between= ["covid_vax_any_1_date - 91 days", "covid_vax_any_1_date - 62 days"],
+    ),
+  
   ),
   
-  diabetes=patients.with_these_clinical_events(
-    codelists.diabetes,
+  # Chronic Neurological Disease including Significant Learning Disorder
+  chronic_neuro_disease=patients.with_these_clinical_events(
+    codelists.cns_cov,
     returning="binary_flag",
-    find_last_match_in_period=True,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    return_expectations={"incidence": 0.01},
+    on_or_before="covid_vax_any_1_date - 1 day",
   ),
-  chronic_liver_disease=patients.with_these_clinical_events(
-    codelists.chronic_liver_disease,
-    on_or_before="covid_vax_any_1_date - 1 days",
+  
+  # Chronic Respiratory Disease
+  chronic_resp_disease = patients.satisfying(
+    "asthma OR resp_cov",
+    resp_cov=patients.with_these_clinical_events(
+      codelists.resp_cov,
+      returning="binary_flag",
+      on_or_before="covid_vax_any_1_date - 1 day",
+    ),
+  ),
+  
+  sev_obesity = patients.satisfying(
+    """
+      sev_obesity_date > bmi_date OR
+      bmi_value1 >= 40
+      """,
+  
+    bmi_stage_date=patients.with_these_clinical_events(
+      codelists.bmi_stage,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  
+    sev_obesity_date=patients.with_these_clinical_events(
+      codelists.sev_obesity,
+      returning="date",
+      find_last_match_in_period=True,
+      ignore_missing_values=True,
+      between= ["bmi_stage_date", "covid_vax_any_1_date - 1 day"],
+      date_format="YYYY-MM-DD",
+    ),
+  
+    bmi_date=patients.with_these_clinical_events(
+      codelists.bmi,
+      returning="date",
+      ignore_missing_values=True,
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  
+    bmi_value1=patients.with_these_clinical_events(
+      codelists.bmi,
+      returning="numeric_value",
+      ignore_missing_values=True,
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      return_expectations={
+        "float": {"distribution": "normal", "mean": 25, "stddev": 5},
+      },
+    ),
+  
+  ),
+  
+  diabetes = patients.satisfying(
+    "dmres_date < diab_date",
+    diab_date=patients.with_these_clinical_events(
+      codelists.diab,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  
+    dmres_date=patients.with_these_clinical_events(
+      codelists.dmres,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  ),
+  
+  sev_mental=patients.satisfying(
+    "smhres_date < sev_mental_date",
+  
+    # Severe Mental Illness codes
+    sev_mental_date=patients.with_these_clinical_events(
+      codelists.sev_mental,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+    # Remission codes relating to Severe Mental Illness
+    smhres_date=patients.with_these_clinical_events(
+      codelists.smhres,
+      returning="date",
+      find_last_match_in_period=True,
+      on_or_before="covid_vax_any_1_date - 1 day",
+      date_format="YYYY-MM-DD",
+    ),
+  ),
+  
+  
+  # Chronic heart disease codes
+  chronic_heart_disease=patients.with_these_clinical_events(
+    codelists.chd_cov,
     returning="binary_flag",
-    return_expectations={"incidence": 0.01},
+    on_or_before="covid_vax_any_1_date - 1 day",
   ),
+  
   chronic_kidney_disease=patients.satisfying(
     """
       ckd OR
@@ -793,127 +907,101 @@ study = StudyDefinition(
       on_or_before="covid_vax_any_1_date - 1 day",
     ),
   ),
-  current_copd=patients.with_these_clinical_events(
-    codelists.current_copd,
-    on_or_before="covid_vax_any_1_date - 1 days",
+  
+  
+  # Chronic Liver disease codes
+  chronic_liver_disease=patients.with_these_clinical_events(
+    codelists.cld,
     returning="binary_flag",
-    return_expectations={"incidence": 0.01},
-  ),
-  LD_incl_DS_and_CP=patients.with_these_clinical_events(
-    codelists.learning_disability_including_downs_syndrome_and_cerebral_palsy,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  cystic_fibrosis=patients.with_these_clinical_events(
-    codelists.cystic_fibrosis,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  other_resp_conditions=patients.with_these_clinical_events(
-    codelists.other_respiratory_conditions,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01},
+    on_or_before="covid_vax_any_1_date - 1 day",
   ),
   
-  lung_cancer=patients.with_these_clinical_events(
-    codelists.lung_cancer,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  haematological_cancer=patients.with_these_clinical_events(
-    codelists.haematological_cancer,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  cancer_excl_lung_and_haem=patients.with_these_clinical_events(
-    codelists.cancer_excluding_lung_and_haematological,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
+  
+  immunosuppressed=patients.satisfying(
+    "immrx OR immdx",
+  
+    # Immunosuppression diagnosis codes
+    immdx=patients.with_these_clinical_events(
+      codelists.immdx_cov,
+      returning="binary_flag",
+      on_or_before="covid_vax_any_1_date - 1 day",
+    ),
+    # Immunosuppression medication codes
+    immrx=patients.with_these_medications(
+      codelists.immrx,
+      returning="binary_flag",
+      between=["covid_vax_any_1_date - 6 months", "covid_vax_any_1_date - 1 day"]
+    ),
   ),
   
-  chemo_or_radio=patients.with_these_clinical_events(
-    codelists.chemotherapy_or_radiotherapy,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  solid_organ_transplantation=patients.with_these_clinical_events(
-    codelists.solid_organ_transplantation,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  bone_marrow_transplant=patients.with_these_clinical_events(
-    codelists.bone_marrow_transplant,
-    between=["2020-07-01", "covid_vax_any_1_date - 1 days"],
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  
-  sickle_cell_disease=patients.with_these_clinical_events(
-    codelists.sickle_cell_disease,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  permanant_immunosuppression=patients.with_these_clinical_events(
-    codelists.permanent_immunosuppression,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  temporary_immunosuppression=patients.with_these_clinical_events(
-    codelists.temporary_immunosuppression,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
+  # Asplenia or Dysfunction of the Spleen codes
   asplenia=patients.with_these_clinical_events(
-    codelists.asplenia,
-    on_or_before="covid_vax_any_1_date - 1 days",
+    codelists.spln_cov,
     returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  dmards=patients.with_these_medications(
-    codelists.dmards,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  # dementia
-  dementia=patients.with_these_clinical_events(
-    codelists.dementia,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01, },
-  ),
-  other_neuro_conditions=patients.with_these_clinical_events(
-    codelists.other_neuro,
-    on_or_before="covid_vax_any_1_date - 1 days",
-    returning="binary_flag",
-    return_expectations={"incidence": 0.01},
+    on_or_before="covid_vax_any_1_date - 1 day",
   ),
   
-  psychosis_schiz_bipolar=patients.with_these_clinical_events(
-    codelists.psychosis_schizophrenia_bipolar_affective_disease,
-    on_or_before="covid_vax_any_1_date - 1 days",
+  # Wider Learning Disability
+  learndis=patients.with_these_clinical_events(
+    codelists.learndis,
     returning="binary_flag",
-    return_expectations={"incidence": 0.01},
+    on_or_before="covid_vax_any_1_date - 1 day",
   ),
   
   
-  
-  
-  ############################################################
-  ######### PRIMIS CODELIST DERIVED CLINICAL VARIABLES     ###
-  ############################################################
-  
+  # to represent household contact of shielding individual
+  # hhld_imdef_dat=patients.with_these_clinical_events(
+  #   codelists.hhld_imdef,
+  #   returning="date",
+  #   find_last_match_in_period=True,
+  #   on_or_before="covid_vax_any_1_date - 1 day",
+  #   date_format="YYYY-MM-DD",
+  # ),
+  # 
+  # #####################################
+  # # primis employment codelists
+  # #####################################
+  # 
+  # # Carer codes
+  # carer_date=patients.with_these_clinical_events(
+  #   codelists.carer,
+  #   returning="date",
+  #   find_last_match_in_period=True,
+  #   on_or_before="covid_vax_any_1_date - 1 day",
+  #   date_format="YYYY-MM-DD",
+  # ),
+  # # No longer a carer codes
+  # notcarer_date=patients.with_these_clinical_events(
+  #   codelists.notcarer,
+  #   returning="date",
+  #   find_last_match_in_period=True,
+  #   on_or_before="covid_vax_any_1_date - 1 day",
+  #   date_format="YYYY-MM-DD",
+  # ),
+  # # Employed by Care Home codes
+  # carehome_date=patients.with_these_clinical_events(
+  #   codelists.carehomeemployee,
+  #   returning="date",
+  #   find_last_match_in_period=True,
+  #   on_or_before="covid_vax_any_1_date - 1 day",
+  #   date_format="YYYY-MM-DD",
+  # ),
+  # # Employed by nursing home codes
+  # nursehome_date=patients.with_these_clinical_events(
+  #   codelists.nursehomeemployee,
+  #   returning="date",
+  #   find_last_match_in_period=True,
+  #   on_or_before="covid_vax_any_1_date - 1 day",
+  #   date_format="YYYY-MM-DD",
+  # ),
+  # # Employed by domiciliary care provider codes
+  # domcare_date=patients.with_these_clinical_events(
+  #   codelists.domcareemployee,
+  #   returning="date",
+  #   find_last_match_in_period=True,
+  #   on_or_before="covid_vax_any_1_date - 1 day",
+  #   date_format="YYYY-MM-DD",
+  # ),
   
   cev_ever = patients.with_these_clinical_events(
     codelists.shield,

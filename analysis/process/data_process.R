@@ -157,21 +157,30 @@ data_processed <- data_extract %>%
       TRUE ~ NA_character_
     ),
 
-    any_immunosuppression = (permanant_immunosuppression | asplenia | dmards | solid_organ_transplantation | sickle_cell_disease | temporary_immunosuppression | bone_marrow_transplant | chemo_or_radio),
+    rural_urban_group = fct_case_when(
+      rural_urban %in% c(1,2) ~ "Urban conurbation",
+      rural_urban %in% c(3,4) ~ "Urban city or town",
+      rural_urban %in% c(5,6,7,8) ~ "Rural town or village",
+      TRUE ~ NA_character_
+    ),
 
     multimorb =
-      (bmi %in% c("Obese II (35-39.9)", "Obese III (40+)")) +
-      (chronic_cardiac_disease | heart_failure | other_heart_disease) +
-      (dialysis) +
+      (sev_obesity) +
+      (chronic_heart_disease) +
+      (chronic_kidney_disease)+
       (diabetes) +
       (chronic_liver_disease)+
-      (current_copd | other_resp_conditions)+
-      (lung_cancer | haematological_cancer | cancer_excl_lung_and_haem)+
-      (any_immunosuppression)+
-      (dementia | other_neuro_conditions)+
-      (LD_incl_DS_and_CP)+
-      (psychosis_schiz_bipolar),
+      (chronic_resp_disease | asthma)+
+      (immunosuppressed | asplenia)+
+      (chronic_neuro_disease)#+
+      #(learndis)+
+      #(sev_mental),
+    ,
     multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, Inf), labels=c("0", "1", "2", "3+"), right=FALSE),
+
+    # clinically at-risk group
+    cv = immunosuppressed | chronic_kidney_disease | chronic_resp_disease | diabetes | chronic_liver_disease |
+      chronic_neuro_disease | chronic_heart_disease | asplenia | learndis | sev_mental,
 
     prior_covid_infection = !is.na(prior_positive_test_date) | !is.na(prior_covidadmitted_date) | !is.na(prior_primary_care_covid_case_date),
 

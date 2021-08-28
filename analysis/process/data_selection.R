@@ -90,7 +90,7 @@ data_flowchart <- data_criteria %>%
     pct_step = n / lag(n),
     crit = str_extract(criteria, "^c\\d+"),
     criteria = fct_case_when(
-      crit == "c0" ~ "All HCWs aged 18-64\n  receiving first dose of BNT162b2 or ChAdOx1\n  between 4 January and 28 February 2021",
+      crit == "c0" ~ "HCWs aged 18-64\n  receiving first dose of BNT162b2 or ChAdOx1\n  between 4 January and 28 February 2021",
       crit == "c1" ~ "  with no missing demographic information",
       crit == "c2" ~ "  who are not clinically extremely vulnerable",
       #crit == "c3" ~ "  with vaccination on or before recruitment end date",

@@ -35,41 +35,12 @@ write_rds(metadata_outcomes, here("output", "data", "metadata_outcomes.rds"))
 
 formula_exposure <- . ~ . + timesincevax_pw
 #formula_demog <- . ~ . + age + I(age * age) + sex + imd + ethnicity
-formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd_Q5 + ethnicity_combined
+formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd_Q5 + ethnicity_combined + rural_urban_group
 formula_comorbs <- . ~ . +
-  bmi +
   prior_covid_infection +
-  #heart_failure +
-  #other_heart_disease +
-
-  #dialysis +
-  #diabetes +
-  #chronic_liver_disease +
-
-  #current_copd +
-  #cystic_fibrosis +
-  #other_resp_conditions +
-
-  #lung_cancer +
-  #haematological_cancer +
-  #cancer_excl_lung_and_haem +
-
-  #chemo_or_radio +
-  #solid_organ_transplantation +
-  #bone_marrow_transplant +
-  #sickle_cell_disease +
-  #permanant_immunosuppression +
-  #temporary_immunosuppression +
-  #asplenia +
-  #dmards +
-  #any_immunosuppression +
-
-  #other_neuro_conditions +
-
-  #LD_incl_DS_and_CP +
-  psychosis_schiz_bipolar +
-
-  multimorb
+  multimorb +
+  learndis +
+  sev_mental
 
 formula_region <- . ~ . + region
 formula_secular <- . ~ . + ns(tstop, df=4)
@@ -111,41 +82,23 @@ var_labels <- list(
   ethnicity_combined ~ "Ethnicity",
   imd_Q5 ~ "IMD",
   region ~ "Region",
+  rural_urban_group ~ "Rural/urban category",
   stp ~ "STP",
   vax1_day ~ "Day of vaccination",
 
-  bmi ~ "Body Mass Index",
+  sev_obesity ~ "Body Mass Index > 40 kg/m^2",
 
-  heart_failure ~ "Heart failure",
-  other_heart_disease ~ "Other heart disease",
-
-  #chronic_kidney_disease ~ "Chronic kidney disease",
+  chronic_heart_disease ~ "Chronic heart disease",
+  chronic_kidney_disease ~ "Chronic kidney disease",
   diabetes ~ "Diabetes",
   chronic_liver_disease ~ "Chronic liver disease",
+  chronic_resp_disease ~ "Chronic respiratory disease",
+  chronic_neuro_disease ~ "Chronic neurological disease",
+  immunosuppressed ~ "Immunosuppressed",
+  asplenia ~ "Asplenia or poor spleen function",
 
-  current_copd ~ "COPD",
-  #cystic_fibrosis ~ "Cystic fibrosis",
-  other_resp_conditions ~ "Other respiratory conditions",
-
-  lung_cancer ~ "Lung Cancer",
-  haematological_cancer ~ "Haematological cancer",
-  cancer_excl_lung_and_haem ~ "Cancer excl. lung, haemo",
-
-  #chemo_or_radio ~ "Chemo- or radio-therapy",
-  #solid_organ_transplantation ~ "Solid organ transplant",
-  #bone_marrow_transplant ~ "Bone marrow transplant",
-  #sickle_cell_disease ~ "Sickle Cell Disease",
-  #permanant_immunosuppression ~ "Permanent immunosuppression",
-  #temporary_immunosuppression ~ "Temporary Immunosuppression",
-  #asplenia ~ "Asplenia",
-  #dmards ~ "DMARDS",
-
-  any_immunosuppression ~ "Immunosuppressed",
-
-  other_neuro_conditions ~ "Other neurological conditions",
-
-  LD_incl_DS_and_CP ~ "Learning disabilities",
-  psychosis_schiz_bipolar ~ "Serious mental illness",
+  learndis ~ "Learning disabilities",
+  sev_mental ~ "Serious mental illness",
 
   multimorb ~ "Morbidity count",
 
@@ -155,3 +108,4 @@ var_labels <- list(
   set_names(., map_chr(., all.vars))
 
 write_rds(var_labels, here("output", "data", "metadata_labels.rds"))
+
