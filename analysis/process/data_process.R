@@ -176,7 +176,7 @@ data_processed <- data_extract %>%
       #(learndis)+
       #(sev_mental),
     ,
-    multimorb = cut(multimorb, breaks = c(0, 1, 2, 3, Inf), labels=c("0", "1", "2", "3+"), right=FALSE),
+    multimorb = cut(multimorb, breaks = c(0, 1, 2, Inf), labels=c("0", "1", "2+"), right=FALSE),
 
     # clinically at-risk group
     cv = immunosuppressed | chronic_kidney_disease | chronic_resp_disease | diabetes | chronic_liver_disease |

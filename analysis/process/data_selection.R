@@ -39,6 +39,7 @@ data_criteria <- data_processed %>%
     has_imd = !is.na(imd),
     has_ethnicity = !is.na(ethnicity_combined),
     has_region = !is.na(region),
+    has_rural = !is.na(rural_urban_group),
     not_cev = !cev,
     #knownvaxdate = vax1_date>=as.Date("2020-03-01"), # not currently used because these are excluded in study definition
     vax1_beforelastvaxdate = vax1_date <= lastvax_date,
@@ -46,7 +47,7 @@ data_criteria <- data_processed %>%
     vax1_azpfizer = vax1_type %in% c("az", "pfizer"),
 
     include = (
-      has_age & has_sex & has_imd & has_ethnicity & has_region &
+      has_age & has_sex & has_imd & has_ethnicity & has_region & has_rural &
         #has_follow_up_previous_year &
         #no_unclear_brand &
         not_cev &
@@ -59,7 +60,7 @@ data_criteria <- data_processed %>%
 
 data_cohort_allvax <- data_criteria %>%
   filter(
-    has_age & has_sex & has_imd & has_ethnicity & has_region &
+    has_age & has_sex & has_imd & has_ethnicity & has_region & has_rural &
     #has_follow_up_previous_year &
     #no_unclear_brand &
     not_cev
@@ -72,7 +73,7 @@ data_flowchart <- data_criteria %>%
   transmute(
     c0_all = vax1_azpfizer & vax1_afterstartdate & vax1_beforelastvaxdate,
     #c1_1yearfup = c0_all & (has_follow_up_previous_year),
-    c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region),
+    c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region & has_rural),
     c2_notcev = c1_notmissing & not_cev
   ) %>%
   summarise(
