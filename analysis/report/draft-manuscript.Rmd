@@ -1,14 +1,14 @@
 ---
 title: "Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers"
 output:
-  word_document: default
   html_document: 
     keep_md: yes
+  word_document: default
   bookdown::html_document2:
     number_sections: false
     toc: false
 bibliography: references.bib
-csl: https://raw.githubusercontent.com/citation-style-language/styles/master/ieee-transactions-on-medical-imaging.csl
+csl: nature.csl # from https://raw.githubusercontent.com/citation-style-language/styles/master/nature.csl
 link-citations: yes
 zotero: true
 ---
@@ -169,10 +169,6 @@ baseline_pfizer <-
 
 A total of `r flowchart[1, "n"]` HCWs aged 18-64 receiving a first dose of BNT162b2 or ChAdOx1 between 4 January and 28 February 2021 and actively registered at at TPP practice were identified, with `r flowchart[[nrow(flowchart), "n"]]` (`r label_percent(0.1)(flowchart[[nrow(flowchart), "pct_all"]])`) meeting the study eligibility criteria. `r baseline_pfizer$n` (`r label_percent(0.1)(baseline_pfizer$n/baseline$n)`) were vaccinated with BNT162b2, contributing `r label_number(0.1)(baseline_pfizer$fu_years)` person-years of follow-up. For ChAdOx1, this was `r baseline_az$n` (`r label_percent(0.1)(baseline_az$n/baseline$n)`) and `r label_number(0.1)(baseline_az$fu_years)` person-years.
 
-Baseline characteristics are reported in Table 1 and were largely well-balanced between recipients of each vaccine, though regional and temporal differences in the distribution of each vaccine are notable. BNT162b2 was on average administered earlier than ChAdOx1 (median day of vaccination `r format(baseline_pfizer$median_vaxday, "%d %B")` for BNT162b2, `r format(baseline_az$median_vaxday, "%d %B")` for ChadOx1). BNT162b2 was relatively more likely to be administered in the South and East of England, and ChAdOx1 the Midlands and Northern England. The proportion of each clinical condition is slightly higher in ChAdOx1 recipients, though consistently under a 0.6% percent-point difference.
-
-The cumulative proportion of vaccinated study participants by calendar time is reported in Figure 1.
-
 #### Table 0: Inclusion criteria
 
 ```{r flowchart, echo=FALSE, warning=FALSE, message=FALSE}
@@ -199,11 +195,15 @@ flowchart %>%
   )
 ```
 
+Baseline characteristics are reported in Table 1 and were largely well-balanced between recipients of each vaccine, though regional and temporal differences in the distribution of each vaccine are notable. BNT162b2 was on average administered earlier than ChAdOx1 (median day of vaccination `r format(baseline_pfizer$median_vaxday, "%d %B")` for BNT162b2, `r format(baseline_az$median_vaxday, "%d %B")` for ChadOx1). BNT162b2 was relatively more likely to be administered in the South and East of England, and ChAdOx1 the Midlands and Northern England. The proportion of each clinical condition is slightly higher in ChAdOx1 recipients, though consistently under a 0.6% percent-point difference.
+
 #### Table 1: Baseline characteristics
 
 ```{r table1, echo=FALSE, warning=FALSE, message=FALSE}
 read_rds(here("output", "descriptive", "tables", "table1.rds"))
 ```
+
+The cumulative proportion of vaccinated study participants by calendar time is reported in Figure 1.
 
 #### Figure 1: Vaccination dates
 
@@ -215,7 +215,7 @@ cat("  \n\n")
 
 ## Event rates
 
-Figure 2 shows event rates by vaccine type, and the unadjusted incidence ratio ratio. Over the duration of `r   label_number(0.1)(baseline$fu_years)` person-years of follow-up there were `r baseline$postest` positive SARS-CoV-2 tests, `r baseline$covidadmitted` COVID-19 hospital admissions, and `r baseline$coviddeath` COVID-19 deaths.
+Table 2 shows event rates by vaccine type, and the crude incidence. Over the duration of `r label_number(0.1)(baseline$fu_years)` person-years of follow-up there were `r baseline$postest` positive SARS-CoV-2 tests, `r baseline$emergency` A&E attendances, `r baseline$covidadmitted` COVID-19 hospital admissions, and `r baseline$coviddeath` COVID-19 deaths.
 
 #### Table 2: Event rates
 
@@ -401,7 +401,7 @@ read_rds(here("output", "descriptive", "tables", "table_irr_simple.rds"))
 
 Figure 3 shows, for each outcome based on the fully adjusted model, the time-dependent hazard ratio for ChAdOx1 versus BNT162b2, and one minus the risk-adjusted cumulative incidence, and the absolute risk difference. Similar figures for the non-fully-adjusted models are presented in supplementary materials.
 
-At 6 weeks post-vaccination, the absolute risk difference (ChAdOx1 - BNT162b2) for a positive SARS-CoV-2 test was `r filter(riskdifference, outcome=="postest", tstop==7*6)$diff_format` per 1000 people, and for COVID-19 hospital admissions was `r filter(riskdifference, outcome=="covidadmitted", tstop==7*6)$diff_format` per 1000 people.
+At 6 weeks post-vaccination, the absolute risk difference (ChAdOx1 - BNT162b2) for a positive SARS-CoV-2 test was `r filter(riskdifference, outcome=="postest", tstop==7*6)$diff_format` per 1000 people, for A&E attendances was `r filter(riskdifference, outcome=="emergency", tstop==7*6)$diff_format` and for COVID-19 hospital admissions was `r filter(riskdifference, outcome=="covidadmitted", tstop==7*6)$diff_format` per 1000 people.
 
 #### Figure 2: Comparative effectivevess
 
