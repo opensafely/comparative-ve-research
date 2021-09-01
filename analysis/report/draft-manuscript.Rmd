@@ -360,17 +360,31 @@ read_rds(here("output", "descriptive", "tables", "table_irr_simple.rds"))
       hazard %>% select(outcome, model, tstop, hr, hr.ll, hr.ul), 
       by=c("outcome", "model", "tstop")
     ) %>% 
+    group_by(model, model_name, outcome, outcome_descr) %>%
+    arrange(model, outcome, vax1_az, tstop) %>%
     mutate(
+      hazard1 = -(survival - lag(survival, 1, 1)) / lag(survival, 1, 1),
+      hazard0 = hazard1/hr,
+      hazard0.ll = hazard1/hr.ul,
+      hazard0.ul = hazard1/hr.ll,
+      
+      survival0 = exp(-cumsum(if_else(is.na(hazard0), 0, hazard0))),
+      survival0.ll = exp(-cumsum(if_else(is.na(hazard0.ul), 0, hazard0.ul))),
+      survival0.ul = exp(-cumsum(if_else(is.na(hazard0.ll), 0, hazard0.ul))),
+      
+      diff2 = (1-survival)-(1-survival0),
+      
       diff.ll = (1-survival) - (1-survival)*hr.ll,
-      diff.ul = (1-survival) + (1-survival)*hr.ul
-    ) #-(surv-lag(surv))/lag(surv)
+      diff.ul = (1-survival) + (1-survival)*hr.ul,
+      #diff_CI = paste0(label_number(0.01, scale=1000)(diff), " (", diff.ll, " ,", diff.ul, ")")
+    ) 
     
   
   plot_riskdiff <-
     ggplot(riskdifference)+
     geom_hline(aes(yintercept=0), colour='black')+
     geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
-    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
+    # geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
     facet_grid(cols=vars(outcome_descr))+
     scale_x_continuous(
       limits = c(0, NA),
@@ -417,7 +431,7 @@ At 6 weeks post-vaccination, the absolute risk difference (ChAdOx1 - BNT162b2) f
 
 #### Figure 2: Comparative effectivevess
 
-```{r comp,echo=FALSE, message=FALSE, out.width='90%', fig.height=8, results='asis'}
+```{r comp,echo=FALSE, message=FALSE, warnings=FALSE, out.width='90%', fig.height=8, results='asis'}
 patchwork::wrap_plots(plot_cmlinc, plot_riskdiff, plot_hazard, ncol=1)
 ```
 
