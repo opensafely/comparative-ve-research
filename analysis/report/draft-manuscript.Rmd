@@ -3,6 +3,7 @@ title: "Comparative vaccine effectiveness of ChAdOx1 versus BNT162b2 in Health a
 output:
   html_document: 
     keep_md: yes
+    self_contained: TRUE
   word_document: default
   bookdown::html_document2:
     number_sections: false
