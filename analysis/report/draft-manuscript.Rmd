@@ -8,10 +8,10 @@ output:
   bookdown::html_document2:
     number_sections: false
     toc: false
-bibliography: references.bib
-csl: nature.csl # from https://raw.githubusercontent.com/citation-style-language/styles/master/nature.csl
-link-citations: yes
-zotero: true
+#bibliography: references.bib
+#csl: nature.csl # from https://raw.githubusercontent.com/citation-style-language/styles/master/nature.csl
+#link-citations: yes
+#zotero: true
 ---
 
 ```{r setup, include=FALSE}
@@ -51,9 +51,9 @@ list2env(list_formula, globalenv())
 
 # Introduction
 
-The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised clinical trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine @polack2020 (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 vaccine @voysey2021 (*ChAdOx1*). Post-authorisation assessment of vaccine effectiveness using observational data is necessary to monitor the success of such programmes as, invariably, target populations and settings differ substantially from those of trials. To date, there have been no RCTs that have directly compared the BNT162b2 and ChAdOx1 vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same population. The concurrent roll-out of these vaccines across the UK, combined with the country's well-developed electronic health record infrastructure, provides a rare opportunity to emulate such a trial using observational data.
+The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised clinical trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine <!--# @polack2020 --> (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 vaccine <!--# @voysey2021 --> (*ChAdOx1*). Post-authorisation assessment of vaccine effectiveness using observational data is necessary to monitor the success of such programmes as, invariably, target populations and settings differ substantially from those of trials. To date, there have been no RCTs that have directly compared the BNT162b2 and ChAdOx1 vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same population. The concurrent roll-out of these vaccines across the UK, combined with the country's well-developed electronic health record infrastructure, provides a rare opportunity to emulate such a trial using observational data.
 
-COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease . Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used @collaborative2021. This study assesses the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP linked primary care database covering around 40% of England's population.
+COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease . Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used <!--#  @collaborative2021 -->. This study assesses the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP linked primary care database covering around 40% of England's population.
 
 # Methods
 
@@ -71,7 +71,7 @@ Study participants were followed up for no more than 14 weeks from the day of th
 
 ## Outcomes
 
-Three outcomes were defined. Positive SARS-CoV-2 tests were identified using SGSS records and based on swab date. Both polymerase chain reaction (PCR) and lateral flow tests are included. We did not differentiate between symptomatic and asymptomatic infection. A&E attendances were identified using HES emergency care records. COVID-19 hospital admissions were identified using HES in-patient hospital records. Admissions where the ICD-10 coded primary or non-primary "reason for admission" included U07.1 ("COVID-19, virus identified") and U07.2 ( "COVID-19, virus not identified") were included @emergenc.
+Three outcomes were defined. Positive SARS-CoV-2 tests were identified using SGSS records and based on swab date. Both polymerase chain reaction (PCR) and lateral flow tests are included. We did not differentiate between symptomatic and asymptomatic infection. A&E attendances were identified using HES emergency care records. COVID-19 hospital admissions were identified using HES in-patient hospital records. Admissions where the ICD-10 coded primary or non-primary "reason for admission" included U07.1 ("COVID-19, virus identified") and U07.2 ( "COVID-19, virus not identified") were included <!--# @emergenc --> .
 
 Although severe disease (such as requirement for intensive or critical care) and mortality were of interest there were too few events to investigate these outcomes fully. Unadjusted rates for these outcomes are reported descriptively. COVID-19 critical care admissions were identified via HES. COVID-19 deaths were identified using linked death registration data. Death with COVID-19 ICD-10 codes (as above) mentioned anywhere on the death certificate (i.e., as an underlying or contributing cause of death) were included.
 
@@ -81,7 +81,7 @@ Participant characteristics used describe the cohort and for confounder adjustme
 
 ## Statistical Analysis
 
-We estimated the relative effectiveness of a first dose of ChAdOx1 versus BNT162b2 using pooled logistic regression (PLR) models [@cupples1988a; @ngwa2016] with the outcome risk estimated at daily intervals. The effect is permitted to vary by time since vaccination to account for the potential differences in vaccine protection over time between the two brands. The PLR models approximate Cox models with time-varying effects, and enables the estimation of risk-adjusted survival rates for each vaccine type using the parametric g-formula. This is one minus the average of the cumulative incidence for each day of follow-up predicted by the PLR model, under the (counterfactual) assumption that every participant received the BNT162b2 vaccine or that every participant received the ChAdOx1 vaccine. Assuming appropriate parameterisation of risk (i.e., adequate confounder adjustment), this replicates the cumulative incidence that would have been observed in an RCT comparing the two vaccines in the population under consideration. Standard errors for the PLR model were obtained using the HC0 clustered sandwich estimator to account for within-participant clustering. Confidence intervals for the risk-adjusted cumulative incidence were obtained using the delta method (i.e, a first-order Taylor series approximation of the variance).
+We estimated the relative effectiveness of a first dose of ChAdOx1 versus BNT162b2 using pooled logistic regression (PLR) models <!--# [@cupples1988a; @ngwa2016] --> with the outcome risk estimated at daily intervals. The effect is permitted to vary by time since vaccination to account for the potential differences in vaccine protection over time between the two brands. The PLR models approximate Cox models with time-varying effects, and enables the estimation of risk-adjusted survival rates for each vaccine type using the parametric g-formula. This is one minus the average of the cumulative incidence for each day of follow-up predicted by the PLR model, under the (counterfactual) assumption that every participant received the BNT162b2 vaccine or that every participant received the ChAdOx1 vaccine. Assuming appropriate parameterisation of risk (i.e., adequate confounder adjustment), this replicates the cumulative incidence that would have been observed in an RCT comparing the two vaccines in the population under consideration. Standard errors for the PLR model were obtained using the HC0 clustered sandwich estimator to account for within-participant clustering. Confidence intervals for the risk-adjusted cumulative incidence were obtained using the delta method (i.e, a first-order Taylor series approximation of the variance).
 
 Four models were fit for each outcome, with progressive adjustment for confounders: (1) An unadjusted model using a restricted cubic spline term with 4 degrees of freedom for time since vaccination, vaccine type, and their interaction; (2) Additionally adjusting for region-specific calendar-time effects, by including a restricted cubic spline term with 4 degrees of freedom for the date of vaccination and its interaction with region; (3) additionally adjusting for demographic characteristics; (4) additionally adjusting for clinical characteristics.
 
@@ -354,13 +354,22 @@ read_rds(here("output", "descriptive", "tables", "table_irr_simple.rds"))
       diff = (1-survival) - first((1-survival)),
       diff_format = label_number(0.01, scale=1000)(diff)
     ) %>%
-    filter(vax1_az==1)
+    filter(vax1_az==1) %>%
+    left_join(
+      hazard %>% select(outcome, model, tstop, hr, hr.ll, hr.ul), 
+      by=c("outcome", "model", "tstop")
+    ) %>% 
+    mutate(
+      diff.ll = (1-survival) - (1-survival)*hr.ll,
+      diff.ul = (1-survival) + (1-survival)*hr.ul
+    ) #-(surv-lag(surv))/lag(surv)
+    
   
   plot_riskdiff <-
     ggplot(riskdifference)+
     geom_hline(aes(yintercept=0), colour='black')+
     geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
-    # geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
+    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
     facet_grid(cols=vars(outcome_descr))+
     scale_x_continuous(
       limits = c(0, NA),
@@ -426,7 +435,7 @@ The dominant circulating variant during the period of study was the Alpha varian
 
 ## Findings in context
 
-A number of studies estimate COVID-19 vaccine effectiveness in observational data using unvaccinated controls [@cabezas2021; @vasileiou2021]. [describe pfizer versus AZ findings]
+A number of studies estimate COVID-19 vaccine effectiveness in observational data using unvaccinated controls <!--# [@cabezas2021; @vasileiou2021]  -->. [describe pfizer versus AZ findings]
 
 Such designs are extremely vulnerable to confounding for example due to vaccine prioritisation and eligiblity policies, as well as vaccine access and acceptance, that cause substantial imbalance between vaccinated and unvaccinated groups. Many of these biases can be bypassed when making direct comparisons between recipients of different vaccine types. To our knowledge, the present study is the first to assess effectiveness of the BNT162b2 and ChAdOx1 vaccines in a head-to-head comparison. We found...
 
