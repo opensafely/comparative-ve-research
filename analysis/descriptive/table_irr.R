@@ -18,6 +18,7 @@ library('glue')
 library('survival')
 library('gt')
 library('gtsummary')
+library('scales')
 
 ## Import custom user functions from lib
 
@@ -109,8 +110,8 @@ if(removeobs) rm(data_cohort)
 postvax_time <- data_tte %>%
   select(patient_id, tte_censor) %>%
   mutate(
-    fup_day = list(postvaxcuts),
-    timesincevax = map(fup_day, ~droplevels(timesince_cut(.x+1, postvaxcuts)))
+    fup_day = list(postvaxcuts_2week),
+    timesincevax = map(fup_day, ~droplevels(timesince_cut_end(.x+1, postvaxcuts_2week)))
   ) %>%
   unnest(c(fup_day, timesincevax))
 
@@ -318,4 +319,53 @@ tab_summary <- data_summary %>%
 write_rds(tab_summary, here("output", "descriptive", "tables", "table_irr.rds"))
 gtsave(tab_summary, here("output", "descriptive", "tables", "table_irr.html"))
 
+
+tab_summary_simple <-
+  data_summary %>%
+  filter(
+    event %in% c(
+      "postest",
+      "emergency",
+      "covidadmitted",
+      "coviddeath",
+      "death"
+    )
+  ) %>%
+  transmute(
+    outcome_descr, timesincevax,
+    pfizer_q,
+    pfizer_rate_fmt = if_else(pfizer_rate<0.001, "<0.001", number_format(0.001)(pfizer_rate)),
+    pfizer_rate_fmt = if_else(pfizer_rate==0, "0", pfizer_rate_fmt),
+    az_q,
+    az_rate_fmt = if_else(az_rate<0.001, "<0.001", number_format(0.001)(az_rate)),
+    az_rate_fmt = if_else(az_rate==0, "0", az_rate_fmt),
+  ) %>%
+  gt(
+    groupname_col = "outcome_descr",
+  ) %>%
+  cols_label(
+    outcome_descr = "Outcome",
+    timesincevax = "Time since first dose",
+
+    pfizer_q = "BNT162b2\nEvents / person-years",
+    pfizer_rate_fmt = "BNT162b2\nIncidence",
+
+    az_q   = "ChAdOx1\nEvents / person-years",
+    az_rate_fmt = "ChAdOx1\nIncidence",
+  ) %>%
+  fmt_missing(
+    everything(),
+    missing_text="--"
+  ) %>%
+  cols_align(
+    align = "right",
+    columns = everything()
+  ) %>%
+  cols_align(
+    align = "left",
+    columns = "timesincevax"
+  )
+
+write_rds(tab_summary_simple, here("output", "descriptive", "tables", "table_irr_simple.rds"))
+gtsave(tab_summary_simple, here("output", "descriptive", "tables", "table_irr_simple.html"))
 

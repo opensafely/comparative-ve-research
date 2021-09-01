@@ -134,6 +134,31 @@ timesince_cut <- function(time_since, breaks, prefix=""){
   period
 }
 
+timesince_cut_end <- function(time_since, breaks, prefix=""){
+
+  # this function defines post-vaccination time-periods at `time_since`,
+  # delimited by `breaks`
+
+  # note, intervals are open on the left and closed on the right
+  # so at the exact time point the vaccination occurred, it will be classed as "pre-dose".
+
+  stopifnot("time_since should be strictly non-negative" = time_since>=0)
+  time_since <- as.numeric(time_since)
+  time_since <- if_else(!is.na(time_since), time_since, Inf)
+
+  lab_left <- breaks[-length(breaks)]+1
+  lab_right <- breaks[-1]
+  label <- paste0(lab_left, "-", lab_right)
+  labels <- paste0(prefix, label)
+
+  #labels0 <- cut(c(breaks, Inf), breaks_aug)
+  #labels <- paste0(prefix, c(prelabel, as.character(labels0[-1])))
+  period <- cut(time_since, breaks=breaks, labels=labels, include.lowest=FALSE)
+
+  period
+}
+
+
 # tidy functions for specific objects ----
 
 

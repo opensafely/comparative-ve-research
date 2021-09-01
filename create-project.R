@@ -278,11 +278,11 @@ actions_list <- splice(
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("design", "data_selection"),
     highly_sensitive = list(
-      rds = "output/descriptive/tables/table_irr.rds"
+      rds = "output/descriptive/tables/table_irr*.rds"
     ),
     moderately_sensitive = list(
-      html = "output/descriptive/tables/table_irr.html",
-      csv = "output/descriptive/tables/table_irr.csv"
+      html = "output/descriptive/tables/table_irr*.html",
+      csv = "output/descriptive/tables/table_irr*.csv"
     )
   ),
 

@@ -159,10 +159,10 @@ actions:
     - data_selection
     outputs:
       highly_sensitive:
-        rds: output/descriptive/tables/table_irr.rds
+        rds: output/descriptive/tables/table_irr*.rds
       moderately_sensitive:
-        html: output/descriptive/tables/table_irr.html
-        csv: output/descriptive/tables/table_irr.csv
+        html: output/descriptive/tables/table_irr*.html
+        csv: output/descriptive/tables/table_irr*.csv
 
   descr_km:
     run: r:latest analysis/descriptive/km.R output/data/data_processed.rds output/data_properties

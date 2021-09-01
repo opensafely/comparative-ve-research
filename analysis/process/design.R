@@ -54,6 +54,7 @@ formula_all_rhsvars <- update(1 ~ 1, formula_exposure) %>%
   update(formula_secular_region)
 
 postvaxcuts <- c(0, 7, 14, 21, 28, 35, 42, 70)
+postvaxcuts_2week <- c(0, 14, 28, 42, 70, 84, 98)
 
 lastfupday <- 14*7
 
@@ -66,6 +67,7 @@ list_formula <- lst(
   formula_secular_region,
   formula_all_rhsvars,
   postvaxcuts,
+  postvaxcuts_2week,
   lastfupday
 )
 
