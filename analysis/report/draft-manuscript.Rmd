@@ -431,7 +431,7 @@ At 6 weeks post-vaccination, the absolute risk difference (ChAdOx1 - BNT162b2) f
 
 #### Figure 2: Comparative effectivevess
 
-```{r comp,echo=FALSE, message=FALSE, warnings=FALSE, out.width='90%', fig.height=8, results='asis'}
+```{r comp,echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
 patchwork::wrap_plots(plot_cmlinc, plot_riskdiff, plot_hazard, ncol=1)
 ```
 
