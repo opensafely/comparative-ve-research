@@ -1,5 +1,5 @@
 ---
-title: "Comparative vaccine effectiveness (ChAdOx1 versus BNT162b2) in Health and Social Care workers"
+title: "Comparative vaccine effectiveness of ChAdOx1 versus BNT162b2 in Health and Social Care workers in England"
 output:
   html_document: 
     keep_md: yes
