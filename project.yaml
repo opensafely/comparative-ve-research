@@ -751,8 +751,8 @@ actions:
     - report_covidadmitted_timesincevax_plr
     outputs:
       moderately_sensitive:
-        html: output/report/effectiveness_manuscript.html
-        md: output/report/effectiveness_manuscript.md
+        html: output/report/draft-manuscript.html
+        md: output/report/draft-manuscript.md
 
   rmd_report_timescales:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir

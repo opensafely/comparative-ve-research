@@ -425,8 +425,8 @@ actions_list <- splice(
       )
     ),
     moderately_sensitive = list(
-      html = "output/report/effectiveness_manuscript.html",
-      md = "output/report/effectiveness_manuscript.md"
+      html = "output/report/draft-manuscript.html",
+      md = "output/report/draft-manuscript.md"
     )
   ),
 
