@@ -168,7 +168,7 @@ baseline_pfizer <-
   )
 ```
 
-A total of `r flowchart[1, "n"]` HCWs aged 18-64 receiving a first dose of BNT162b2 or ChAdOx1 between 4 January and 28 February 2021 and actively registered at at TPP practice were identified, with `r flowchart[[nrow(flowchart), "n"]]` (`r label_percent(0.1)(flowchart[[nrow(flowchart), "pct_all"]])`) meeting the study eligibility criteria. `r baseline_pfizer$n` (`r label_percent(0.1)(baseline_pfizer$n/baseline$n)`) were vaccinated with BNT162b2, contributing `r label_number(0.1)(baseline_pfizer$fu_years)` person-years of follow-up. For ChAdOx1, this was `r baseline_az$n` (`r label_percent(0.1)(baseline_az$n/baseline$n)`) and `r label_number(0.1)(baseline_az$fu_years)` person-years.
+A total of `r label_number(1, big.mark=",")(flowchart[1, "n"])` HCWs aged 18-64 receiving a first dose of BNT162b2 or ChAdOx1 between 4 January and 28 February 2021 and actively registered at at TPP practice were identified, with `r label_number(1)(flowchart[[nrow(flowchart), "n"]])` (`r label_percent(0.1)(flowchart[[nrow(flowchart), "pct_all"]])`) meeting the study eligibility criteria. `r label_number(1, big.mark=",")(baseline_pfizer$n)` (`r label_percent(0.1)(baseline_pfizer$n/baseline$n)`) were vaccinated with BNT162b2, contributing `r label_number(0.1)(baseline_pfizer$fu_years)` person-years of follow-up. For ChAdOx1, this was `r label_number(1, big.mark=",")(baseline_az$n)` (`r label_percent(0.1)(baseline_az$n/baseline$n)`) and `r label_number(0.1)(baseline_az$fu_years)` person-years.
 
 #### Table 0: Inclusion criteria
 
