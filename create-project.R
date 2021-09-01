@@ -411,7 +411,7 @@ actions_list <- splice(
     name = "rmd_manuscript",
     run = glue(
       "r:latest -e {q}",
-      q = single_quote('rmarkdown::render("analysis/report/effectiveness_manuscript.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
+      q = single_quote('rmarkdown::render("analysis/report/draft-manuscript.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
     ),
     needs = splice(
       "design", "data_selection",

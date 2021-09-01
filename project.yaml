@@ -735,7 +735,7 @@ actions:
         md: output/report/effectiveness_report.md
 
   rmd_manuscript:
-    run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_manuscript.Rmd",  knit_root_dir
+    run: r:latest -e 'rmarkdown::render("analysis/report/draft-manuscript.Rmd",  knit_root_dir
       = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
     needs:
     - design
