@@ -395,7 +395,7 @@ read_rds(here("output", "descriptive", "tables", "table_irr_simple.rds"))
       expand = expansion(0),
       sec.axis = dup_axis(name="Lower risk after \n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
     )+
-    coord_cartesian(ylim=limits = c(-5, 5))+
+    coord_cartesian(ylim= c(-5, 5))+
     scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
     scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
     labs(
