@@ -347,44 +347,58 @@ read_rds(here("output", "descriptive", "tables", "table_irr_simple.rds"))
    NULL
   
   
-  riskdifference <- 
-    cmlinc  %>%
-    group_by(model, model_name, outcome, outcome_descr, tstop) %>%
-    arrange(tstop, model, outcome, vax1_az) %>%
-    mutate(
-      diff = (1-survival) - first((1-survival)),
-      diff_format = label_number(0.01, scale=1000)(diff)
+  riskdiff <-
+    map_dfr(
+      outcomes,
+      ~read_rds(here("output", "models", .x, "timesincevax", glue("reportplr_adjusteddiff_ns.rds"))),
+      .id="outcome"
     ) %>%
-    filter(vax1_az==1) %>%
-    left_join(
-      hazard %>% select(outcome, model, tstop, hr, hr.ll, hr.ul), 
-      by=c("outcome", "model", "tstop")
-    ) %>% 
-    group_by(model, model_name, outcome, outcome_descr) %>%
-    arrange(model, outcome, vax1_az, tstop) %>%
+    left_join(metadata_outcomes, by="outcome") %>%
     mutate(
-      hazard1 = -(survival - lag(survival, 1, 1)) / lag(survival, 1, 1),
-      hazard0 = hazard1/hr,
-      hazard0.ll = hazard1/hr.ul,
-      hazard0.ul = hazard1/hr.ll,
-      
-      survival0 = exp(-cumsum(if_else(is.na(hazard0), 0, hazard0))),
-      survival0.ll = exp(-cumsum(if_else(is.na(hazard0.ul), 0, hazard0.ul))),
-      survival0.ul = exp(-cumsum(if_else(is.na(hazard0.ll), 0, hazard0.ul))),
-      
-      diff2 = (1-survival)-(1-survival0),
-      
-      diff.ll = (1-survival) - (1-survival)*hr.ll,
-      diff.ul = (1-survival) + (1-survival)*hr.ul,
-      #diff_CI = paste0(label_number(0.01, scale=1000)(diff), " (", diff.ll, " ,", diff.ul, ")")
-    ) 
+      outcome_descr = fct_inorder(outcome_descr),
+      model_name = fct_inorder(str_wrap(model_name, 15)),
+      diff_format = label_number(0.01, scale=1000)(diff),
+    ) %>%
+    filter(model==3)  
+  
+  # riskdiff <- 
+  #   cmlinc  %>%
+  #   group_by(model, model_name, outcome, outcome_descr, tstop) %>%
+  #   arrange(tstop, model, outcome, vax1_az) %>%
+  #   mutate(
+  #     diff = (1-survival) - first((1-survival)),
+  #     
+  #   ) %>%
+  #   filter(vax1_az==1) %>%
+  #   left_join(
+  #     hazard %>% select(outcome, model, tstop, hr, hr.ll, hr.ul), 
+  #     by=c("outcome", "model", "tstop")
+  #   ) %>% 
+  #   group_by(model, model_name, outcome, outcome_descr) %>%
+  #   arrange(model, outcome, vax1_az, tstop) %>%
+  #   mutate(
+  #     hazard1 = -(survival - lag(survival, 1, 1)) / lag(survival, 1, 1),
+  #     hazard0 = hazard1/hr,
+  #     hazard0.ll = hazard1/hr.ul,
+  #     hazard0.ul = hazard1/hr.ll,
+  #     
+  #     survival0 = exp(-cumsum(if_else(is.na(hazard0), 0, hazard0))),
+  #     survival0.ll = exp(-cumsum(if_else(is.na(hazard0.ul), 0, hazard0.ul))),
+  #     survival0.ul = exp(-cumsum(if_else(is.na(hazard0.ll), 0, hazard0.ul))),
+  #     
+  #     diff2 = (1-survival)-(1-survival0),
+  #     
+  #     diff.ll = (1-survival) - (1-survival)*hr.ll,
+  #     diff.ul = (1-survival) + (1-survival)*hr.ul,
+  #     #diff_CI = paste0(label_number(0.01, scale=1000)(diff), " (", diff.ll, " ,", diff.ul, ")")
+  #   ) 
     
   
   plot_riskdiff <-
-    ggplot(riskdifference)+
+    ggplot(riskdiff)+
     geom_hline(aes(yintercept=0), colour='black')+
     geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
-    # geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
+    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
     facet_grid(cols=vars(outcome_descr))+
     scale_x_continuous(
       limits = c(0, NA),
@@ -427,7 +441,7 @@ read_rds(here("output", "descriptive", "tables", "table_irr_simple.rds"))
 
 Figure 3 shows, for each outcome based on the fully adjusted model, the time-dependent hazard ratio for ChAdOx1 versus BNT162b2, and one minus the risk-adjusted cumulative incidence, and the absolute risk difference. Similar figures for the non-fully-adjusted models are presented in supplementary materials.
 
-At 6 weeks post-vaccination, the absolute risk difference (ChAdOx1 - BNT162b2) for a positive SARS-CoV-2 test was `r filter(riskdifference, outcome=="postest", tstop==7*6)$diff_format` per 1000 people, for A&E attendances was `r filter(riskdifference, outcome=="emergency", tstop==7*6)$diff_format` and for COVID-19 hospital admissions was `r filter(riskdifference, outcome=="covidadmitted", tstop==7*6)$diff_format` per 1000 people.
+At 6 weeks post-vaccination, the absolute risk difference (ChAdOx1 - BNT162b2) for a positive SARS-CoV-2 test was `r filter(riskdiff, outcome=="postest", tstop==7*6)$diff_format` per 1000 people, for A&E attendances was `r filter(riskdiff, outcome=="emergency", tstop==7*6)$diff_format` and for COVID-19 hospital admissions was `r filter(riskdiff, outcome=="covidadmitted", tstop==7*6)$diff_format` per 1000 people.
 
 #### Figure 2: Comparative effectivevess
 
