@@ -419,7 +419,7 @@ actions_list <- splice(
       "descr_km", "descr_vaxdate",
       as.list(
         glue(
-          outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
+          outcome = c("postest", "emergency", "covidadmitted"),
           "report_{outcome}_timesincevax_plr"
         )
       )

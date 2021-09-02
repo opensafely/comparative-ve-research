@@ -744,10 +744,8 @@ actions:
     - descr_irr
     - descr_km
     - descr_vaxdate
-    - report_test_timesincevax_plr
     - report_postest_timesincevax_plr
     - report_emergency_timesincevax_plr
-    - report_admitted_timesincevax_plr
     - report_covidadmitted_timesincevax_plr
     outputs:
       moderately_sensitive:
