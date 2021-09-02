@@ -267,6 +267,8 @@
         * [output/models/test/timesincevax/reportplr_effectsplot_pw.png](output/models/test/timesincevax/reportplr_effectsplot_pw.png)
         * [output/models/test/timesincevax/reportplr_effectsplot_pw.svg](output/models/test/timesincevax/reportplr_effectsplot_pw.svg)
   * output/report
+    * [output/report/draft-manuscript.html](output/report/draft-manuscript.html)
+    * [output/report/draft-manuscript.md](output/report/draft-manuscript.md)
     * [output/report/effectiveness_report.html](output/report/effectiveness_report.html)
     * [output/report/effectiveness_report.md](output/report/effectiveness_report.md)
     * output/report/figures
