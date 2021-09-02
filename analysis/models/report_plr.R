@@ -258,7 +258,7 @@ group_by(vax1_az, tstop) %>%
   ) %>%
   arrange(model, vax1_az, tstop)
 
-cml_inc <- ggplot(curves %>% filter(model=="3"))+
+cmlinc <- ggplot(curves %>% filter(model=="3"))+
   geom_step(aes(x=tstop, y=1-survival, group=vax1_az_descr, colour=vax1_az_descr))+
   scale_x_continuous(
     breaks = seq(0,7*52,by=14),
@@ -282,8 +282,8 @@ cml_inc <- ggplot(curves %>% filter(model=="3"))+
 
 write_rds(curves, here("output", "models", outcome, timescale, glue("reportplr_cmlinccurves_pw.rds")), compress="gz")
 
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.svg")), cml_inc, width=20, height=15, units="cm")
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.png")), cml_inc, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.svg")), cmlinc, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_cmlincplot_pw.png")), cmlinc, width=20, height=15, units="cm")
 
 
 
@@ -446,9 +446,69 @@ cmlinc_variance <- function(model, vcov, newdata, id, time, weights){
 
 #test<-cmlinc_variance(plrmod3, vcov3, mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)
 
+
+## risk-adjusted survival curves ----
+
+riskdiff_variance <- function(model, vcov, newdata0, newdata1, id, time, weights){
+
+  # calculate variance of adjusted survival / adjusted cumulative incidence
+  # needs model object, cluster-vcov, input data, model weights, and indices for patient and time
+
+  tt <- terms(model) # this helpfully grabs the correct spline basis from the model, rather than recalculating based on `newdata`
+  Terms <- delete.response(tt)
+  m.mat0 <- model.matrix(Terms, data=newdata0)
+  m.mat1 <- model.matrix(Terms, data=newdata1)
+  m.coef <- model$coef
+
+  N <- nrow(m.mat0)
+  K <- length(m.coef)
+
+  # log-odds, nu_t, at time t
+  nu0 <- m.coef %*% t(m.mat0) # t_i x 1
+  nu1 <- m.coef %*% t(m.mat1) # t_i x 1
+  # part of partial derivative
+  pdc0 <- (exp(nu0)/((1+exp(nu0))^2)) # t_i x 1
+  pdc1 <- (exp(nu1)/((1+exp(nu1))^2)) # t_i x 1
+  # summand for partial derivative of P_t(theta_t | X_t), for each time t and term k
+
+  #summand <- crossprod(diag(as.vector(pdc0)), m.mat0)    # t_i  x k
+  summand0 <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    summand0[,k] <- m.mat0[,k] * as.vector(pdc0)
+  }
+  summand1 <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    summand1[,k] <- m.mat1[,k] * as.vector(pdc1)
+  }
+
+  # cumulative sum of summand, by patient_id  # t_i x k
+  cmlsum <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    cmlsum[,k] <- ave(summand1[,k] - summand0[,k], id, FUN=cumsum)
+  }
+
+  ## multiply by model weights (weights are normalised here so we can use `sum` later, not `weighted.mean`)
+  normweights <- weights / ave(weights, time, FUN=sum) # t_i x 1
+
+  #wgtcmlsum <- crossprod(diag(normweights), cmlsum ) # t_i x k
+  wgtcmlsum <- matrix(0, nrow=N, ncol=K)
+  for (k in seq_len(K)){
+    wgtcmlsum[,k] <- cmlsum[,k] * normweights
+  }
+
+  # partial derivative of cumulative incidence at t
+  partial_derivative <- rowsum(wgtcmlsum, time)
+
+  variance <- rowSums(crossprod(t(partial_derivative), vcov) * partial_derivative) # t x 1
+
+  variance
+}
+
+#test<-riskdiff_variance(plrmod3, vcov3, mutate(data_plr, vax1_az=0L), mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)
+
 ccf <-  function(data, vax1_az){
 
-  # g-formula to get marginalised / adjusted incidence / survival curves
+  # g-formula to get marginalised/adjusted incidence / survival curves
 
   vaxtype <- vax1_az
 
@@ -523,19 +583,44 @@ ccf <-  function(data, vax1_az){
 survival_pfizer <- ccf(data_plr, vax1_az=0)
 survival_az <- ccf(data_plr, vax1_az=1)
 
-curves <-
+cmlinc_curves <-
   bind_rows(survival_pfizer, survival_az) %>%
+  arrange(vax1_az, outcome, model, tstop) %>%
   mutate(
     model = as.integer(model),
-    vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2")
+    vax1_az_descr = if_else(vax1_az==1, "ChAdOx1", "BNT162b2"),
   ) %>%
   left_join(
     tidy_plr_ns %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
   )
 
+diff_curves <-
+  cmlinc_curves %>%
+  group_by(model, tstop) %>%
+  mutate(
+    diff = (1-survival) - first((1-survival)),
+  ) %>%
+  filter(vax1_az==1) %>%
+  ungroup() %>%
+  mutate(
+    diff.se = sqrt(c(
+      c(0, riskdiff_variance(plrmod0, vcov0, mutate(data_plr, vax1_az=0L), mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)),
+      c(0, riskdiff_variance(plrmod1, vcov1, mutate(data_plr, vax1_az=0L), mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)),
+      c(0, riskdiff_variance(plrmod2, vcov2, mutate(data_plr, vax1_az=0L), mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)),
+      c(0, riskdiff_variance(plrmod3, vcov3, mutate(data_plr, vax1_az=0L), mutate(data_plr, vax1_az=1L), data_plr$patient_id, data_plr$tstop, data_plr$sample_weights)),
+      NULL
+    ))
+  ) %>%
+  mutate(
+    diff.ll = diff+qnorm(0.025)*diff.se,
+    diff.ul = diff+qnorm(0.975)*diff.se,
+  )
+
 if(removeobs) rm(plrmod0, plrmod1, plrmod2, plrmod3)
 
-survival <- ggplot(curves %>% filter(model=="3"))+
+
+
+cmlinc_plot <- ggplot(cmlinc_curves %>% filter(model=="3"))+
   geom_step(aes(x=tstop, y=survival, group=vax1_az_descr, colour=vax1_az_descr))+
   geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=survival.ll, ymax=survival.ul, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
   scale_x_continuous(
@@ -560,67 +645,39 @@ survival <- ggplot(curves %>% filter(model=="3"))+
     axis.text.x.top=element_text(hjust=0)
   )
 
-write_rds(curves, here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.rds")), compress="gz")
+write_rds(cmlinc_curves, here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.rds")), compress="gz")
 
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.svg")), cml_inc, width=20, height=15, units="cm")
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.png")), cml_inc, width=20, height=15, units="cm")
-
-
-## hazard ratios derived from survival curves
-
-curves_hr <- curves %>%
-  group_by(model, model_name, tstop) %>%
-  summarise(
-    vax1_az = vax1_az,
-    hr = haz/first(haz)
-  ) %>%
-  ungroup() %>%
-  filter(vax1_az != 0)
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.svg")), cmlinc_plot, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjustedsurvival_ns.png")), cmlinc_plot, width=20, height=15, units="cm")
 
 
-plotplr <-
-  ggplot(data = curves_hr) +
-  geom_line(aes(y=hr, x=tstop, colour=model_name))+
-  geom_hline(aes(yintercept=1), colour='grey')+
-  scale_y_log10(
-    breaks=c(0.25, 0.33, 0.5, 0.67, 0.80, 1, 1.25, 1.5, 2, 3, 4),
-    sec.axis = dup_axis(name="<--  favours Pfizer  /  favours AZ  -->", breaks = NULL)
-  )+
+diff_plot <- ggplot(diff_curves %>% filter(model=="3"))+
+  geom_step(aes(x=tstop, y=diff))+
+  geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll, ymax=diff.ul), alpha=0.1)+
   scale_x_continuous(
     breaks = seq(0,7*52,by=14),
-     expand = expansion(0)
+    expand = expansion(0)
   )+
-  scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
+  scale_y_continuous(
+    expand = expansion(0)
+  )+
+  scale_colour_brewer(type="qual", palette="Set2")+
+  scale_fill_brewer(type="qual", palette="Set2", guide="none")+
   labs(
-    y="Hazard ratio",
     x="Days since first dose",
+    y="Risk difference",
     colour=NULL,
-    title=glue::glue("AZ versus Pfizer, by time since first-dose")
-  ) +
+    fill=NULL
+  )+
   theme_bw()+
   theme(
-    panel.border = element_blank(),
-    axis.line.y = element_line(colour = "black"),
+    legend.position=c(.05,.05),
+    legend.justification = c(0,0),
+    axis.text.x.top=element_text(hjust=0)
+  )
 
-    panel.grid.minor.x = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    strip.text.y.left = element_text(angle = 0),
+write_rds(diff_curves, here("output", "models", outcome, timescale, glue("reportplr_adjusteddiff_ns.rds")), compress="gz")
 
-    panel.spacing = unit(0.8, "lines"),
-
-    plot.title = element_text(hjust = 0),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    plot.caption = element_text(hjust = 0, face= "italic"),
-
-    legend.position = "bottom"
-  ) +
-  NULL
-
-write_rds(plotplr, path=here("output", "models", outcome, timescale, glue("reportplr_effectsplot2_ns.rds")))
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot2_ns.svg")), plotplr, width=20, height=15, units="cm")
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_effectsplot2_ns.png")), plotplr, width=20, height=15, units="cm")
-
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjusteddiff_ns.svg")), diff_plot, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, glue("reportplr_adjusteddiff_ns.png")), diff_plot, width=20, height=15, units="cm")
 
