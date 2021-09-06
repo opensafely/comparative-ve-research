@@ -24,12 +24,14 @@ if(length(args)==0){
   removeobs <- FALSE
   outcome <- "postest"
   timescale <- "timesincevax"
+  censor_seconddose <- as.integer("0")
   samplesize_nonoutcomes_n <- 5000
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
-  samplesize_nonoutcomes_n <- as.integer(args[[3]])
+  censor_seconddose <- as.integer(args[[3]])
+  samplesize_nonoutcomes_n <- as.integer(args[[4]])
 }
 
 
@@ -50,14 +52,14 @@ source(here("analysis", "lib", "survival_functions.R"))
 
 
 # create output directories ----
-fs::dir_create(here("output", "models", outcome, timescale))
+fs::dir_create(here("output", "models", outcome, timescale, censor_seconddose))
 
 ## create special log file ----
-cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, glue("modelplr_log_{outcome}.txt")), append = FALSE)
+cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_log_{outcome}.txt")), append = FALSE)
 ## function to pass additional log text
 logoutput <- function(...){
-  cat(..., file = here("output", "models", outcome, timescale, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", "models", outcome, timescale, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat(..., file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat("\n", file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
 }
 
 ## import metadata ----
@@ -71,14 +73,32 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
+if(censor_seconddose==1){
+  postvaxcuts<-postvaxcuts12
+  lastfupday<-lastfupday12
+} else {
+  postvaxcuts<-postvaxcuts20
+  lastfupday<-lastfupday20
+}
+
 # Import data ----
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 
 # calculate time to event variables
 data_tte <- data_cohort %>%
   mutate(
+    end_date,
+    censor_date = pmin(
+      vax1_date - 1 + lastfupday,
+      dereg_date,
+      death_date,
+      if_else(rep(censor_seconddose, n())==1, vax2_date, as.Date(Inf)),
+      end_date,
+      na.rm=TRUE
+    ),
+
+
     outcome_date = .[[glue("{outcome_var}")]],
-    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
     ind_censor = censor_indicator(censor_date, censor_date),
@@ -136,7 +156,7 @@ logoutput(
   glue("data_pt memory usage = ", format(object.size(data_plr), units="GB", standard="SI", digits=3L))
 )
 
-write_rds(data_plr, here("output", "models", outcome, timescale, "modelplr_data.rds"), compress="gz")
+write_rds(data_plr, here("output", "models", outcome, timescale, censor_seconddose, "modelplr_data.rds"), compress="gz")
 
 ## make formulas ----
 
@@ -240,10 +260,10 @@ plr_process <- function(plrmod, number, cluster, splinetype){
   #write_rds(tidy, here("output", "models", outcome, timescale, glue("modelplr_tidy{number}{splinetype}.rds")), compress="gz")
 
   vcov <- vcovCL(plrmod, cluster = cluster, type = "HC0")
-  write_rds(vcov, here("output", "models", outcome, timescale, glue("modelplr_vcov{number}{splinetype}.rds")), compress="gz")
+  write_rds(vcov, here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov{number}{splinetype}.rds")), compress="gz")
 
   plrmod$data <- NULL
-  write_rds(plrmod, here("output", "models", outcome, timescale, glue("modelplr_model{number}{splinetype}.rds")), compress="gz")
+  write_rds(plrmod, here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_model{number}{splinetype}.rds")), compress="gz")
 
   lst(glance, tidy)
 }
@@ -326,15 +346,15 @@ model_glance <- bind_rows(summary0$glance, summary1$glance, summary2$glance, sum
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_glance, here::here("output", "models", outcome, timescale, glue("modelplr_glance_pw.csv")))
+write_csv(model_glance, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_glance_pw.csv")))
 
 model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$tidy) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_pw.csv")))
-write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_pw.rds")))
+write_csv(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_pw.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_pw.rds")))
 
 ## continuous estimands ----
 
@@ -406,15 +426,15 @@ model_glance <- bind_rows(summary0$glance, summary1$glance, summary2$glance, sum
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_glance, here::here("output", "models", outcome, timescale, glue("modelplr_glance_ns.csv")))
+write_csv(model_glance, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_glance_ns.csv")))
 
 model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$tidy) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.csv")))
-write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelplr_tidy_ns.rds")))
+write_csv(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_ns.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_ns.rds")))
 
 ## print warnings ----
 print(warnings())

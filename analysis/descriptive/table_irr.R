@@ -40,6 +40,8 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
+lastfupday <- lastfupday20
+
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
 
 ## create output directory ----
@@ -56,7 +58,7 @@ data_tte <- data_cohort %>%
     vax1_type,
     end_date,
 
-    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, vax2_date, na.rm=TRUE),
 
     # time to last follow up day
     tte_enddate = tte(vax1_date-1, end_date, end_date),
@@ -107,8 +109,8 @@ if(removeobs) rm(data_cohort)
 postvax_time <- data_tte %>%
   select(patient_id, tte_censor) %>%
   mutate(
-    fup_day = list(postvaxcuts_2week),
-    timesincevax = map(fup_day, ~droplevels(timesince_cut_end(.x+1, postvaxcuts_2week)))
+    fup_day = list(postvaxcuts20_2week),
+    timesincevax = map(fup_day, ~droplevels(timesince_cut_end(.x+1, postvaxcuts20_2week)))
   ) %>%
   unnest(c(fup_day, timesincevax))
 

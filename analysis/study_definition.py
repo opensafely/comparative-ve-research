@@ -23,7 +23,7 @@ start_date = study_dates["start_date"]
 start_date_pfizer = study_dates["start_date_pfizer"]
 start_date_az = study_dates["start_date_az"]
 start_date_moderna = study_dates["start_date_moderna"]
-#end_date = study_dates["end_date"] 
+end_date = study_dates["end_date"] 
 
 
 from datetime import datetime, timedelta

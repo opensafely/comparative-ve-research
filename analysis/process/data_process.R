@@ -24,7 +24,7 @@ source(here("analysis", "lib", "utility_functions.R"))
 
 # import globally defined repo variables from
 study_dates <- jsonlite::read_json(
-  path=here("output","data","metadata_study-dates.json")
+  path=here("output", "data", "metadata_study-dates.json")
 )
 
 ## load A&E diagnosis column names
@@ -105,8 +105,7 @@ data_processed <- data_extract %>%
     start_date_pfizer = as.Date(study_dates$start_date_pfizer),
     start_date_az = as.Date(study_dates$start_date_az),
     lastvax_date = as.Date(study_dates$lastvax_date),
-    end_date14 = as.Date(study_dates$end_date14),
-    end_date20 = as.Date(study_dates$end_date20),
+    end_date = as.Date(study_dates$end_date),
 
     ageband = cut(
       age,

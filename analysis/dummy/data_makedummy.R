@@ -195,27 +195,27 @@ sim_list = list(
 
 
   covid_test_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),
     missing_rate = ~0.6
   ),
 
   positive_test_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),
     missing_rate = ~0.8
   ),
 
   emergency_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),
     missing_rate = ~0.9
   ),
 
   covidadmitted_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),
     missing_rate = ~0.95
   ),
 
   admitted_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),
     missing_rate = ~0.94
   ),
 
@@ -226,7 +226,7 @@ sim_list = list(
   ),
 
   death_day = bn_node(
-    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+200)),
+    ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),
     missing_rate = ~0.99
   ),
 
@@ -289,3 +289,10 @@ dummydata_processed <- dummydata %>%
 
 
 write_feather(dummydata_processed, sink = here("dummydata", "dummyinput.feather"))
+
+
+
+
+
+
+

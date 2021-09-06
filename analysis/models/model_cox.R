@@ -26,10 +26,12 @@ if(length(args)==0){
   removeobs <- FALSE
   outcome <- "admitted"
   timescale <- "timesincevax"
+  censor_seconddose <- as.integer("1")
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
+  censor_seconddose <- as.integer(args[[3]])
 }
 
 
@@ -49,14 +51,14 @@ source(here("analysis", "lib", "survival_functions.R"))
 
 
 # create output directories ----
-fs::dir_create(here("output", "models", outcome, timescale))
+fs::dir_create(here("output", "models", outcome, timescale, censor_seconddose))
 
 ## create special log file ----
-cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, glue("modelcox_log.txt")), append = FALSE)
+cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_log.txt")), append = FALSE)
 ## function to pass additional log text
 logoutput <- function(...){
-  cat(..., file = here("output", "models", outcome, timescale, glue("modelcox_log.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", "models", outcome, timescale, glue("modelcox_log.txt")), sep = "\n  ", append = TRUE)
+  cat(..., file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_log.txt")), sep = "\n  ", append = TRUE)
+  cat("\n", file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_log.txt")), sep = "\n  ", append = TRUE)
 }
 
 ## import metadata ----
@@ -68,14 +70,30 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here::here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
+if(censor_seconddose==1){
+  postvaxcuts<-postvaxcuts12
+  lastfupday<-lastfupday12
+} else{
+  postvaxcuts<-postvaxcuts20
+  lastfupday<-lastfupday20
+}
+
+
 # Import data ----
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 
 data_tte <- data_cohort %>%
   mutate(
+    censor_date = pmin(
+      vax1_date - 1 + lastfupday,
+      dereg_date,
+      death_date,
+      if_else(rep(censor_seconddose, n())==1, vax2_date, as.Date(Inf)),
+      end_date,
+      na.rm=TRUE
+    ),
 
     outcome_date = .[[glue("{outcome_var}")]],
-    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
 
     # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
     tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
@@ -139,7 +157,7 @@ logoutput(
   glue("data_cox memory usage = ", format(object.size(data_cox), units="GB", standard="SI", digits=3L))
 )
 
-write_rds(data_cox, here("output", "models", outcome, timescale, "modelcox_data.rds"), compress="gz")
+write_rds(data_cox, here("output", "models", outcome, timescale, censor_seconddose, "modelcox_data.rds"), compress="gz")
 
 
 
@@ -262,7 +280,7 @@ cox_model <- function(number, formula_cox){
   )
 
   coxmod$data <- NULL
-  write_rds(coxmod, here("output", "models", outcome, timescale, glue("modelcox_model{number}.rds")), compress="gz")
+  write_rds(coxmod, here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_model{number}.rds")), compress="gz")
 
 
   lst(glance, tidy)
@@ -282,13 +300,13 @@ model_glance <-
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_glance, here::here("output", "models", outcome, timescale, glue("modelcox_glance.csv")))
+write_csv(model_glance, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_glance.csv")))
 
 model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$tidy) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_tidy, here::here("output", "models", outcome, timescale, glue("modelcox_tidy.csv")))
-write_rds(model_tidy, here::here("output", "models", outcome, timescale, glue("modelcox_tidy.rds")))
+write_csv(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_tidy.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelcox_tidy.rds")))
 

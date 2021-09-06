@@ -23,10 +23,12 @@ if(length(args)==0){
   removeobs <- FALSE
   outcome <- "postest"
   timescale <- "timesincevax"
+  censor_seconddose <- as.integer("1")
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
+  censor_seconddose <- as.integer(args[[3]])
 
 }
 
@@ -54,6 +56,14 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
 
+if(censor_seconddose==1){
+  postvaxcuts<-postvaxcuts12
+  lastfupday<-lastfupday12
+} else {
+  postvaxcuts<-postvaxcuts20
+  lastfupday<-lastfupday20
+}
+
 
   # Import processed data ----
 
@@ -63,7 +73,7 @@ list2env(list_formula, globalenv())
 
 #data_cox <- read_rds(here("output", "models", outcome, timescale, "modelcox_data.rds"))
 
-tidy_cox <- read_rds(here("output", "models", outcome, timescale, "modelcox_tidy.rds"))
+tidy_cox <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, "modelcox_tidy.rds"))
 
 if(timescale == "calendar"){
   effectscox <- tidy_cox %>%
@@ -92,8 +102,8 @@ effectscox <- effectscox %>%
     term_midpoint = term_left + (term_right+1-term_left)/2
   )
 
-write_csv(effectscox, path = here("output", "models", outcome, timescale, glue::glue("reportcox_effects.csv")))
-write_rds(effectscox, path = here("output", "models", outcome, timescale, glue::glue("reportcox_effects.rds")))
+write_csv(effectscox, path = here("output", "models", outcome, timescale, censor_seconddose, glue::glue("reportcox_effects.csv")))
+write_rds(effectscox, path = here("output", "models", outcome, timescale, censor_seconddose, glue::glue("reportcox_effects.rds")))
 
 plotcox <-
   ggplot(data = effectscox) +
@@ -136,9 +146,9 @@ plotcox <-
 plotcox
 ## save plot
 
-write_rds(plotcox, path=here("output", "models", outcome, timescale, glue("reportcox_effectsplot.rds")))
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportcox_effectsplot.svg")), plotcox, width=20, height=15, units="cm")
-ggsave(filename=here("output", "models", outcome, timescale, glue("reportcox_effectsplot.png")), plotcox, width=20, height=15, units="cm")
+write_rds(plotcox, path=here("output", "models", outcome, timescale, censor_seconddose, glue("reportcox_effectsplot.rds")))
+ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportcox_effectsplot.svg")), plotcox, width=20, height=15, units="cm")
+ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportcox_effectsplot.png")), plotcox, width=20, height=15, units="cm")
 
 
 

@@ -29,6 +29,11 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
 
+list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
+list2env(list_formula, globalenv())
+
+lastfupday <- lastfupday20
+
 ## create output directory ----
 fs::dir_create(here("output", "descriptive", "tables"))
 
@@ -73,20 +78,22 @@ data_tte <- data_cohort %>%
     # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
     # so use vax1_date - 1
 
-    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    censor_date = pmin(
+      vax1_date - 1 + lastfupday,
+      dereg_date,
+      death_date,
+      end_date,
+      na.rm=TRUE
+    ),
 
     # time to last follow up day
-    tte_enddate = tte(vax1_date-1, end_date, end_date),
+    tte_enddate = tte(vax1_date-1, vax1_date+lastfupday20, vax1_date+lastfupday20),
 
     # time to last follow up day or death or deregistration
     tte_censor = tte(vax1_date-1, censor_date, censor_date),
 
-    tte_vaxany2 = tte(vax1_date-1, covid_vax_any_2_date, censor_date),
-    ind_vaxany2 = censor_indicator(covid_vax_any_2_date, censor_date),
-
-    tte_vaxpfizer2 = tte(vax1_date-1, covid_vax_pfizer_2_date, censor_date),
-    tte_vaxaz2 = tte(vax1_date-1, covid_vax_az_2_date, censor_date),
-    tte_vaxmoderna2 = tte(vax1_date-1, covid_vax_moderna_2_date, censor_date),
+    tte_vaxany2 = tte(vax1_date-1, vax2_date, censor_date),
+    ind_vaxany2 = censor_indicator(vax2_date, censor_date),
 
     tte_test =tte(vax1_date-1, covid_test_date, censor_date, na.censor=FALSE),
     ind_test = censor_indicator(covid_test_date, censor_date),

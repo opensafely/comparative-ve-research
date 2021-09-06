@@ -20,8 +20,7 @@ study_dates <- list(
   start_date_az = "2021-01-04",
   start_date_moderna = "2021-03-04",
   lastvax_date = "2021-02-28", #inclusive
-  end_date14 = "2021-04-25", #inclusive
-  end_date20 = "2021-06-06" # inclusive
+  end_date = "2021-06-13" #inclusive
 )
 
 jsonlite::write_json(study_dates, path = here("output", "data", "metadata_study-dates.json"), auto_unbox=TRUE, pretty =TRUE)
@@ -67,10 +66,13 @@ formula_all_rhsvars <- update(1 ~ 1, formula_exposure) %>%
   update(formula_secular) %>%
   update(formula_secular_region)
 
-postvaxcuts <- c(0, 7, 14, 21, 28, 35, 42, 56, 84, 112)
-postvaxcuts_2week <- c(0, 14, 28, 42, 70, 84, 98, 112, 136, 140)
+postvaxcuts12 <- c(0, 7, 14, 21, 28, 35, 42, 70)
+postvaxcuts20 <- c(0, 7, 14, 21, 28, 35, 42, 84, 98, 112, 140)
+postvaxcuts12_2week <- c(0, 14, 28, 42, 70, 84)
+postvaxcuts20_2week <- c(0, 14, 28, 42, 70, 84, 98, 112, 136, 140)
 
-lastfupday <- 14*7
+lastfupday12 <- 12*7
+lastfupday20 <- 20*7
 
 
 list_formula <- lst(
@@ -80,9 +82,12 @@ list_formula <- lst(
   formula_secular,
   formula_secular_region,
   formula_all_rhsvars,
-  postvaxcuts,
-  postvaxcuts_2week,
-  lastfupday
+  postvaxcuts12,
+  postvaxcuts12_2week,
+  postvaxcuts20,
+  postvaxcuts20_2week,
+  lastfupday12,
+  lastfupday20
 )
 
 write_rds(list_formula, here("output", "data", "metadata_formulas.rds"))
@@ -92,7 +97,8 @@ write_rds(list_formula, here("output", "data", "metadata_formulas.rds"))
 var_labels <- list(
   vax1_type ~ "Vaccine type",
   vax1_type_descr ~ "Vaccine type",
-  fu_days ~ "Days of follow-up",
+  fu_days12 ~ "Days of follow-up (up to 12 weeks)",
+  fu_days20 ~ "Days of follow-up (up to 20 weeks)",
   age ~ "Age",
   ageband ~ "Age",
   sex ~ "Sex",
