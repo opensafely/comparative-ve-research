@@ -12,7 +12,19 @@ library('here')
 ## create output directories ----
 fs::dir_create(here("output", "data"))
 
-## Import processed data ----
+# define key dates ----
+
+study_dates <- list(
+  start_date = "2020-12-08",
+  start_date_pfizer = "2020-12-08",
+  start_date_az = "2021-01-04",
+  start_date_moderna = "2021-03-04",
+  lastvax_date = "2021-02-28",
+  end_date14 = "2021-04-25",
+  end_date20 = "2021-04-25"
+)
+
+jsonlite::write_json(study_dates, path = here("output", "data", "metadata_study-dates.json"), auto_unbox=TRUE, pretty =TRUE)
 
 # define different outcomes ----
 
@@ -78,6 +90,7 @@ write_rds(list_formula, here("output", "data", "metadata_formulas.rds"))
 var_labels <- list(
   vax1_type ~ "Vaccine type",
   vax1_type_descr ~ "Vaccine type",
+  fu_days ~ "Days of follow-up",
   age ~ "Age",
   ageband ~ "Age",
   sex ~ "Sex",
@@ -86,7 +99,7 @@ var_labels <- list(
   region ~ "Region",
   rural_urban_group ~ "Rural/urban category",
   stp ~ "STP",
-  vax1_day ~ "Day of vaccination",
+  vax1_day ~ "Vaccination day (from 4 January 2021)",
 
   sev_obesity ~ "Body Mass Index > 40 kg/m^2",
 
@@ -111,3 +124,4 @@ var_labels <- list(
 
 write_rds(var_labels, here("output", "data", "metadata_labels.rds"))
 
+print(rmarkdown::pandoc_version())

@@ -31,12 +31,6 @@ if(length(args)==0){
   removeobs <- TRUE
 }
 
-## import global vars ----
-gbl_vars <- jsonlite::fromJSON(
-  txt="./analysis/global-variables.json"
-)
-#list2env(gbl_vars, globalenv())
-
 ## create output directories ----
 fs::dir_create(here("output", "descriptive", "tables"))
 
@@ -49,14 +43,19 @@ list2env(list_formula, globalenv())
 
 
 ## Import processed data ----
-data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
+data_cohort <- read_rds(here("output", "data", "data_cohort.rds")) %>%
+  mutate(
+    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, covid_vax_any_2_date, na.rm=TRUE),
+    tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
+    fu_days = tte_censor,
+  )
 
 
 ## baseline variables
 tab_summary_baseline <- data_cohort %>%
   select(
     all_of(names(var_labels)),
-    -age, -stp, -vax1_type
+    -age, -stp, -vax1_type,
   ) %>%
   tbl_summary(
     by = vax1_type_descr,

@@ -87,10 +87,13 @@ actions:
     outputs:
       moderately_sensitive:
         metadata: output/data/metadata*
+        dates: analysis/study_dates.json
 
   extract:
     run: cohortextractor:latest generate_cohort --study-definition study_definition
       --output-format feather
+    needs:
+    - design
     outputs:
       highly_sensitive:
         cohort: output/input.feather
@@ -140,16 +143,6 @@ actions:
       moderately_sensitive:
         html: output/descriptive/tables/table1*.html
         csv: output/descriptive/tables/table1*.csv
-
-  descr_table1_allvax:
-    run: r:latest analysis/descriptive/table1_allvax.R
-    needs:
-    - design
-    - data_selection
-    outputs:
-      moderately_sensitive:
-        html: output/descriptive/tables/table1_allvax.html
-        csv: output/descriptive/tables/table1_allvax.csv
 
   descr_irr:
     run: r:latest analysis/descriptive/table_irr.R output/data/data_processed.rds

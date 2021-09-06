@@ -32,13 +32,6 @@ if(length(args)==0){
 }
 
 
-## import global vars ----
-gbl_vars <- jsonlite::fromJSON(
-  txt="./analysis/global-variables.json"
-)
-#list2env(gbl_vars, globalenv())
-
-
 ## import metadata ----
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
@@ -256,6 +249,7 @@ data_by_day <-
   left_join(
     data_cohort %>% transmute(
       patient_id,
+      start_date,
       all = "all",
       sex,
       imd,
@@ -268,7 +262,7 @@ data_by_day <-
   ) %>%
   mutate(
     day = tstop,
-    date = as.Date(gbl_vars$start_date) + day -1,
+    date = as.Date(start_date) + day -1,
     week = lubridate::floor_date(date, unit="week", week_start=2), #week commencing tuesday (since index date is a tuesday)
     #date = week,
 

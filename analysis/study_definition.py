@@ -15,15 +15,15 @@ import codelists
 import json
 
 # import global-variables.json
-with open("./analysis/global-variables.json") as f:
-  gbl_vars = json.load(f)
+with open("./output/data/metadata_study-dates.json") as f:
+  study_dates = json.load(f)
 
-# define variables explicitly
-start_date = gbl_vars["start_date"] # change this in global-variables.json if necessary
-start_date_pfizer = gbl_vars["start_date_pfizer"] # change this in global-variables.json if necessary
-start_date_az = gbl_vars["start_date_az"] # change this in global-variables.json if necessary
-start_date_moderna = gbl_vars["start_date_moderna"] # change this in global-variables.json if necessary
-end_date = gbl_vars["end_date"] # change this in global-variables.json if necessary
+# change these in design.R if necessary
+start_date = study_dates["start_date"] 
+start_date_pfizer = study_dates["start_date_pfizer"]
+start_date_az = study_dates["start_date_az"]
+start_date_moderna = study_dates["start_date_moderna"]
+#end_date = study_dates["end_date"] 
 
 
 from datetime import datetime, timedelta

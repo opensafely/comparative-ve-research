@@ -22,13 +22,6 @@ if(length(args)==0){
   removeobs <- TRUE
 }
 
-## import global vars ----
-gbl_vars <- jsonlite::fromJSON(
-  txt="./analysis/global-variables.json"
-)
-#list2env(gbl_vars, globalenv())
-
-
 ## import metadata ----
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 

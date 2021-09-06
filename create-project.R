@@ -202,13 +202,15 @@ actions_list <- splice(
     name = "design",
     run = "r:latest analysis/process/design.R",
     moderately_sensitive = list(
-      metadata = "output/data/metadata*"
+      metadata = "output/data/metadata*",
+      dates = "analysis/study_dates.json"
     )
   ),
 
   action(
     name = "extract",
     run = "cohortextractor:latest generate_cohort --study-definition study_definition --output-format feather",
+    needs = list("design"),
     highly_sensitive = list(
       cohort = "output/input.feather"
     )
@@ -259,16 +261,6 @@ actions_list <- splice(
     moderately_sensitive = list(
       html = "output/descriptive/tables/table1*.html",
       csv = "output/descriptive/tables/table1*.csv"
-    )
-  ),
-
-  action(
-    name = "descr_table1_allvax",
-    run = "r:latest analysis/descriptive/table1_allvax.R",
-    needs = list("design", "data_selection"),
-    moderately_sensitive = list(
-      html = "output/descriptive/tables/table1_allvax.html",
-      csv = "output/descriptive/tables/table1_allvax.csv"
     )
   ),
 

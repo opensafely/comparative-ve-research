@@ -23,13 +23,13 @@ library('here')
 source(here("analysis", "lib", "utility_functions.R"))
 
 # import globally defined repo variables from
-gbl_vars <- jsonlite::fromJSON(
-  txt="./analysis/global-variables.json"
+study_dates <- jsonlite::read_json(
+  path=here("data","data","metadata_study-dates.json")
 )
 
 ## load A&E diagnosis column names
-diagnosis_codes <- jsonlite::fromJSON(
-  txt="./analysis/lib/diagnosis_groups.json"
+diagnosis_codes <- jsonlite::read_json(
+  path=here("analysis","lib,","diagnosis_groups.json")
 )
 diagnosis_col_names <- paste0("emergency_", names(diagnosis_codes), "_date")
 diagnosis_short <- str_remove(str_remove(diagnosis_col_names, "emergency_"), "_date")
@@ -101,11 +101,11 @@ if(Sys.getenv("OPENSAFELY_BACKEND") %in% c("", "expectations")){
 data_processed <- data_extract %>%
   mutate(
 
-    start_date = as.Date(gbl_vars$start_date), # i.e., this is interpreted later as [midnight at the _end of_ the start date] = [midnight at the _start of_ start date + 1], So that for example deaths on start_date+1 occur at t=1, not t=0.
-    start_date_pfizer = as.Date(gbl_vars$start_date_pfizer),
-    start_date_az = as.Date(gbl_vars$start_date_az),
-    lastvax_date = as.Date(gbl_vars$lastvax_date),
-    end_date = as.Date(gbl_vars$end_date),
+    start_date = as.Date(study_dates$start_date), # i.e., this is interpreted later as [midnight at the _end of_ the start date] = [midnight at the _start of_ start date + 1], So that for example deaths on start_date+1 occur at t=1, not t=0.
+    start_date_pfizer = as.Date(study_dates$start_date_pfizer),
+    start_date_az = as.Date(study_dates$start_date_az),
+    lastvax_date = as.Date(study_dates$lastvax_date),
+    end_date = as.Date(study_dates$end_date),
 
     ageband = cut(
       age,

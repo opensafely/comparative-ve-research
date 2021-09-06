@@ -24,18 +24,9 @@ if(length(args)==0){
 }
 
 
-## import global vars ----
-gbl_vars <- jsonlite::fromJSON(
-  txt="./analysis/global-variables.json"
-)
-#list2env(gbl_vars, globalenv())
-
-
 ## import metadata ----
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
-list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
-list2env(list_formula, globalenv())
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
 
 ## create output directory ----
