@@ -38,32 +38,31 @@ gbl_vars <- jsonlite::fromJSON(
 
 ```
 
-
 # Introduction
 
 The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised clinical trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 vaccine (*ChAdOx1*). To date, there have been no RCTs that have directly compared these two vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same cohort. The concurrent roll-out of BNT162b2 and ChAdOx1 within the same UK population provides an opportunity to emulate such a trial using observational data.
 
-COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease. Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used (`r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")` onwards). This study assessed the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP database covering around 40% of England's population. 
+COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease. Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used (`r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")` onwards). This study assessed the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP database covering around 40% of England's population.
 
-The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research). 
+The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research).
 
 # Methods
 
 ## Study population
 
-Vaccinated HCWs were included in the study if: 
+Vaccinated HCWs were included in the study if:
 
-* registered at a GP practice using TPP's SystmOne clinical information system on the day of they received their first dose of BNT162b2 or ChAdOx1; 
-* the date of vaccination was between `r format(as.Date(gbl_vars$start_date_az), "%d %B")` and `r format(as.Date(gbl_vars$lastvax_date), "%d %B %Y")` (`r as.Date(gbl_vars$lastvax_date) - as.Date(gbl_vars$start_date_az)` days), a period when both vaccines were being administered widely;
-* aged between 18 and 64 inclusive; 
-* not classed as Clinically Extremely Vulnerable, as set out by government guidance, at the time of vaccination; 
-* information on sex, ethnicity, deprivation, and geographical region was known.
+-   registered at a GP practice using TPP's SystmOne clinical information system on the day of they received their first dose of BNT162b2 or ChAdOx1;
+-   the date of vaccination was between `r format(as.Date(gbl_vars$start_date_az), "%d %B")` and `r format(as.Date(gbl_vars$lastvax_date), "%d %B %Y")` (`r as.Date(gbl_vars$lastvax_date) - as.Date(gbl_vars$start_date_az)` days), a period when both vaccines were being administered widely;
+-   aged between 18 and 64 inclusive;
+-   not classed as Clinically Extremely Vulnerable, as set out by government guidance, at the time of vaccination;
+-   information on sex, ethnicity, deprivation, and geographical region was known.
 
-Study participants were followed up for 14 weeks from the date of the first dose, or until the first of: 
+Study participants were followed up for 14 weeks from the date of the first dose, or until the first of:
 
-* death or deregistration;
-* Second vaccine dose;
-* The study end date, `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`.
+-   death or deregistration;
+-   Second vaccine dose;
+-   The study end date, `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`.
 
 ### Identifying vaccinated HCWs
 
@@ -73,37 +72,36 @@ Note -- many of those flagged as HCWs do not have a vaccination record, which sh
 
 ### Outcomes
 
-* SARS-CoV-2 infection, as identified via SGSS records. Both PCR and LFT tests are included.
-* Unplanned COVID-19-related hospitalisation via HES records. ICD-10 codes are used to identify COVID-19-related admissions. 
-* Unplanned COVID-19-related ICU admission via HES records. ICD-10 codes are used to identify COVID-19-related admissions. 
-* COVID-19-related death via death registration records. With COVID-19 ICD-10 codes anywhere on the death certificate (i.e., as an underlying or contributing cause of death)
+-   SARS-CoV-2 infection, as identified via SGSS records. Both PCR and LFT tests are included.
+-   Unplanned COVID-19-related hospitalisation via HES records. ICD-10 codes are used to identify COVID-19-related admissions.
+-   Unplanned COVID-19-related ICU admission via HES records. ICD-10 codes are used to identify COVID-19-related admissions.
+-   COVID-19-related death via death registration records. With COVID-19 ICD-10 codes anywhere on the death certificate (i.e., as an underlying or contributing cause of death)
 
 ## Statistical Analysis
 
-The aim is to estimate comparative vaccine effectiveness, i.e., the relative hazard of each outcome for ChAdOx1 versus BNT162b2 vaccine recipients. The effect is permitted to vary by time since vaccination, to account for the potential differences in vaccine protection over time between the two brands. 
+The aim is to estimate comparative vaccine effectiveness, i.e., the relative hazard of each outcome for ChAdOx1 versus BNT162b2 vaccine recipients. The effect is permitted to vary by time since vaccination, to account for the potential differences in vaccine protection over time between the two brands.
 
-Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, NHS region, clinically “at risk” (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All characteristics are ascertained as at the time of vaccination. 
+Patient characteristics used for adjustment include: age, sex, deprivation, ethnicity, NHS region, clinically "at risk" (but not clinically extremely vulnerable) as per national prioritisation guidelines, asthma, number of previous SARS-CoV-2 tests (via SGSS), rurality, evidence of prior covid infection (positive test or COVID-19 hospitalisation), number of recorded comorbidities, severe mental illness. All characteristics are ascertained as at the time of vaccination.
 
-NHS regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest, for example due to changes in local infection rates. 
+NHS regions are used as a stratification variable to account for geographical variation in event rates for the outcomes of interest, for example due to changes in local infection rates.
 
 ### Time-dependent Cox models
+
 Time-dependent Cox models are used to estimate the time-varying effects for each vaccine type. Time zero is the date of vaccination, i.e., using a treatment time-scale. Outcome events occurring on the same day as vaccination are included in follow-up. Date of vaccination is included as an additional baseline covariate using a restricted cubic spline with knots at the first and second tertile, plus boundary knots. Here, follow-up time is stratified into weekly intervals with the vaccine-specific effect estimated within each time-strata. In `R`'s `coxph` function, this is modelled using `vaccine_type:strata(week_since_first_dose)`.
 
 ### Pooled Logistic Regression models
 
-We emulate the Cox model described above using pooled logistic regression (PLR), with the outcome risk estimated at daily intervals. These models include a restricted cubic spline with 3 degrees of freedom on the log of the timescale (time since vaccination), interacted with vaccine type. The PLR models serve two purposes. Firstly, a continuous-time estimate of comparative effectiveness, as opposed to the piecewise-linear approximation above, is obtained. Secondly, the risk-adjusted survival rates for each vaccine type are obtained using the parametric g-formula. This is the average risk for each day of follow-up predicted by the PLR model, under the (complimentary counterfactual) assumption that every patient received the BNT162b2 vaccine or that every patient received the ChAdOx1 vaccine. 
+We emulate the Cox model described above using pooled logistic regression (PLR), with the outcome risk estimated at daily intervals. These models include a restricted cubic spline with 3 degrees of freedom on the log of the timescale (time since vaccination), interacted with vaccine type. The PLR models serve two purposes. Firstly, a continuous-time estimate of comparative effectiveness, as opposed to the piecewise-linear approximation above, is obtained. Secondly, the risk-adjusted survival rates for each vaccine type are obtained using the parametric g-formula. This is the average risk for each day of follow-up predicted by the PLR model, under the (complimentary counterfactual) assumption that every patient received the BNT162b2 vaccine or that every patient received the ChAdOx1 vaccine.
 
 Confidence intervals for the risk-adjusted survival rates are calculated using the delta method (i.e, a first-order Taylor series approximation of the variance of the cumulative incidence).
 
-The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the outcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the risk-adjusted survival curves. 
-
+The person-time dataset needed to fit the PLR model is large and leads to infeasible RAM requirements / computation time. To deal with this, a sampling strategy is used such that all those who experienced an outcome and a random sample of 50000 who did not experience the outcome are selected for the models. The models are weighted to recover the characteristics of the complete dataset. This weighting is also applied to the risk-adjusted survival curves.
 
 # Results
 
 Note all counts below 6 are redacted and survival estimates are rounded for disclosure control.
 
 ## Flowchart
-
 
 ```{r flowchart, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -133,7 +131,6 @@ flowchart %>%
   
 ```
 
-
 ## Baseline demographics
 
 ```{r table1, echo=FALSE}
@@ -158,9 +155,8 @@ read_rds(here("output", "descriptive", "tables", "table_irr.rds"))
 
 The plots below show:
 
-* *ChAdOx1* versus *BNT162b2* hazard ratio splines
-* Risk-adjusted survival curves for *ChAdOx1* and *BNT162b2*
-
+-   *ChAdOx1* versus *BNT162b2* hazard ratio splines
+-   Risk-adjusted survival curves for *ChAdOx1* and *BNT162b2*
 
 ```{r, curves, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=6, results='asis'}
 
@@ -277,6 +273,11 @@ print(glue("### A&E attendance"), "  \n")
 wrap_plots(plots_spline("emergency"), plots_adjsurv("emergency"), nrow=2)
 
 cat("  \n\n")
+print(glue("### COVID-19 A&E attendance"), "  \n")
+wrap_plots(plots_spline("covidemergency"), plots_adjsurv("covidemergency"), nrow=2)
+
+
+cat("  \n\n")
 print(glue("### Any unplanned hospital admission"), "  \n")
 wrap_plots(plots_spline("admitted"), plots_adjsurv("admitted"), nrow=2)
 
@@ -286,4 +287,3 @@ print(glue("### COVID-19 hospital admission"), "  \n")
 wrap_plots(plots_spline("covidadmitted"), plots_adjsurv("covidadmitted"), nrow=2)
 
 ```
-

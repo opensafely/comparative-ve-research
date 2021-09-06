@@ -15,13 +15,13 @@ fs::dir_create(here("output", "data"))
 # define key dates ----
 
 study_dates <- list(
-  start_date = "2020-12-08",
+  start_date = "2020-12-08", #inclusive
   start_date_pfizer = "2020-12-08",
   start_date_az = "2021-01-04",
   start_date_moderna = "2021-03-04",
-  lastvax_date = "2021-02-28",
-  end_date14 = "2021-04-25",
-  end_date20 = "2021-04-25"
+  lastvax_date = "2021-02-28", #inclusive
+  end_date14 = "2021-04-25", #inclusive
+  end_date20 = "2021-06-06" # inclusive
 )
 
 jsonlite::write_json(study_dates, path = here("output", "data", "metadata_study-dates.json"), auto_unbox=TRUE, pretty =TRUE)
@@ -33,12 +33,14 @@ metadata_outcomes <- tribble(
   "test", "covid_test_date", "SARS-CoV-2 test",
   "postest", "positive_test_date", "Positive SARS-CoV-2 test",
   "emergency", "emergency_date", "A&E attendance",
+  "covidemergency", "emergency_covid_date", "COVID-19 A&E attendance",
   "admitted", "admitted_date", "Unplanned hospitalisation",
   "covidadmitted", "covidadmitted_date", "COVID-19 hospitalisation",
   "covidcc", "covidcc_date", "COVID-19 critical care",
   "coviddeath", "coviddeath_date", "COVID-19 death",
   "noncoviddeath", "noncoviddeath_date", "Non-COVID-19 death",
   "death", "death_date", "Any death",
+  "seconddose", "covid_vax_any_2_date", "Second dose",
 )
 
 write_rds(metadata_outcomes, here("output", "data", "metadata_outcomes.rds"))
@@ -65,8 +67,8 @@ formula_all_rhsvars <- update(1 ~ 1, formula_exposure) %>%
   update(formula_secular) %>%
   update(formula_secular_region)
 
-postvaxcuts <- c(0, 7, 14, 21, 28, 35, 42, 70)
-postvaxcuts_2week <- c(0, 14, 28, 42, 70, 84, 98)
+postvaxcuts <- c(0, 7, 14, 21, 28, 35, 42, 56, 84, 112)
+postvaxcuts_2week <- c(0, 14, 28, 42, 70, 84, 98, 112, 136, 140)
 
 lastfupday <- 14*7
 
@@ -123,5 +125,3 @@ var_labels <- list(
   set_names(., map_chr(., all.vars))
 
 write_rds(var_labels, here("output", "data", "metadata_labels.rds"))
-
-print(rmarkdown::pandoc_version())

@@ -73,6 +73,9 @@ data_tte <- data_cohort %>%
     tte_emergency = tte(vax1_date-1, emergency_date, censor_date, na.censor=TRUE),
     ind_emergency = censor_indicator(emergency_date, censor_date),
 
+    tte_covidemergency = tte(vax1_date-1, emergency_covid_date, censor_date, na.censor=TRUE),
+    ind_covidemergency = censor_indicator(emergency_covid_date, censor_date),
+
     tte_admitted = tte(vax1_date-1, admitted_date, censor_date, na.censor=TRUE),
     ind_admitted = censor_indicator(admitted_date, censor_date),
 
@@ -119,6 +122,7 @@ data_cox_split <- tmerge(
   tstop = tte_censor,
   test = event(tte_test),
   postest = event(tte_postest),
+  covidemergency = event(tte_covidemergency),
   emergency = event(tte_emergency),
   admitted = event(tte_admitted),
   covidadmitted = event(tte_covidadmitted),
@@ -131,6 +135,7 @@ data_cox_split <- tmerge(
   status_test = tdc(tte_test),
   status_postest = tdc(tte_postest),
   status_emergency = tdc(tte_emergency),
+  status_covidemergency = tdc(tte_covidemergency),
   status_admitted = tdc(tte_admitted),
   status_covidadmitted = tdc(tte_covidadmitted),
   status_covidcc = tdc(tte_covidcc),
@@ -248,16 +253,17 @@ data_summary <- local({
   temp1 <- pt_summary(data_cox_split, "test")
   temp2 <- pt_summary(data_cox_split, "postest")
   temp3 <- pt_summary(data_cox_split, "emergency")
-  temp4 <- pt_summary(data_cox_split, "admitted")
-  temp5 <- pt_summary(data_cox_split, "covidadmitted")
-  temp6 <- pt_summary(data_cox_split, "covidcc")
-  temp7 <- pt_summary(data_cox_split, "coviddeath")
-  temp8 <- pt_summary(data_cox_split, "noncoviddeath")
-  temp9 <- pt_summary(data_cox_split, "death")
+  temp4 <- pt_summary(data_cox_split, "covidemergency")
+  temp5 <- pt_summary(data_cox_split, "admitted")
+  temp6 <- pt_summary(data_cox_split, "covidadmitted")
+  temp7 <- pt_summary(data_cox_split, "covidcc")
+  temp8 <- pt_summary(data_cox_split, "coviddeath")
+  temp9 <- pt_summary(data_cox_split, "noncoviddeath")
+  temp10 <- pt_summary(data_cox_split, "death")
   bind_rows(
     temp1, temp2, temp3, temp4,
     temp5, temp6, temp7, temp8,
-    temp9
+    temp9, temp10
   )
 }) %>%
 left_join(
@@ -320,6 +326,7 @@ tab_summary_simple <-
     event %in% c(
       "postest",
       "emergency",
+      "covidemergency",
       "covidadmitted",
       "coviddeath",
       "death"

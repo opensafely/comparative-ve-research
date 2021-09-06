@@ -221,8 +221,7 @@ actions_list <- splice(
     run = "r:latest analysis/process/data_process.R",
     needs = list("extract"),
     highly_sensitive = list(
-      processed = "output/data/data_processed.rds",
-      diagnoses = "output/data/data_diagnoses.rds"
+      processed = "output/data/data_processed.rds"
     )
   ),
 
@@ -315,15 +314,15 @@ actions_list <- splice(
 
   comment("# # # # # # # # # # # # # # # # # # #", "Models", "# # # # # # # # # # # # # # # # # # #"),
 
-  comment("###  SARS-CoV-2 Test"),
-  action_model("test", "timesincevax", "cox"),
-  action_report("test", "timesincevax", "cox"),
-  action_model("test", "calendar", "cox"),
-  action_report("test", "calendar", "cox"),
-  action_model("test", "timesincevax", "plr", 50000),
-  action_report("test", "timesincevax", "plr"),
-  action_model("test", "calendar", "plr", 50000),
-  action_report("test", "calendar", "plr"),
+  # comment("###  SARS-CoV-2 Test"),
+  # action_model("test", "timesincevax", "cox"),
+  # action_report("test", "timesincevax", "cox"),
+  # action_model("test", "calendar", "cox"),
+  # action_report("test", "calendar", "cox"),
+  # action_model("test", "timesincevax", "plr", 50000),
+  # action_report("test", "timesincevax", "plr"),
+  # action_model("test", "calendar", "plr", 50000),
+  # action_report("test", "calendar", "plr"),
 
   comment("###  Positive SARS-CoV-2 Test"),
   action_model("postest", "timesincevax", "cox"),
@@ -344,6 +343,16 @@ actions_list <- splice(
   action_report("emergency", "timesincevax", "plr"),
   action_model("emergency", "calendar", "plr", 50000),
   action_report("emergency", "calendar", "plr"),
+
+  comment("###  COVID-19 A&E attendence"),
+  action_model("covidemergency", "timesincevax", "cox"),
+  action_report("covidemergency", "timesincevax", "cox"),
+  action_model("covidemergency", "calendar", "cox"),
+  action_report("covidemergency", "calendar", "cox"),
+  action_model("covidemergency", "timesincevax", "plr", 50000),
+  action_report("covidemergency", "timesincevax", "plr"),
+  action_model("covidemergency", "calendar", "plr", 50000),
+  action_report("covidemergency", "calendar", "plr"),
 
   comment("### Unplanned Hospital admission"),
   action_model("admitted", "timesincevax", "cox"),
@@ -388,7 +397,7 @@ actions_list <- splice(
       "descr_km", "descr_vaxdate",
       as.list(
         glue(
-             outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
+             outcome = c("postest", "emergency", "covidemergency", "admitted", "covidadmitted"),
              "report_{outcome}_timesincevax_plr"
         )
       )
@@ -411,7 +420,7 @@ actions_list <- splice(
       "descr_km", "descr_vaxdate",
       as.list(
         glue(
-          outcome = c("postest", "emergency", "covidadmitted"),
+          outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
           "report_{outcome}_timesincevax_plr"
         )
       )
@@ -435,7 +444,7 @@ actions_list <- splice(
       as.list(
         glue_data(
           .x = expand_grid(
-            outcome = c("test", "postest", "emergency", "admitted", "covidadmitted"),
+            outcome = c("test", "postest", "emergency", "covidemergency", "admitted", "covidadmitted"),
             modeltype = c("cox", "plr"),
             timescale = c("timesincevax", "calendar")
           ),
