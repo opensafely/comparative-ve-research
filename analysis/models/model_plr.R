@@ -175,6 +175,26 @@ model_names = c(
 
 formula_outcome <- outcome_event ~ 1
 
+## TODO
+# define knots based on event times, not on all follow-up time
+#
+
+nsevents <- function(x, events, df){
+  # this is the same as the `ns` function,
+  # except the knot locations are chosen
+  # based on the event times only, not on all person-time
+  probs <- seq(0,df)/df
+  q <- quantile(x[events==1], probs=probs)
+  ns(x, knots=q[-c(1, df+1)], Boundary.knots = q[c(1, df+1)])
+}
+
+# nsevents(
+#   c(1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10),
+#   c(0,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1),
+#   3
+# )
+# ns(c(1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10), df=3)
+
 # mimicing timescale / stratification in simple cox models
 if(timescale=="calendar"){
   formula_timescale_pw <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
@@ -182,16 +202,16 @@ if(timescale=="calendar"){
   formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az * timesincevax_pw
-  formula_timesincevax_ns <- . ~ . + vax1_az * ns(tstop, 4)
+  formula_timesincevax_ns <- . ~ . + vax1_az * nsevents(tstop, outcome_event, 4)
 
 }
 if(timescale=="timesincevax"){
   formula_timescale_pw <- . ~ . + timesincevax_pw # spline for timescale only
-  formula_timescale_ns <- . ~ . + ns(tstop, 4) # spline for timescale only
+  formula_timescale_ns <- . ~ . + nsevents(tstop, outcome_event, 4) # spline for timescale only
   formula_spacetime <- . ~ . + ns(vax1_day, 4)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az + vax1_az:timesincevax_pw
-  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:ns(tstop, 4)
+  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:nsevents(tstop, outcome_event, 4)
 
 }
 

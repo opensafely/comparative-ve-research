@@ -71,6 +71,16 @@ if(censor_seconddose==1){
 
 formula_outcome <- outcome_event ~ 1
 
+
+nsevents <- function(x, events, df){
+  # this is the same as the `ns` function,
+  # except the knot locations are chosen
+  # based on the event times only, not on all person-time
+  probs <- seq(0,df)/df
+  q <- quantile(x[events==1], probs=probs)
+  ns(x, knots=q[-c(1, df+1)], Boundary.knots = q[c(1, df+1)])
+}
+
 # mimicing timescale / stratification in simple cox models
 if(timescale=="calendar"){
   formula_timescale_pw <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
@@ -78,16 +88,16 @@ if(timescale=="calendar"){
   formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az * timesincevax_pw
-  formula_timesincevax_ns <- . ~ . + vax1_az * ns(tstop, 4)
+  formula_timesincevax_ns <- . ~ . + vax1_az * nsevents(tstop, outcome_event, 4)
 
 }
 if(timescale=="timesincevax"){
   formula_timescale_pw <- . ~ . + timesincevax_pw # spline for timescale only
-  formula_timescale_ns <- . ~ . + ns(tstop, 4) # spline for timescale only
+  formula_timescale_ns <- . ~ . + nsevents(tstop, outcome_event, 4) # spline for timescale only
   formula_spacetime <- . ~ . + ns(vax1_day, 4)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az + vax1_az:timesincevax_pw
-  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:ns(tstop, 4)
+  formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:nsevents(tstop, outcome_event, 4)
 
 }
 
@@ -312,7 +322,6 @@ vcov0 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose
 vcov1 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov1ns.rds")))
 vcov2 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov2ns.rds")))
 vcov3 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov3ns.rds")))
-
 
 get_HRspline <- function(.data, model, vcov, df){
   ## function to get AZ/pfizer hazard ratio spline over time since first dose
