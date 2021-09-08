@@ -263,6 +263,19 @@ actions_list <- splice(
   ),
 
   action(
+    name = "descr_table1_allvax",
+    run = "r:latest analysis/descriptive/table1_allvax.R",
+    needs = list("design", "data_selection"),
+    highly_sensitive = list(
+      rds = "output/descriptive/tables/table1_allvax*.rds"
+    ),
+    moderately_sensitive = list(
+      html = "output/descriptive/tables/table1_allvax*.html",
+      csv = "output/descriptive/tables/table1_allvax*.csv"
+    )
+  ),
+
+  action(
     name = "descr_irr",
     run = "r:latest analysis/descriptive/table_irr.R",
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
