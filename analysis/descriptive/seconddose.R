@@ -54,6 +54,7 @@ data_cohort <- read_rds(here::here("output", "data", "data_cohort.rds")) %>%
 
     vaxpfizer2_date = if_else(vax1_type=="pfizer", vax2_date, as.Date(NA)),
     vaxaz2_date = if_else(vax1_type=="az", vax2_date, as.Date(NA)),
+    vaxmoderna2_date = if_else(vax1_type=="moderna", vax2_date, as.Date(NA)),
 
     # assume vaccination occurs at the start of the day, and all other events occur at the end of the day.
     # so use vax1_date - 1
@@ -71,17 +72,22 @@ data_cohort <- read_rds(here::here("output", "data", "data_cohort.rds")) %>%
 
     tte_vaxaz2 = tte(vax1_date-1, vaxaz2_date, censor_date),
     ind_vaxaz2 = censor_indicator(vaxaz2_date, censor_date),
+
+    tte_vaxmoderna2 = tte(vax1_date-1, vaxmoderna2_date, censor_date),
+    ind_vaxmoderna2 = censor_indicator(vaxmoderna2_date, censor_date),
   )
 
 threshold <- 5
 
 survaz <- survfit(Surv(tte_vaxaz2, ind_vaxaz2) ~ vax1_type_descr, data = data_cohort, conf.type="log-log")
 survpfizer <- survfit(Surv(tte_vaxpfizer2, ind_vaxpfizer2) ~ vax1_type_descr, data = data_cohort, conf.type="log-log")
+survmoderna <- survfit(Surv(tte_vaxmoderna2, ind_vaxmoderna2) ~ vax1_type_descr, data = data_cohort, conf.type="log-log")
 
 survpfizertidy <- broom::tidy(survpfizer) %>% mutate(vax2_type_descr = "BNT162b2")
 survaztidy <- broom::tidy(survaz) %>% mutate(vax2_type_descr = "ChAdOx1")
+survmodernatidy <- broom::tidy(survmoderna) %>% mutate(vax2_type_descr = "Moderna")
 
-survtidy <- bind_rows(survpfizertidy, survaztidy) %>%
+survtidy <- bind_rows(survpfizertidy, survaztidy, survmodernatidy) %>%
   group_by(strata, vax2_type_descr) %>%
   mutate(
     vax1_type_descr = str_remove(strata, fixed("vax1_type_descr=")),
@@ -93,8 +99,8 @@ survtidy <- bind_rows(survpfizertidy, survaztidy) %>%
   ) %>%
   ungroup() %>%
   add_row(
-    vax1_type_descr = rep(unique(.$vax1_type_descr), times=2),
-    vax2_type_descr = rep(unique(.$vax1_type_descr), each=2),
+    vax1_type_descr = rep(unique(.$vax1_type_descr), times=3),
+    vax2_type_descr = rep(unique(.$vax2_type_descr), each=2),
     time=0,
     surv=1,
     surv.ll=1,
@@ -109,15 +115,15 @@ survtidy <- bind_rows(survpfizertidy, survaztidy) %>%
 
 surv_plot <- survtidy %>%
   mutate(
-    vax2_type_descr = paste0("First dose ", vax2_type_descr)
+    vax1_type_descr = paste0("First dose ", vax1_type_descr)
   ) %>%
   ggplot(
-    aes(group=paste(vax1_type_descr, vax2_type_descr), colour=vax1_type_descr, fill=vax1_type_descr)
+    aes(group=paste(vax1_type_descr, vax2_type_descr), colour=vax2_type_descr, fill=vax2_type_descr)
   ) +
   geom_step(aes(x=time, y=1-surv))+
   geom_rect(aes(xmin=time, xmax=leadtime, ymin=1-surv.ll, ymax=1-surv.ul), alpha=0.1, colour="transparent")+
   geom_hline(aes(yintercept=0), colour='black')+
-  facet_wrap(vars(vax2_type_descr), strip.position="top", ncol=1)+
+  facet_wrap(vars(vax1_type_descr), strip.position="top", ncol=1)+
   scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
   scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
   scale_x_continuous(breaks = seq(0,lastfupday,14), expand=expansion(mult=c(0,0.01)))+
