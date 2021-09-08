@@ -179,6 +179,17 @@ actions:
       moderately_sensitive:
         png: output/descriptive/vaxdate/*.png
 
+  descr_seconddose:
+    run: r:latest analysis/descriptive/seconddose.R
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/descriptive/seconddose/*.rds
+      moderately_sensitive:
+        png: output/descriptive/seconddose/*.png
+
   ## # # # # # # # # # # # # # # # # # # # 
   ## Models 
   ## # # # # # # # # # # # # # # # # # # # 

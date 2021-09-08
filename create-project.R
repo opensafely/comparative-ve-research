@@ -302,6 +302,19 @@ actions_list <- splice(
     )
   ),
 
+  action(
+    name = "descr_seconddose",
+    run = "r:latest analysis/descriptive/seconddose.R",
+    needs = list("design", "data_selection"),
+    highly_sensitive = list(
+      rds = "output/descriptive/seconddose/*.rds"
+    ),
+    moderately_sensitive = list(
+      png = "output/descriptive/seconddose/*.png"
+    )
+  ),
+
+
   comment("# # # # # # # # # # # # # # # # # # #", "Models", "# # # # # # # # # # # # # # # # # # #"),
 
   # comment("###  SARS-CoV-2 Test"),
