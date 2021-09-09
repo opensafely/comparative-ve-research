@@ -1249,9 +1249,13 @@ actions:
     - descr_irr
     - descr_km
     - descr_vaxdate
+    - report_postest_timesincevax_0_plr
     - report_postest_timesincevax_1_plr
+    - report_emergency_timesincevax_0_plr
     - report_emergency_timesincevax_1_plr
+    - report_covidemergency_timesincevax_0_plr
     - report_covidemergency_timesincevax_1_plr
+    - report_covidadmitted_timesincevax_0_plr
     - report_covidadmitted_timesincevax_1_plr
     outputs:
       moderately_sensitive:
@@ -1269,9 +1273,13 @@ actions:
     - descr_km
     - descr_vaxdate
     - descr_seconddose
+    - report_postest_timesincevax_0_plr
     - report_postest_timesincevax_1_plr
+    - report_emergency_timesincevax_0_plr
     - report_emergency_timesincevax_1_plr
+    - report_covidemergency_timesincevax_0_plr
     - report_covidemergency_timesincevax_1_plr
+    - report_covidadmitted_timesincevax_0_plr
     - report_covidadmitted_timesincevax_1_plr
     outputs:
       moderately_sensitive:

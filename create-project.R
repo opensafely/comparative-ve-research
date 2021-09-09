@@ -475,9 +475,12 @@ actions_list <- splice(
       "descr_table1", "descr_irr",
       "descr_km", "descr_vaxdate",
       as.list(
-        glue(
-          outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
-          "report_{outcome}_timesincevax_1_plr"
+        glue_data(
+          .x = expand_grid(
+            outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
+            censor_seconddose = c("0", "1")
+          ),
+          "report_{outcome}_timesincevax_{censor_seconddose}_plr"
         )
       )
     ),
@@ -499,9 +502,12 @@ actions_list <- splice(
       "descr_km", "descr_vaxdate",
       "descr_seconddose",
       as.list(
-        glue(
-          outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
-          "report_{outcome}_timesincevax_1_plr"
+        glue_data(
+          .x = expand_grid(
+            outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
+            censor_seconddose = c("0", "1")
+          ),
+          "report_{outcome}_timesincevax_{censor_seconddose}_plr"
         )
       )
     ),
