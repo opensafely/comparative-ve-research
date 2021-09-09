@@ -40,13 +40,13 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
-lastfupdaay <- lastfupday20
+lastfupday <- lastfupday20
 
 ## Import processed data ----
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds")) %>%
   mutate(
-    censor_date12 = pmin(vax1_date - 1 + lastfupday12, end_date, dereg_date, death_date, vax2_date, na.rm=TRUE),
-    censor_date20 = pmin(vax1_date - 1 + lastfupday20, end_date, dereg_date, death_date, vax2_date, na.rm=TRUE),
+    censor_date12 = pmin(vax1_date - 1 + lastfupday12, end_date, dereg_date, death_date, na.rm=TRUE),
+    censor_date20 = pmin(vax1_date - 1 + lastfupday20, end_date, dereg_date, death_date, na.rm=TRUE),
     tte_censor12 = tte(vax1_date-1, censor_date12, censor_date12, na.censor=TRUE),
     tte_censor20 = tte(vax1_date-1, censor_date20, censor_date20, na.censor=TRUE),
     fu_days12 = tte_censor12,
