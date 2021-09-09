@@ -1258,6 +1258,26 @@ actions:
         html: output/report/draft-manuscript.html
         md: output/report/draft-manuscript.md
 
+  rmd_supplement:
+    run: r:latest -e 'rmarkdown::render("analysis/report/draft-supplement.Rmd",  knit_root_dir
+      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
+    needs:
+    - design
+    - data_selection
+    - descr_table1_allvax
+    - descr_irr
+    - descr_km
+    - descr_vaxdate
+    - descr_seconddose
+    - report_postest_timesincevax_1_plr
+    - report_emergency_timesincevax_1_plr
+    - report_covidemergency_timesincevax_1_plr
+    - report_covidadmitted_timesincevax_1_plr
+    outputs:
+      moderately_sensitive:
+        html: output/report/draft-supplement.html
+        md: output/report/draft-supplement.md
+
   rmd_report_timescales:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir
       = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )'
@@ -1268,25 +1288,29 @@ actions:
     - descr_irr
     - descr_km
     - descr_vaxdate
+    - report_postest_timesincevax_0_cox
     - report_postest_timesincevax_1_cox
+    - report_postest_calendar_0_cox
     - report_postest_calendar_1_cox
+    - report_postest_timesincevax_0_plr
     - report_postest_timesincevax_1_plr
+    - report_postest_calendar_0_plr
     - report_postest_calendar_1_plr
-    - report_emergency_timesincevax_1_cox
-    - report_emergency_calendar_1_cox
-    - report_emergency_timesincevax_1_plr
-    - report_emergency_calendar_1_plr
+    - report_covidemergency_timesincevax_0_cox
     - report_covidemergency_timesincevax_1_cox
+    - report_covidemergency_calendar_0_cox
     - report_covidemergency_calendar_1_cox
+    - report_covidemergency_timesincevax_0_plr
     - report_covidemergency_timesincevax_1_plr
+    - report_covidemergency_calendar_0_plr
     - report_covidemergency_calendar_1_plr
-    - report_admitted_timesincevax_1_cox
-    - report_admitted_calendar_1_cox
-    - report_admitted_timesincevax_1_plr
-    - report_admitted_calendar_1_plr
+    - report_covidadmitted_timesincevax_0_cox
     - report_covidadmitted_timesincevax_1_cox
+    - report_covidadmitted_calendar_0_cox
     - report_covidadmitted_calendar_1_cox
+    - report_covidadmitted_timesincevax_0_plr
     - report_covidadmitted_timesincevax_1_plr
+    - report_covidadmitted_calendar_0_plr
     - report_covidadmitted_calendar_1_plr
     outputs:
       moderately_sensitive:

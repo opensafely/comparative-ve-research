@@ -488,6 +488,30 @@ actions_list <- splice(
   ),
 
   action(
+    name = "rmd_supplement",
+    run = glue(
+      "r:latest -e {q}",
+      q = single_quote('rmarkdown::render("analysis/report/draft-supplement.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
+    ),
+    needs = splice(
+      "design", "data_selection",
+      "descr_table1_allvax", "descr_irr",
+      "descr_km", "descr_vaxdate",
+      "descr_seconddose",
+      as.list(
+        glue(
+          outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
+          "report_{outcome}_timesincevax_1_plr"
+        )
+      )
+    ),
+    moderately_sensitive = list(
+      html = "output/report/draft-supplement.html",
+      md = "output/report/draft-supplement.md"
+    )
+  ),
+
+  action(
     name = "rmd_report_timescales",
     run = glue(
       "r:latest -e {q}",
@@ -500,11 +524,12 @@ actions_list <- splice(
       as.list(
         glue_data(
           .x = expand_grid(
-            outcome = c("postest", "emergency", "covidemergency", "admitted", "covidadmitted"),
+            outcome = c("postest", "covidemergency", "covidadmitted"),
             modeltype = c("cox", "plr"),
-            timescale = c("timesincevax", "calendar")
+            timescale = c("timesincevax", "calendar"),
+            censor_seconddose = c("0", "1")
           ),
-          "report_{outcome}_{timescale}_1_{modeltype}"
+          "report_{outcome}_{timescale}_{censor_seconddose}_{modeltype}"
         )
       )
     ),

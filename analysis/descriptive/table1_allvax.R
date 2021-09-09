@@ -57,15 +57,16 @@ data_cohort <- read_rds(here("output", "data", "data_cohort_allvax.rds")) %>%
 ## baseline variables
 tab_summary_baseline <- data_cohort %>%
   select(
-    all_of(names(var_labels)),
+    all_of(names(var_labels)), cev,
     -age, -stp, -vax1_type, -fu_days12, -fu_days20
   ) %>%
   tbl_summary(
     by = vax1_type_descr,
-    label=unname(var_labels[names(.)]),
-    missing = "ifany",
+    label=unname(splice(var_labels, list(cev = cev ~ "Clinically Extremely Vulnerable"))[names(.)]),
+    missing = "ifany"
   )  %>%
   modify_footnote(starts_with("stat_") ~ NA)
+
 
 tab_summary_baseline$inputs$data <- NULL
 
