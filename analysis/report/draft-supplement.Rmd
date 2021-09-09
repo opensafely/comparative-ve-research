@@ -84,6 +84,7 @@ baseline <-
     
     
     postest = sum(postest),
+    covidemergency = sum(covidemergency),
     emergency = sum(emergency),
     admitted = sum(admitted),
     covidadmitted = sum(covidadmitted),
@@ -127,7 +128,7 @@ baseline_pfizer <-
   outcomes <- 
     c(
       "postest",
-      "emergency",
+      "covidemergency",
       "covidadmitted"
     ) %>% 
     set_names(., .)
@@ -333,13 +334,20 @@ patchwork::wrap_plots(plot_cmlinc(1), plot_riskdiff(1), plot_hazard(1), ncol=1)
 patchwork::wrap_plots(plot_cmlinc(2), plot_riskdiff(2), plot_hazard(2), ncol=1)
 ```
 
-#### Supplmentary Figure 2: Second dose interval by vaccine type
+#### Supplmentary Figure 2a: Second dose interval, where second dose vaccine is same as first dose vaccine
 
 Second doses are censored by study end date, de-registration, death, and additionally by outcome-specific events.
 
-```{r seconddose_postest, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
-plot_seconddose_all <- read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_all.rds"))
-plot_seconddose_all
+```{r seconddose_same, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
+read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_samebrand.rds"))
+```
+
+#### Supplmentary Figure 2b: Second dose interval, where second dose vaccine is different than the first dose vaccine
+
+Second doses are censored by study end date, de-registration, death, and additionally by outcome-specific events.
+
+```{r seconddose_diff, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
+read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_diffbrand.rds"))
 ```
 
 #### Supplmentary Table 1: Baseline characteristics before eligibility exclusions

@@ -148,8 +148,8 @@ seconddose <- function(outcome){
     facet_wrap(vars(vax1_type_descr), strip.position="top", ncol=1)+
     scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
     scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
-    scale_x_continuous(breaks = seq(0,lastfupday,14), expand=expansion(mult=c(0,0.01)))+
-    scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
+    scale_x_continuous(breaks = seq(0,lastfupday,14), expand=expansion(mult=c(0)))+
+    scale_y_continuous(limits=c(0,1), expand = expansion(mult=c(0)))+
     coord_cartesian(xlim=c(0, lastfupday) ,ylim=c(0,NA))+
     labs(
       x="Days since vaccination",
@@ -193,30 +193,27 @@ survtidyall <-
   )
 
 
-surv_plot <- survtidyall %>%
-  mutate(
-    vax1_type_descr = paste0("First dose ", vax1_type_descr)
+surv_plot_samebrand <- survtidyall %>%
+  filter(
+    vax1_type_descr == vax2_type_descr
   ) %>%
   ggplot(
-    aes(group=paste(vax1_type_descr, vax2_type_descr), colour=vax2_type_descr, fill=vax2_type_descr)
+    aes(group=vax1_type_descr, colour=vax1_type_descr, fill=vax1_type_descr),
   ) +
+  geom_hline(aes(yintercept=0), colour='black')+
+  geom_hline(aes(yintercept=1), colour='black')+
   geom_step(aes(x=time, y=1-surv))+
   geom_rect(aes(xmin=time, xmax=leadtime, ymin=1-surv.ll, ymax=1-surv.ul), alpha=0.1, colour="transparent")+
-  geom_hline(aes(yintercept=0), colour='black')+
-  facet_grid(
-    rows=vars(outcome_descr),
-    cols=vars(vax1_type_descr),
-    switch="y"
-  )+
+  facet_wrap(vars(outcome_descr), ncol=1)+
   scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
   scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
-  scale_x_continuous(breaks = seq(0,lastfupday,14), expand=expansion(mult=c(0,0.01)))+
-  scale_y_continuous(expand = expansion(mult=c(0,0.01)))+
+  scale_x_continuous(breaks = seq(0,lastfupday,28), expand=expansion(mult=c(0)))+
+  scale_y_continuous(expand = expansion(mult=c(0)), limits=c(0,1))+
   coord_cartesian(xlim=c(0, lastfupday) ,ylim=c(0,NA))+
   labs(
     x="Days since vaccination",
-    y="Proportion with second dose",
-    colour="Second dose",
+    y="Proportion with second dose\n(matching first dose)",
+    colour=NULL,
     title=NULL
   )+
   theme_minimal()+
@@ -225,12 +222,56 @@ surv_plot <- survtidyall %>%
     legend.justification = c(0,1),
     panel.grid.minor.x = element_blank(),
     axis.ticks.x = element_line(colour = 'black'),
-    axis.line.x = element_line(colour = "black"),
-    axis.line.y = element_line(colour = "black"),
-    #strip.placement="outside",
-    strip.text.y = element_text(angle=0)
+    strip.placement="outside",
+    #strip.text.y = element_text(angle=0)
   )
 
 
-write_rds(surv_plot, here("output", "descriptive", "seconddose", glue("plot_seconddose_all.rds")))
-ggsave(surv_plot, filename=glue("plot_seconddose_all.png"), path=here("output", "descriptive", "seconddose"))
+write_rds(surv_plot_samebrand, here("output", "descriptive", "seconddose", glue("plot_seconddose_samebrand.rds")))
+ggsave(surv_plot_samebrand, filename=glue("plot_seconddose_samebrand.png"), path=here("output", "descriptive", "seconddose"))
+
+
+surv_plot_diffbrand <- survtidyall %>%
+  filter(
+    vax1_type_descr!=vax2_type_descr
+  ) %>%
+  mutate(
+    vax1_type_descr = paste("First dose", vax1_type_descr)
+  ) %>%
+  ggplot(
+    aes(group=paste(vax1_type_descr, vax2_type_descr), colour=vax2_type_descr, fill=vax2_type_descr),
+  ) +
+  geom_hline(aes(yintercept=0), colour='black')+
+  geom_step(aes(x=time, y=1-surv))+
+  geom_rect(aes(xmin=time, xmax=leadtime, ymin=1-surv.ll, ymax=1-surv.ul), alpha=0.1, colour="transparent")+
+  facet_grid(
+    rows=vars(outcome_descr),
+    cols=vars(vax1_type_descr),
+    scales="free_y"
+  )+
+  scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+  scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+  scale_x_continuous(breaks = seq(0,lastfupday,28), expand=expansion(mult=c(0)))+
+  scale_y_continuous(expand = expansion(mult=c(0)), limits=c(0,NA))+
+  coord_cartesian(xlim=c(0, lastfupday) ,ylim=c(0,NA))+
+  labs(
+    x="Days since vaccination",
+    y="Proportion with second dose",
+    colour="Second dose",
+    fill=NULL,
+    title=NULL
+  )+
+  theme_minimal()+
+  theme(
+    legend.position = c(0.05,0.95),
+    legend.justification = c(0,1),
+    panel.grid.minor.x = element_blank(),
+    axis.ticks.x = element_line(colour = 'black'),
+    strip.placement="outside",
+    #strip.text.y = element_text(angle=0)
+  )+
+  NULL
+
+
+write_rds(surv_plot_diffbrand, here("output", "descriptive", "seconddose", glue("plot_seconddose_diffbrand.rds")))
+ggsave(surv_plot_diffbrand, filename=glue("plot_seconddose_diffbrand.png"), path=here("output", "descriptive", "seconddose"))
