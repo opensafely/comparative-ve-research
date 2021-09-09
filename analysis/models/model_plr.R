@@ -65,7 +65,6 @@ logoutput <- function(...){
 ## import metadata ----
 
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
-
 outcome_var <- metadata_outcomes$outcome_var[metadata_outcomes$outcome==outcome]
 
 var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
