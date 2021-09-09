@@ -76,7 +76,7 @@ print_plots_km <- function(outcome){
   
 }
 
-print_plots_effects <- function(outcome, modeltype){
+print_plots_effects <- function(outcome, modeltype, censor_seconddose){
 
   suffix <- if(modeltype=="plr"){
     "_pw"
@@ -84,9 +84,9 @@ print_plots_effects <- function(outcome, modeltype){
     ""
   }
   
-  calendar_effects <- read_rds(here("output", "models", outcome, "calendar", glue("report{modeltype}_effects{suffix}.rds"))) %>%
+  calendar_effects <- read_rds(here("output", "models", outcome, "calendar", censor_seconddose, glue("report{modeltype}_effects{suffix}.rds"))) %>%
     mutate(timescale = "Calendar time")
-  timesincevax_effects <- read_rds(here("output", "models", outcome, "timesincevax", glue("report{modeltype}_effects{suffix}.rds"))) %>%
+  timesincevax_effects <- read_rds(here("output", "models", outcome, "timesincevax", censor_seconddose, glue("report{modeltype}_effects{suffix}.rds"))) %>%
     mutate(timescale = "Vaccinated time")
   
   tidy_effects <- bind_rows(calendar_effects, timesincevax_effects)
@@ -99,7 +99,7 @@ print_plots_effects <- function(outcome, modeltype){
     facet_grid(cols=vars(timescale))+
     scale_x_continuous(
       breaks = seq(0, 7*52, 14), 
-      limits = c(min(tidy_effects$term_left), 14*7), 
+      limits = c(min(tidy_effects$term_left), 20*7), 
       expand = c(0, 0)
     )+
     scale_y_log10(
@@ -140,11 +140,11 @@ print_plots_effects <- function(outcome, modeltype){
 
 
 
-print_plots_spline <- function(outcome){
+print_plots_spline <- function(outcome, censor_seconddose){
 
-  calendar_effects <- read_rds(here("output", "models", outcome, "calendar", glue("reportplr_effects_ns.rds"))) %>%
+  calendar_effects <- read_rds(here("output", "models", outcome, "calendar", censor_seconddose, glue("reportplr_effects_ns.rds"))) %>%
     mutate(timescale = "Calendar time")
-  timesincevax_effects <- read_rds(here("output", "models", outcome, "timesincevax", glue("reportplr_effects_ns.rds"))) %>%
+  timesincevax_effects <- read_rds(here("output", "models", outcome, "timesincevax", censor_seconddose, glue("reportplr_effects_ns.rds"))) %>%
     mutate(timescale = "Vaccinated time")
   
   spline <- bind_rows(calendar_effects, timesincevax_effects)
@@ -196,19 +196,19 @@ print_plots_spline <- function(outcome){
 }
 
 
-print_plots_adjsurv <- function(outcome){
+print_plots_adjsurv <- function(outcome, censor_seconddose){
 
-  calendar_curve <- read_rds(here("output", "models", outcome, "calendar", glue("reportplr_adjustedsurvival_ns.rds"))) %>%
+  calendar_curve <- read_rds(here("output", "models", outcome, "calendar", censor_seconddose, glue("reportplr_adjustedsurvival_ns.rds"))) %>%
     mutate(timescale = "Calendar time")
-  timesincevax_curve <- read_rds(here("output", "models", outcome, "timesincevax", glue("reportplr_adjustedsurvival_ns.rds"))) %>%
+  timesincevax_curve <- read_rds(here("output", "models", outcome, "timesincevax", censor_seconddose, glue("reportplr_adjustedsurvival_ns.rds"))) %>%
     mutate(timescale = "Vaccinated time")
   
   curves <- bind_rows(calendar_curve, timesincevax_curve)
   
   plot_cmlinc <-
     ggplot(curves %>% filter(model=="3"))+
-    geom_step(aes(x=tstop, y=survival, group=vax1_az_descr, colour=vax1_az_descr))+
-    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=survival.ll, ymax=survival.ul, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
+    geom_step(aes(x=tstop, y=1-survival, group=vax1_az_descr, colour=vax1_az_descr))+
+    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=1-survival.ll, ymax=1-survival.ul, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
     facet_grid(cols=vars(timescale))+
     scale_x_continuous(
       breaks = seq(0,7*52,by=14),
@@ -226,8 +226,8 @@ print_plots_adjsurv <- function(outcome){
     )+
     theme_bw()+
     theme(
-      legend.position=c(0.05,.95),
-      legend.justification = c(0,1),
+      legend.position=c(0.95,.05),
+      legend.justification = c(1,0),
       axis.text.x.top=element_text(hjust=0),
       
       panel.border = element_blank(),
@@ -250,53 +250,130 @@ print_plots_adjsurv <- function(outcome){
 }
 
 
-cat("  \n\n")
-print(glue("### SARS-CoV-2 test"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("test")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("test", "cox")
-print(glue("#### PLR, piecewise"), "  \n")
-print_plots_effects("test", "plr")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("test")
-print_plots_adjsurv("test")
+
+print_plots_diff <- function(outcome, censor_seconddose){
+  calendar_curve <- read_rds(here("output", "models", outcome, "calendar", censor_seconddose, glue("reportplr_adjusteddiff_ns.rds"))) %>%
+    mutate(timescale = "Calendar time")
+  timesincevax_curve <- read_rds(here("output", "models", outcome, "timesincevax", censor_seconddose, glue("reportplr_adjusteddiff_ns.rds"))) %>%
+    mutate(timescale = "Vaccinated time")
+  
+  curves <- bind_rows(calendar_curve, timesincevax_curve)
+  
+  plot_diff <-
+    ggplot(curves)+
+    geom_hline(aes(yintercept=0, colour=model_name))+
+    geom_step(aes(x=tstop, y=diff, colour=model_name))+
+    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll, ymax=diff.ul, fill=model_name), alpha=0.1, colour="transparent")+
+    facet_grid(cols=vars(timescale))+
+    scale_x_continuous(
+      limits = c(0, NA),
+      breaks = seq(0,7*52,by=14),
+      expand = expansion(0)
+    )+
+    scale_y_continuous(
+      expand = expansion(0),
+      sec.axis = dup_axis(name="Lower risk after \n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
+    )+
+    #coord_cartesian(ylim= c(-5, 5))+
+    scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+    scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+    labs(
+      x=NULL,
+      y="Difference\nin cumulative incidence",
+      colour=NULL,
+      fill=NULL
+    )+
+    theme_bw()+
+    theme(
+      panel.border = element_blank(),
+      axis.line.y.left = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+
+      panel.spacing = unit(0.8, "lines"),
+
+      plot.title = element_text(hjust = 0),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0, face= "italic"),
+      
+
+     ) +
+   NULL
+
+  
+  print(plot_diff)
+  cat("  \n\n")
+}
+
+
+# cat("  \n\n")
+# print(glue("### SARS-CoV-2 test"), "  \n")
+# print(glue("#### Unadjusted"), "  \n")
+# print_plots_km("test")
+# print(glue("#### Cox"), "  \n")
+# print_plots_effects("test", "cox", "0")
+# print(glue("#### PLR, piecewise"), "  \n")
+# print_plots_effects("test", "plr", "0")
+# print(glue("#### PLR, spline"), "  \n")
+# print_plots_spline("test", "0")
+# print_plots_adjsurv("test", "0")
+# print_plots_diff("test", "0")
 
 cat("  \n\n")
 print(glue("### SARS-CoV-2 positive test"), "  \n")
 print(glue("#### Unadjusted"), "  \n")
 print_plots_km("postest")
 print(glue("#### Cox"), "  \n")
-print_plots_effects("postest", "cox")
+print_plots_effects("postest", "cox", "0")
 print(glue("#### PLR, piecewise"), "  \n")
-print_plots_effects("postest", "plr")
+print_plots_effects("postest", "plr", "0")
 print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("postest")
-print_plots_adjsurv("postest")
+print_plots_spline("postest", "0")
+print_plots_adjsurv("postest", "0")
+print_plots_diff("postest", "0")
+
+# cat("  \n\n")
+# print(glue("### A&E attendance"), "  \n")
+# print(glue("#### Unadjusted"), "  \n")
+# print_plots_km("emergency")
+# print(glue("#### Cox"), "  \n")
+# print_plots_effects("emergency", "cox", "0")
+# print(glue("#### PLR, piecewise"), "  \n")
+# print_plots_effects("emergency", "plr", "0")
+# print(glue("#### PLR, spline"), "  \n")
+# print_plots_spline("emergency", "0")
+# print_plots_adjsurv("emergency", "0")
+# print_plots_diff("postest", "0")
 
 cat("  \n\n")
-print(glue("### A&E attendance"), "  \n")
+print(glue("### COVID-19 A&E attendance"), "  \n")
 print(glue("#### Unadjusted"), "  \n")
-print_plots_km("emergency")
+print_plots_km("covidemergency")
 print(glue("#### Cox"), "  \n")
-print_plots_effects("emergency", "cox")
+print_plots_effects("covidemergency", "cox", "0")
 print(glue("#### PLR, piecewise"), "  \n")
-print_plots_effects("emergency", "plr")
+print_plots_effects("covidemergency", "plr", "0")
 print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("emergency")
-print_plots_adjsurv("emergency")
+print_plots_spline("covidemergency", "0")
+print_plots_adjsurv("covidemergency", "0")
+print_plots_diff("covidemergency", "0")
 
-cat("  \n\n")
-print(glue("### Any unplanned hospital admission"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("admitted")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("admitted", "cox")
-print(glue("#### PLR, piecewise"), "  \n")
-print_plots_effects("admitted", "plr")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("admitted")
-print_plots_adjsurv("admitted")
+# cat("  \n\n")
+# print(glue("### Any unplanned hospital admission"), "  \n")
+# print(glue("#### Unadjusted"), "  \n")
+# print_plots_km("admitted")
+# print(glue("#### Cox"), "  \n")
+# print_plots_effects("admitted", "cox", "0")
+# print(glue("#### PLR, piecewise"), "  \n")
+# print_plots_effects("admitted", "plr", "0")
+# print(glue("#### PLR, spline"), "  \n")
+# print_plots_spline("admitted", "0")
+# print_plots_adjsurv("admitted", "0")
+# print_plots_diff("admitted", "0")
 
 
 cat("  \n\n")
@@ -304,11 +381,12 @@ print(glue("### COVID-19 hospital admission"), "  \n")
 print(glue("#### Unadjusted"), "  \n")
 print_plots_km("covidadmitted")
 print(glue("#### Cox"), "  \n")
-print_plots_effects("covidadmitted", "cox")
+print_plots_effects("covidadmitted", "cox", "0")
 print(glue("#### PLR, piecewise"), "  \n")
-print_plots_effects("covidadmitted", "plr")
+print_plots_effects("covidadmitted", "plr", "0")
 print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("covidadmitted")
-print_plots_adjsurv("covidadmitted")
+print_plots_spline("covidadmitted", "0")
+print_plots_adjsurv("covidadmitted", "0")
+print_plots_diff("covidadmitted", "0")
 
 ```
