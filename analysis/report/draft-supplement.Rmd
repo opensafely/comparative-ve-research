@@ -338,7 +338,7 @@ patchwork::wrap_plots(plot_cmlinc(2), plot_riskdiff(2), plot_hazard(2), ncol=1)
 Second doses are censored by study end date, de-registration, death, and additionally by outcome-specific events.
 
 ```{r seconddose_postest, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
-plot_seconddose_all <- read_rds(here("output", "descriptive", "secondose", "plot_seconddose_all.rds"))
+plot_seconddose_all <- read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_all.rds"))
 plot_seconddose_all
 ```
 

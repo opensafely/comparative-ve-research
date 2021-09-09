@@ -231,7 +231,6 @@ surv_plot <- survtidyall %>%
     strip.text.y = element_text(angle=0)
   )
 
-surv_plot
 
 write_rds(surv_plot, here("output", "descriptive", "seconddose", glue("plot_seconddose_all.rds")))
 ggsave(surv_plot, filename=glue("plot_seconddose_all.png"), path=here("output", "descriptive", "seconddose"))
