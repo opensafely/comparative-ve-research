@@ -197,7 +197,7 @@ baseline_pfizer <-
   hazard <-
     map_dfr(
       outcomes,
-      ~read_rds(here("output", "models", .x, "timesincevax", glue("reportplr_effects_ns.rds"))),
+      ~read_rds(here("output", "models", .x, "timesincevax", "0", glue("reportplr_effects_ns.rds"))),
       .id="outcome"
     ) %>%
     left_join(metadata_outcomes, by="outcome") %>%
