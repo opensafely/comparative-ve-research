@@ -1278,8 +1278,8 @@ actions:
         html: output/report/draft-supplement.html
         md: output/report/draft-supplement.md
 
-  rmd_report_timescales:
-    run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir
+  rmd_report_models:
+    run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparemodels.Rmd",  knit_root_dir
       = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )'
     needs:
     - design
@@ -1314,7 +1314,7 @@ actions:
     - report_covidadmitted_calendar_1_plr
     outputs:
       moderately_sensitive:
-        html: output/report/effectiveness_report_comparetimescales.html
-        md: output/report/effectiveness_report_comparetimescales.md
+        html: output/report/effectiveness_report_comparemodels.html
+        md: output/report/effectiveness_report_comparemodels.md
         figures: output/report/figures_timescales/*.png
 

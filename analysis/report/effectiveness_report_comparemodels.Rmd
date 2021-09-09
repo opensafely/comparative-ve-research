@@ -93,10 +93,10 @@ print_plots_effects <- function(outcome, modeltype, censor_seconddose){
   
   plot_effects <-
     ggplot(data = tidy_effects) +
-    geom_point(aes(y=exp(estimate), x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
-    geom_linerange(aes(ymin=exp(conf.low), ymax=exp(conf.high), x=term_midpoint, colour=model_name), position = position_dodge(width = 1.8))+
+    geom_point(aes(y=exp(estimate), x=term_midpoint), position = position_dodge(width = 1.8))+
+    geom_linerange(aes(ymin=exp(conf.low), ymax=exp(conf.high), x=term_midpoint), position = position_dodge(width = 1.8))+
     geom_hline(aes(yintercept=1), colour='grey')+
-    facet_grid(cols=vars(timescale))+
+    facet_grid(rows=vars(timescale), cols=vars(model_name))+
     scale_x_continuous(
       breaks = seq(0, 7*52, 14), 
       limits = c(min(tidy_effects$term_left), 20*7), 
@@ -106,7 +106,6 @@ print_plots_effects <- function(outcome, modeltype, censor_seconddose){
     breaks=c(0.125, 0.167, 0.25, 0.333, 0.5, 0.667, 1, 1.5, 2, 3, 4, 6, 8),
     sec.axis = dup_axis(name="favours\n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
   )+
-    scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=2))+
     labs(
       y="Hazard ratio",#\nChAdOx1 / BNT162b2",
       x="Days since vaccination",
@@ -152,9 +151,9 @@ print_plots_spline <- function(outcome, censor_seconddose){
   plot_spline <-
     ggplot(spline)+
     geom_hline(aes(yintercept=1), colour='grey')+
-    geom_line(aes(x=tstop-1, y=hr, colour=model_name))+
-    geom_ribbon(aes(x=tstop-1, ymin=hr.ll, ymax=hr.ul, fill=model_name), alpha=0.2, colour="transparent")+
-    facet_grid(cols=vars(timescale))+
+    geom_line(aes(x=tstop-1, y=hr))+
+    geom_ribbon(aes(x=tstop-1, ymin=hr.ll, ymax=hr.ul), alpha=0.2, colour="transparent")+
+    facet_grid(rows=vars(timescale), cols=vars(model_name))+
     scale_x_continuous(
       breaks = seq(0,7*52,by=14),
       expand = expansion(0)
@@ -163,8 +162,6 @@ print_plots_spline <- function(outcome, censor_seconddose){
       breaks=c(0.125, 0.167, 0.25, 0.333, 0.5, 0.667, 1, 1.5, 2, 3, 4, 6, 8),
       sec.axis = dup_axis(name="favours\n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
     )+
-    scale_colour_brewer(type="qual", palette="Set2", guide=guide_legend(ncol=1))+
-    scale_fill_brewer(type="qual", palette="Set2", guide="none")+
     labs(
       x = "Days since first dose",
       y = "Hazard ratio",
@@ -209,7 +206,7 @@ print_plots_adjsurv <- function(outcome, censor_seconddose){
     ggplot(curves %>% filter(model=="3"))+
     geom_step(aes(x=tstop, y=1-survival, group=vax1_az_descr, colour=vax1_az_descr))+
     geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=1-survival.ll, ymax=1-survival.ul, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
-    facet_grid(cols=vars(timescale))+
+    facet_grid(rows=vars(timescale), cols=vars(model_name))+
     scale_x_continuous(
       breaks = seq(0,7*52,by=14),
       expand = expansion(0)
@@ -261,10 +258,10 @@ print_plots_diff <- function(outcome, censor_seconddose){
   
   plot_diff <-
     ggplot(curves)+
-    geom_hline(aes(yintercept=0, colour=model_name))+
-    geom_step(aes(x=tstop, y=diff, colour=model_name))+
-    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll, ymax=diff.ul, fill=model_name), alpha=0.1, colour="transparent")+
-    facet_grid(cols=vars(timescale))+
+    geom_hline(aes(yintercept=0))+
+    geom_step(aes(x=tstop, y=diff))+
+    geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll, ymax=diff.ul), alpha=0.1, colour="transparent")+
+    facet_grid(rows=vars(timescale), cols=vars(model_name))+
     scale_x_continuous(
       limits = c(0, NA),
       breaks = seq(0,7*52,by=14),
@@ -274,14 +271,9 @@ print_plots_diff <- function(outcome, censor_seconddose){
       expand = expansion(0),
       sec.axis = dup_axis(name="Lower risk after \n <- BNT162b2 / ChAdOx1 ->", breaks = NULL)
     )+
-    #coord_cartesian(ylim= c(-5, 5))+
-    scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
-    scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
     labs(
       x=NULL,
-      y="Difference\nin cumulative incidence",
-      colour=NULL,
-      fill=NULL
+      y="Difference\nin cumulative incidence"
     )+
     theme_bw()+
     theme(
@@ -299,7 +291,7 @@ print_plots_diff <- function(outcome, censor_seconddose){
       plot.title.position = "plot",
       plot.caption.position = "plot",
       plot.caption = element_text(hjust = 0, face= "italic"),
-      
+      legend.position = "bottom"
 
      ) +
    NULL
@@ -350,17 +342,17 @@ print_plots_diff("postest", "0")
 # print_plots_diff("postest", "0")
 
 cat("  \n\n")
-print(glue("### COVID-19 A&E attendance"), "  \n")
-print(glue("#### Unadjusted"), "  \n")
-print_plots_km("covidemergency")
-print(glue("#### Cox"), "  \n")
-print_plots_effects("covidemergency", "cox", "0")
-print(glue("#### PLR, piecewise"), "  \n")
-print_plots_effects("covidemergency", "plr", "0")
-print(glue("#### PLR, spline"), "  \n")
-print_plots_spline("covidemergency", "0")
-print_plots_adjsurv("covidemergency", "0")
-print_plots_diff("covidemergency", "0")
+# print(glue("### COVID-19 A&E attendance"), "  \n")
+# print(glue("#### Unadjusted"), "  \n")
+# print_plots_km("covidemergency")
+# print(glue("#### Cox"), "  \n")
+# print_plots_effects("covidemergency", "cox", "0")
+# print(glue("#### PLR, piecewise"), "  \n")
+# print_plots_effects("covidemergency", "plr", "0")
+# print(glue("#### PLR, spline"), "  \n")
+# print_plots_spline("covidemergency", "0")
+# print_plots_adjsurv("covidemergency", "0")
+# print_plots_diff("covidemergency", "0")
 
 # cat("  \n\n")
 # print(glue("### Any unplanned hospital admission"), "  \n")

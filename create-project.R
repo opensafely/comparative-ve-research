@@ -512,10 +512,10 @@ actions_list <- splice(
   ),
 
   action(
-    name = "rmd_report_timescales",
+    name = "rmd_report_models",
     run = glue(
       "r:latest -e {q}",
-      q = single_quote('rmarkdown::render("analysis/report/effectiveness_report_comparetimescales.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )')
+      q = single_quote('rmarkdown::render("analysis/report/effectiveness_report_comparemodels.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )')
     ),
     needs = splice(
       "design", "data_selection",
@@ -534,8 +534,8 @@ actions_list <- splice(
       )
     ),
     moderately_sensitive = list(
-      html = "output/report/effectiveness_report_comparetimescales.html",
-      md = "output/report/effectiveness_report_comparetimescales.md",
+      html = "output/report/effectiveness_report_comparemodels.html",
+      md = "output/report/effectiveness_report_comparemodels.md",
       figures = "output/report/figures_timescales/*.png"
     )
   )
