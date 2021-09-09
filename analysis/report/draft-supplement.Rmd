@@ -150,13 +150,13 @@ baseline_pfizer <-
     
     cmlinc %>%
       filter(model == modell) %>%
-      ggplot(cmlinc)+
+      ggplot()+
       geom_step(aes(x=tstop, y=(1-survival)*1000, group=vax1_az_descr, colour=vax1_az_descr))+
       geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=(1-survival.ll)*1000, ymax=(1-survival.ul)*1000, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
       geom_hline(aes(yintercept=0), colour='black')+
       facet_grid(cols=vars(outcome_descr))+
       scale_x_continuous(
-        breaks = seq(0,7*52,by=14),
+        breaks = seq(0,7*52,by=28),
         expand = expansion(0)
       )+
       scale_y_continuous(
@@ -221,7 +221,7 @@ baseline_pfizer <-
       facet_grid(cols=vars(outcome_descr))+
       scale_x_continuous(
         limits = c(0, NA),
-        breaks = seq(0,7*52,by=14),
+        breaks = seq(0,7*52,by=28),
         expand = expansion(0)
       )+
       scale_y_log10(
@@ -276,14 +276,14 @@ baseline_pfizer <-
     modell <- model
     riskdiff %>%
       filter(model==modell) %>%
-      ggplot(riskdiff)+
+      ggplot()+
       geom_hline(aes(yintercept=0), colour='black')+
       geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
       geom_rect(aes(xmin=lag(tstop, 1, 0), xmax=tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
       facet_grid(cols=vars(outcome_descr))+
       scale_x_continuous(
         limits = c(0, NA),
-        breaks = seq(0,7*52,by=14),
+        breaks = seq(0,7*52,by=28),
         expand = expansion(0)
       )+
       scale_y_continuous(
