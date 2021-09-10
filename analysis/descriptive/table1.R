@@ -58,7 +58,7 @@ data_cohort <- read_rds(here("output", "data", "data_cohort.rds")) %>%
 tab_summary_baseline <- data_cohort %>%
   select(
     all_of(names(var_labels)),
-    -age, -stp, -vax1_type,
+    -age, -stp, -vax1_type, -fu_days12, -fu_days20
   ) %>%
   tbl_summary(
     by = vax1_type_descr,

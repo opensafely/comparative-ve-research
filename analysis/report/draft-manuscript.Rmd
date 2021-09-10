@@ -108,8 +108,9 @@ Data management and analyses were conducted in Python 3.8 and R version 4.0.2. A
 data_cohort <- 
   data_cohort %>%
   mutate(
-    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, vax2_date, na.rm=TRUE),
+    censor_date = pmin(vax1_date - 1 + lastfupday, end_date, dereg_date, death_date, na.rm=TRUE),
     tte_censor = tte(vax1_date-1, censor_date, censor_date, na.censor=TRUE),
+    tte_seconddose = tte(vax1_date-1, vax2_date-1, censor_date, na.censor=TRUE),
 
     postest = censor_indicator(positive_test_date, censor_date),
     emergency = censor_indicator(emergency_date, censor_date),
@@ -119,6 +120,8 @@ data_cohort <-
     covidcc = censor_indicator(covidcc_date, censor_date),
     coviddeath = censor_indicator(coviddeath_date, censor_date),
     death = censor_indicator(death_date, censor_date),
+    
+    seconddose = censor_indicator(vax2_date-1, censor_date)
   ) 
 
 baseline <- 
@@ -132,8 +135,7 @@ baseline <-
     fu_years = sum(tte_censor)/365.25,
     fu_median = median(tte_censor),
     priorinfection = mean(prior_covid_infection),
-    
-    
+    seconddose_12week = mean(replace_na(tte_seconddose<=12*7, FALSE)),
     
     postest = sum(postest),
     covidemergency = sum(covidemergency),
@@ -142,6 +144,7 @@ baseline <-
     covidadmitted = sum(covidadmitted),
     coviddeath = sum(coviddeath),
     death = sum(death),
+    seconddose = sum(seconddose),
   )
 
 baseline_az <- 
@@ -156,7 +159,9 @@ baseline_az <-
     fu_years = sum(tte_censor)/365.25,
     fu_median = median(tte_censor),
     priorinfection = mean(prior_covid_infection),
-    median_vaxday = first(start_date_az) + floor(median(vax1_day)) -1
+    median_vaxday = first(start_date_az) + floor(median(vax1_day)) -1,
+    seconddose_12week = mean(replace_na(tte_seconddose<=12*7, FALSE)),
+    
   )
 
 baseline_pfizer <- 
@@ -171,7 +176,8 @@ baseline_pfizer <-
     fu_years = sum(tte_censor)/365.25,
     fu_median = median(tte_censor),
     priorinfection = mean(prior_covid_infection),
-    median_vaxday = first(start_date_az) + floor(median(vax1_day)) - 1
+    median_vaxday = first(start_date_az) + floor(median(vax1_day)) - 1,
+    seconddose_12week = mean(replace_na(tte_seconddose<=12*7, FALSE)),
   )
 ```
 
@@ -224,6 +230,8 @@ read_rds(here("output", "descriptive", "tables", "table1.rds"))
 ## Event rates
 
 Over the duration of `r label_number(1, big.mark=",")(baseline$fu_years)` person-years of follow-up there were `r baseline$postest` positive SARS-CoV-2 tests, `r label_number(1, big.mar=",")(baseline$covidemergency)` COVID-19 A&E attendances, `r label_number(1, big.mar=",")(baseline$covidadmitted)` COVID-19 hospital admissions, and `r if_else(baseline$coviddeath<6, "<6", label_number(1)(baseline$coviddeath))` COVID-19 deaths (Table 2).
+
+At 12 weeks, `r label_percent(0.1)(baseline_pfizer$seconddose_12week)` of BNT162b2 recipients had received a second dose, compared with `r label_percent(0.1)(baseline_az$seconddose_12week)` of ChAdOx1 recipients.
 
 #### Table 2: Event rates
 
@@ -466,7 +474,7 @@ patchwork::wrap_plots(plot_cmlinc, plot_riskdiff, plot_hazard, ncol=1)
 
 # Discussion
 
-This observational study of almost 1/3 million health and social care workers living in England found no significant differences in the incidence of COVID-19-related events between those receiving BNT162b2 or ChAdOx1 at 6 weeks. There is a clear leveling-off of the incidence of positive tests after around 3 weeks, consistent with the expected time-to-onset of vaccine-induced immunity of around 2 weeks plus the delay from infection to a positive test. After
+This observational study of almost 1/3 million health and social care workers living in England found no significant differences in the incidence of COVID-19-related events between those receiving BNT162b2 or ChAdOx1 at 6 weeks. There is a clear leveling-off of the incidence of positive tests after around 3-4 weeks, consistent with the expected time-to-onset of vaccine-induced immunity of around 2 weeks plus the delay from infection to a positive test.
 
 ## Strengths and weaknesses
 
@@ -475,6 +483,8 @@ We used routinely-collected health records with comprehensive coverage of primar
 We were unable to fully investigate differences in protection against severe disease, in large part thanks to clear protective benefits of both vaccines, reducing the absolute numbers of events, and therefore statistical power, in the studied cohort.
 
 Despite reasonable balance of vaccine allocation across baseline characteristics and adjustment for a range of potential confounders, the possibility of unmeasured confounding remains. The cold-chain storage requirements of BNT162b2 meant that it is more likely to have be administered in Acute NHS Trusts and other large vaccination centres, and is thus a potential confounder for instance due to differences in viral exposure across these settings. Though we adjusted for region, rurality, and deprivation, we were unable to directly account for occupational differences that may affect both exposure risk and vaccine type.
+
+Second-dose effects were considered using an intention-to-treat approach, which does not account for potential differences in treatment adherence between vaccine types. However, we found that by 12 weeks more BNT162b2 recipients had received a second dose than ChAdOx1 recipients, which would bias effect estimates in favour of BNT162b2 assuming higher protection after a second-dose of either vaccine. Either way, there was insufficient power to reliably estimate comparative second-dose effects as event incidence at 12 weeks and beyond was low for both vaccines, with fewer than 10 positive tests per 1000-person-years, and far fewer for COVID-19 A&E attendances and hospital admissions during this period. The need for many thousands of second-dose person-years to detect differences in second-dose effects is encouraging to the extent that it suggests extremely high protective effects for both vaccines, though the fact that background case rates in England were declining over the duration of the study period should not be ignored <!-- covid dashboard -->. We also cannot rule-out potential waning effects, which we did not study.
 
 The dominant circulating variant during the period of study was the Alpha variant, which has since been supplanted by other strains, in particular the Delta variant which we did not consider here.
 

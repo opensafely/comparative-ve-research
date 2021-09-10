@@ -96,6 +96,9 @@ data_tte <- data_cohort %>%
     tte_death = tte(vax1_date-1, death_date, censor_date, na.censor=TRUE),
     ind_death = censor_indicator(death_date, censor_date),
 
+    tte_seconddose = tte(vax1_date-1, vax2_date-1, censor_date, na.censor=TRUE),
+    ind_seconddose = censor_indicator(vax2_date-1, censor_date),
+
   ) %>%
   filter(
     # TDOD remove once study def rerun with new dereg date
@@ -132,6 +135,7 @@ data_cox_split <- tmerge(
   coviddeath = event(tte_coviddeath),
   noncoviddeath = event(tte_noncoviddeath),
   death = event(tte_death),
+  seconddose = event(tte_seconddose),
 
 
   status_test = tdc(tte_test),
@@ -143,7 +147,8 @@ data_cox_split <- tmerge(
   status_covidcc = tdc(tte_covidcc),
   status_coviddeath = tdc(tte_coviddeath),
   status_noncoviddeath = tdc(tte_noncoviddeath),
-  status_death = tdc(tte_death)
+  status_death = tdc(tte_death),
+  status_seconddose = tdc(tte_seconddose),
 
 ) %>%
   tmerge( # create treatment timescale variables
@@ -262,10 +267,11 @@ data_summary <- local({
   temp8 <- pt_summary(data_cox_split, "coviddeath")
   temp9 <- pt_summary(data_cox_split, "noncoviddeath")
   temp10 <- pt_summary(data_cox_split, "death")
+  temp11 <- pt_summary(data_cox_split, "seconddose")
   bind_rows(
     temp1, temp2, temp3, temp4,
     temp5, temp6, temp7, temp8,
-    temp9, temp10
+    temp9, temp10, temp11
   )
 }) %>%
 left_join(
@@ -327,11 +333,11 @@ tab_summary_simple <-
   filter(
     event %in% c(
       "postest",
-      "emergency",
       "covidemergency",
       "covidadmitted",
       "coviddeath",
-      "death"
+      "death",
+      "seconddose"
     )
   ) %>%
   transmute(
