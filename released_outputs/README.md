@@ -269,8 +269,10 @@
   * output/report
     * [output/report/draft-manuscript.html](output/report/draft-manuscript.html)
     * [output/report/draft-manuscript.md](output/report/draft-manuscript.md)
+    * [output/report/draft-supplement.html](output/report/draft-supplement.html)
     * [output/report/effectiveness_report.html](output/report/effectiveness_report.html)
     * [output/report/effectiveness_report.md](output/report/effectiveness_report.md)
+    * [output/report/effectiveness_report_comparemodels.html](output/report/effectiveness_report_comparemodels.html)
     * output/report/figures
       * [output/report/figures/curves-1.png](output/report/figures/curves-1.png)
       * [output/report/figures/curves-10.png](output/report/figures/curves-10.png)
