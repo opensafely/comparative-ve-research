@@ -322,35 +322,37 @@ baseline_pfizer <-
 
 ```
 
-#### Supplmentary Figure 1a: Comparative effectiveness using a minimally adjusted model
+#### Figure S1a: Comparative effectiveness adjusting for region-specific calendar-time
 
 ```{r comp1, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
 patchwork::wrap_plots(plot_cmlinc(1), plot_riskdiff(1), plot_hazard(1), ncol=1)
 ```
 
-#### Supplmentary Figure 1b: Comparative effectiveness using a demographically adjusted model
+#### Figure S1b: Comparative effectiveness adjusting for region-specific calendar-time and demographic characteristics
 
 ```{r comp2, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
 patchwork::wrap_plots(plot_cmlinc(2), plot_riskdiff(2), plot_hazard(2), ncol=1)
 ```
 
-#### Supplmentary Figure 2a: Second dose interval, where second dose vaccine is same as first dose vaccine
+#### Figure S2: Second dose interval
 
-Second doses are censored by study end date, de-registration, death, and additionally by outcome-specific events.
+Second dose events are censored by study end date, de-registration, death, and additionally by outcome-specific events.
 
 ```{r seconddose_same, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
 read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_samebrand.rds"))
 ```
 
-#### Supplmentary Figure 2b: Second dose interval, where second dose vaccine is different than the first dose vaccine
+<!-- #### Figure S2b: Second dose interval, where second dose vaccine is different than the first dose vaccine -->
 
-Second doses are censored by study end date, de-registration, death, and additionally by outcome-specific events.
+<!-- Second doses are censored by study end date, de-registration, death, and additionally by outcome-specific events. -->
 
-```{r seconddose_diff, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'}
-read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_diffbrand.rds"))
-```
+<!-- ```{r seconddose_diff, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=8, results='asis'} -->
 
-#### Supplmentary Table 1: Baseline characteristics before eligibility exclusions
+<!-- read_rds(here("output", "descriptive", "seconddose", "plot_seconddose_diffbrand.rds")) -->
+
+<!-- ``` -->
+
+#### Table S1: Baseline characteristics before eligibility exclusions
 
 Characteristics for all HCWs aged 18-64 receiving a first dose of BNT162b2 or ChAdOx1 between 4 January and 28 February 2021 and actively registered at at TPP practice are reported, before exclusions due to missing demographic characteristics and Clinically Extremely Vulnerable status.
 

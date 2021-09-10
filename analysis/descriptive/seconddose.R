@@ -88,14 +88,14 @@ seconddose <- function(outcome){
       ),
       tte_censor = tte(vax1_date-1, censor_date, censor_date),
 
-      tte_vaxpfizer2 = tte(vax1_date-1, vaxpfizer2_date, censor_date),
-      ind_vaxpfizer2 = censor_indicator(vaxpfizer2_date, censor_date),
+      tte_vaxpfizer2 = tte(vax1_date-1, vaxpfizer2_date-1, censor_date),
+      ind_vaxpfizer2 = censor_indicator(vaxpfizer2_date-1, censor_date),
 
-      tte_vaxaz2 = tte(vax1_date-1, vaxaz2_date, censor_date),
-      ind_vaxaz2 = censor_indicator(vaxaz2_date, censor_date),
+      tte_vaxaz2 = tte(vax1_date-1, vaxaz2_date-1, censor_date),
+      ind_vaxaz2 = censor_indicator(vaxaz2_date-1, censor_date),
 
-      tte_vaxmoderna2 = tte(vax1_date-1, vaxmoderna2_date, censor_date),
-      ind_vaxmoderna2 = censor_indicator(vaxmoderna2_date, censor_date),
+      tte_vaxmoderna2 = tte(vax1_date-1, vaxmoderna2_date-1, censor_date),
+      ind_vaxmoderna2 = censor_indicator(vaxmoderna2_date-1, censor_date),
     )
 
 

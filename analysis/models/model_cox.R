@@ -88,7 +88,7 @@ data_tte <- data_cohort %>%
       vax1_date - 1 + lastfupday,
       dereg_date,
       death_date,
-      if_else(rep(censor_seconddose, n())==1, vax2_date, as.Date(Inf)),
+      if_else(rep(censor_seconddose, n())==1, vax2_date-1, as.Date(Inf)),
       end_date,
       na.rm=TRUE
     ),
