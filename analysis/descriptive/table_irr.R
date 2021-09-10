@@ -148,7 +148,7 @@ data_cox_split <- tmerge(
   status_coviddeath = tdc(tte_coviddeath),
   status_noncoviddeath = tdc(tte_noncoviddeath),
   status_death = tdc(tte_death),
-  status_seconddose = tdc(tte_seconddose),
+  status_seconddose = tdc(tte_seconddose)
 
 ) %>%
   tmerge( # create treatment timescale variables
