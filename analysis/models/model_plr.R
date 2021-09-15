@@ -76,8 +76,9 @@ if(censor_seconddose==1){
   postvaxcuts<-postvaxcuts12
   lastfupday<-lastfupday12
 } else {
-  postvaxcuts<-postvaxcuts20
-  lastfupday<-lastfupday20
+  postvaxcuts <- postvaxcuts20
+  if(outcome=="postest") postvaxcuts <- postvaxcuts20_postest
+  lastfupday <- lastfupday20
 }
 
 # Import data ----
