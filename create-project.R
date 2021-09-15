@@ -253,10 +253,8 @@ actions_list <- splice(
     name = "descr_table1",
     run = "r:latest analysis/descriptive/table1.R",
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
-      rds = "output/descriptive/tables/table1*.rds"
-    ),
     moderately_sensitive = list(
+      rds = "output/descriptive/tables/table1*.rds",
       html = "output/descriptive/tables/table1*.html",
       csv = "output/descriptive/tables/table1*.csv"
     )
@@ -266,10 +264,8 @@ actions_list <- splice(
     name = "descr_table1_allvax",
     run = "r:latest analysis/descriptive/table1_allvax.R",
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
-      rds = "output/descriptive/tables/table1_allvax*.rds"
-    ),
     moderately_sensitive = list(
+      rds = "output/descriptive/tables/table1_allvax*.rds",
       html = "output/descriptive/tables/table1_allvax*.html",
       csv = "output/descriptive/tables/table1_allvax*.csv"
     )
@@ -311,7 +307,7 @@ actions_list <- splice(
       rds = "output/descriptive/vaxdate/*.rds"
     ),
     moderately_sensitive = list(
-      png = "output/descriptive/vaxdate/*.png"
+      png = "output/descriptive/vaxdate/*.png",
     )
   ),
 
@@ -441,6 +437,29 @@ actions_list <- splice(
 
   comment("# # # # # # # # # # # # # # # # # # #", "Reports", "# # # # # # # # # # # # # # # # # # #"),
 
+
+  action(
+    name = "report_objects",
+    run = "r:latest analysis/descriptive/km.R",
+    arguments = c("output/data/data_processed.rds", "output/data_properties"),
+    needs = splice(
+      "design", "data_selection",
+      as.list(
+        glue_data(
+          .x = expand_grid(
+            outcome = c("postest", "covidemergency", "covidadmitted"),
+            censor_seconddose = c("0", "1")
+          ),
+          "report_{outcome}_timesincevax_{censor_seconddose}_plr"
+        )
+      )
+      ),
+    moderately_sensitive = list(
+      png = "output/descriptive/km/plot_survival*.png",
+      svg = "output/descriptive/km/plot_survival*.svg"
+    )
+  ),
+
   action(
     name = "rmd_report",
     run = glue(
@@ -474,15 +493,7 @@ actions_list <- splice(
       "design", "data_selection",
       "descr_table1", "descr_irr",
       "descr_km", "descr_vaxdate",
-      as.list(
-        glue_data(
-          .x = expand_grid(
-            outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
-            censor_seconddose = c("0", "1")
-          ),
-          "report_{outcome}_timesincevax_{censor_seconddose}_plr"
-        )
-      )
+      "report_objects"
     ),
     moderately_sensitive = list(
       html = "output/report/draft-manuscript.html",
