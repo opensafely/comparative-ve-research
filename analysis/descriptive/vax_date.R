@@ -87,6 +87,7 @@ plot_stack <-
   ) +
   theme_minimal()+
   theme(
+    axis.line.x.bottom = element_line(),
     axis.text.x.top=element_text(hjust=0),
     axis.ticks.x=element_line(),
     legend.position = c(0.3,0.8),
@@ -126,6 +127,7 @@ plot_step <-
   ) +
   theme_minimal()+
   theme(
+    axis.line.x.bottom = element_line(),
     axis.text.x.top=element_text(hjust=0),
     axis.ticks.x=element_line(),
     legend.position = c(0.3,0.8),
