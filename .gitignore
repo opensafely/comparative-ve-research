@@ -5,6 +5,7 @@ __pycache__
 .python-version
 output/*
 metadata/*
+manuscript/*
 venv/
 .Rproj.user
 .Rproj.user/*
