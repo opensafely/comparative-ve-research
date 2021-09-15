@@ -137,9 +137,8 @@ actions:
     - design
     - data_selection
     outputs:
-      highly_sensitive:
-        rds: output/descriptive/tables/table1*.rds
       moderately_sensitive:
+        rds: output/descriptive/tables/table1*.rds
         html: output/descriptive/tables/table1*.html
         csv: output/descriptive/tables/table1*.csv
 
@@ -149,9 +148,8 @@ actions:
     - design
     - data_selection
     outputs:
-      highly_sensitive:
-        rds: output/descriptive/tables/table1_allvax*.rds
       moderately_sensitive:
+        rds: output/descriptive/tables/table1_allvax*.rds
         html: output/descriptive/tables/table1_allvax*.html
         csv: output/descriptive/tables/table1_allvax*.csv
 
@@ -1219,6 +1217,22 @@ actions:
   ## Reports 
   ## # # # # # # # # # # # # # # # # # # # 
 
+  report_objects:
+    run: r:latest analysis/descriptive/km.R output/data/data_processed.rds output/data_properties
+    needs:
+    - design
+    - data_selection
+    - report_postest_timesincevax_0_plr
+    - report_postest_timesincevax_1_plr
+    - report_covidemergency_timesincevax_0_plr
+    - report_covidemergency_timesincevax_1_plr
+    - report_covidadmitted_timesincevax_0_plr
+    - report_covidadmitted_timesincevax_1_plr
+    outputs:
+      moderately_sensitive:
+        png: output/descriptive/km/plot_survival*.png
+        svg: output/descriptive/km/plot_survival*.svg
+
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",  knit_root_dir
       = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
@@ -1249,14 +1263,7 @@ actions:
     - descr_irr
     - descr_km
     - descr_vaxdate
-    - report_postest_timesincevax_0_plr
-    - report_postest_timesincevax_1_plr
-    - report_emergency_timesincevax_0_plr
-    - report_emergency_timesincevax_1_plr
-    - report_covidemergency_timesincevax_0_plr
-    - report_covidemergency_timesincevax_1_plr
-    - report_covidadmitted_timesincevax_0_plr
-    - report_covidadmitted_timesincevax_1_plr
+    - report_objects
     outputs:
       moderately_sensitive:
         html: output/report/draft-manuscript.html

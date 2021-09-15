@@ -307,7 +307,7 @@ actions_list <- splice(
       rds = "output/descriptive/vaxdate/*.rds"
     ),
     moderately_sensitive = list(
-      png = "output/descriptive/vaxdate/*.png",
+      png = "output/descriptive/vaxdate/*.png"
     )
   ),
 
