@@ -190,6 +190,8 @@ data_processed <- data_extract %>%
       TRUE ~ NA_character_
     ),
 
+    emergency_covid_date = pmin(emergency_covid_date, covidadmitted_date, na.rm=TRUE),
+
     covidadmitted_ccdays = as.integer(as.character(covidadmitted_ccdays)), # covidadmitted_ccdays is a factor, so convert to character then integer
     noncoviddeath_date = if_else(!is.na(death_date) & is.na(coviddeath_date), death_date, as.Date(NA_character_)),
     covidcc_date = if_else(!is.na(covidadmitted_date) & covidadmitted_ccdays>0, covidadmitted_date, as.Date(NA_character_)),
