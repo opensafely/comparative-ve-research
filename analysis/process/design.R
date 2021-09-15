@@ -130,7 +130,8 @@ var_labels <- list(
 
   multimorb ~ "Morbidity count",
 
-  prior_covid_infection ~ "Prior SARS-CoV-2 infection"
+  prior_covid_infection ~ "Prior SARS-CoV-2 infection",
+  prior_tests_cat ~ "Number of SARS-CoV-2 tests in previous 3 months"
 
 ) %>%
   set_names(., map_chr(., all.vars))

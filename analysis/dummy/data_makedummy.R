@@ -193,6 +193,11 @@ sim_list = list(
     missing_rate = ~0.995
   ),
 
+  prior_covid_test_frequency = bn_node(
+    ~as.integer(rpois(n=1, lambda=3)),
+    missing_rate = ~0
+  ),
+
 
   covid_test_day = bn_node(
     ~as.integer(runif(n=1, covid_vax_any_1_day, covid_vax_any_1_day+300)),

@@ -600,6 +600,20 @@ study = StudyDefinition(
     find_first_match_in_period=True,
     restrict_to_earliest_specimen_date=False,
     return_expectations={
+      "date": {"earliest": "2020-02-01"},
+      "incidence": 0.5,
+    },
+  ),
+  
+  prior_covid_test_frequency=patients.with_test_result_in_sgss(
+    pathogen="SARS-CoV-2",
+    test_result="any",
+    between=[days(start_date_az, -90), days(start_date_az, -1)],
+    returning="number_of_matches_in_period", # need "count" here but not yet available
+    date_format="YYYY-MM-DD",
+    find_first_match_in_period=True,
+    restrict_to_earliest_specimen_date=False,
+    return_expectations={
       "int": {"distribution": "normal", "mean": 10, "stddev": 3},
       "incidence": 1,
     },
