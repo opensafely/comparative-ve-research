@@ -40,7 +40,8 @@ var_labels <- read_rds(here("output", "data", "metadata_labels.rds"))
 
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
 list2env(list_formula, globalenv())
-lastfupday <- lastfupday20
+postvaxcuts20_4week <- c(0, 28, 56, 84, 112, 140)
+lastfupday <- max(postvaxcuts20_4week)
 
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
 
@@ -112,8 +113,8 @@ if(removeobs) rm(data_cohort)
 postvax_time <- data_tte %>%
   select(patient_id, tte_censor) %>%
   mutate(
-    fup_day = list(postvaxcuts20_2week),
-    timesincevax = map(fup_day, ~droplevels(timesince_cut_end(.x+1, postvaxcuts20_2week)))
+    fup_day = list(postvaxcuts20_4week),
+    timesincevax = map(fup_day, ~droplevels(timesince_cut_end(.x+1, postvaxcuts20_4week)))
   ) %>%
   unnest(c(fup_day, timesincevax))
 
@@ -238,10 +239,7 @@ pt_summary <- function(data, event){
   redacted <- unredacted_wide %>%
     mutate(
       pfizer_rate = redactor2(pfizer_n, 5, pfizer_rate),
-      #pfizer_q = redactor2(pfizer_n, 5, pfizer_q),
-
       az_rate = redactor2(az_n, 5, az_rate),
-      #az_q = redactor2(az_n, 5, az_q),
 
       rr = redactor2(pmin(az_n, pfizer_n), 5, rr),
       rrE = redactor2(pmin(az_n, pfizer_n), 5, rrE),
@@ -293,7 +291,7 @@ tab_summary <- data_summary %>%
     pfizer_q = "Events / person-years",
     az_q   = "Events / person-years",
 
-    pfizer_rate = "Rate/year",
+    pfizer_rate = "Incidence",
     az_rate = "Incidence",
     rr = "Incidence rate ratio",
 
