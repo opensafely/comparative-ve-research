@@ -482,50 +482,6 @@ actions_list <- splice(
     )
   ),
 
-  action(
-    name = "rmd_manuscript",
-    run = glue(
-      "r:latest -e {q}",
-      q = single_quote('rmarkdown::render("analysis/report/draft-manuscript.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
-    ),
-    needs = splice(
-      "design", "data_selection",
-      "descr_table1", "descr_irr",
-      "descr_km", "descr_vaxdate",
-      "report_objects"
-    ),
-    moderately_sensitive = list(
-      html = "output/report/draft-manuscript.html",
-      md = "output/report/draft-manuscript.md"
-    )
-  ),
-
-  action(
-    name = "rmd_supplement",
-    run = glue(
-      "r:latest -e {q}",
-      q = single_quote('rmarkdown::render("analysis/report/draft-supplement.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
-    ),
-    needs = splice(
-      "design", "data_selection",
-      "descr_table1_allvax", "descr_irr",
-      "descr_km", "descr_vaxdate",
-      "descr_seconddose",
-      as.list(
-        glue_data(
-          .x = expand_grid(
-            outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
-            censor_seconddose = c("0", "1")
-          ),
-          "report_{outcome}_timesincevax_{censor_seconddose}_plr"
-        )
-      )
-    ),
-    moderately_sensitive = list(
-      html = "output/report/draft-supplement.html",
-      md = "output/report/draft-supplement.md"
-    )
-  ),
 
   action(
     name = "rmd_report_models",
@@ -554,7 +510,53 @@ actions_list <- splice(
       md = "output/report/effectiveness_report_comparemodels.md",
       figures = "output/report/figures_timescales/*.png"
     )
-  )
+  ),
+
+
+  # action(
+  #   name = "rmd_manuscript",
+  #   run = glue(
+  #     "r:latest -e {q}",
+  #     q = single_quote('rmarkdown::render("analysis/report/draft-manuscript.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
+  #   ),
+  #   needs = splice(
+  #     "design", "data_selection",
+  #     "descr_table1", "descr_irr",
+  #     "descr_km", "descr_vaxdate",
+  #     "report_objects"
+  #   ),
+  #   moderately_sensitive = list(
+  #     html = "output/report/draft-manuscript.html",
+  #     md = "output/report/draft-manuscript.md"
+  #   )
+  # ),
+  #
+  # action(
+  #   name = "rmd_supplement",
+  #   run = glue(
+  #     "r:latest -e {q}",
+  #     q = single_quote('rmarkdown::render("analysis/report/draft-supplement.Rmd",  knit_root_dir = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )')
+  #   ),
+  #   needs = splice(
+  #     "design", "data_selection",
+  #     "descr_table1_allvax", "descr_irr",
+  #     "descr_km", "descr_vaxdate",
+  #     "descr_seconddose",
+  #     as.list(
+  #       glue_data(
+  #         .x = expand_grid(
+  #           outcome = c("postest", "emergency", "covidemergency", "covidadmitted"),
+  #           censor_seconddose = c("0", "1")
+  #         ),
+  #         "report_{outcome}_timesincevax_{censor_seconddose}_plr"
+  #       )
+  #     )
+  #   ),
+  #   moderately_sensitive = list(
+  #     html = "output/report/draft-supplement.html",
+  #     md = "output/report/draft-supplement.md"
+  #   )
+  # )
 
 
 
