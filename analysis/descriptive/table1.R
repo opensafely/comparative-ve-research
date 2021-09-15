@@ -68,15 +68,15 @@ tab_summary_baseline <- data_cohort %>%
 
 tab_summary_baseline$inputs$data <- NULL
 
+
 tab_csv <- tab_summary_baseline$table_body
 names(tab_csv) <- tab_summary_baseline$table_header$label
-tab_csv <- tab_csv[, (!tab_summary_baseline$table_header$hide | tab_summary_baseline$table_header$label=="variable")]
+tab_csv <- tab_csv[, (!tab_summary_baseline$table_header$hide | tab_summary_baseline$table_header$label=="var_label")]
+
 
 write_rds(tab_summary_baseline, here("output", "descriptive", "tables", "table1.rds"))
 gtsave(as_gt(tab_summary_baseline), here("output", "descriptive", "tables", "table1.html"))
 write_csv(tab_csv, here("output", "descriptive", "tables", "table1.csv"))
-
-
 
 
 tab_summary_region <- data_cohort %>%
