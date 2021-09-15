@@ -440,8 +440,8 @@ actions_list <- splice(
 
   action(
     name = "report_objects",
-    run = "r:latest analysis/descriptive/km.R",
-    arguments = c("output/data/data_processed.rds", "output/data_properties"),
+    run = "r:latest analysis/report/report-objects.R",
+    arguments = NULL,
     needs = splice(
       "design", "data_selection",
       as.list(
@@ -455,8 +455,7 @@ actions_list <- splice(
       )
       ),
     moderately_sensitive = list(
-      png = "output/descriptive/km/plot_survival*.png",
-      svg = "output/descriptive/km/plot_survival*.svg"
+      out = "output/report/objects/*"
     )
   ),
 

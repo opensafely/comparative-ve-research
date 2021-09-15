@@ -369,10 +369,12 @@ data_plr <- read_rds(here("output", "models", outcome, timescale, censor_secondd
 #"timesincevax", "ns(tstop,"
 # "pw", "ns"
 
+#modeltype="pw"
+#timestr="timesincevax"
+
+
 report_estimates <- function(modeltype, timestr){
 
-  modeltype="pw"
- timestr="timesincevax"
 
   tidy_plr <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_{modeltype}.rds")))
 
@@ -722,5 +724,5 @@ report_estimates <- function(modeltype, timestr){
 
 }
 
-report_estimates("ns", "ns(tstop,")
+report_estimates("ns", "nsevents(tstop,")
 report_estimates("pw", "timesincevax")

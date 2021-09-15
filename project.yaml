@@ -1218,7 +1218,7 @@ actions:
   ## # # # # # # # # # # # # # # # # # # # 
 
   report_objects:
-    run: r:latest analysis/descriptive/km.R output/data/data_processed.rds output/data_properties
+    run: r:latest analysis/report/report-objects.R
     needs:
     - design
     - data_selection
@@ -1230,8 +1230,7 @@ actions:
     - report_covidadmitted_timesincevax_1_plr
     outputs:
       moderately_sensitive:
-        png: output/descriptive/km/plot_survival*.png
-        svg: output/descriptive/km/plot_survival*.svg
+        out: output/report/objects/*
 
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",  knit_root_dir
