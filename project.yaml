@@ -1252,46 +1252,6 @@ actions:
         html: output/report/effectiveness_report.html
         md: output/report/effectiveness_report.md
 
-  rmd_manuscript:
-    run: r:latest -e 'rmarkdown::render("analysis/report/draft-manuscript.Rmd",  knit_root_dir
-      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
-    needs:
-    - design
-    - data_selection
-    - descr_table1
-    - descr_irr
-    - descr_km
-    - descr_vaxdate
-    - report_objects
-    outputs:
-      moderately_sensitive:
-        html: output/report/draft-manuscript.html
-        md: output/report/draft-manuscript.md
-
-  rmd_supplement:
-    run: r:latest -e 'rmarkdown::render("analysis/report/draft-supplement.Rmd",  knit_root_dir
-      = "/workspace",  output_dir = "/workspace/output/report", output_format = c("html_document")   )'
-    needs:
-    - design
-    - data_selection
-    - descr_table1_allvax
-    - descr_irr
-    - descr_km
-    - descr_vaxdate
-    - descr_seconddose
-    - report_postest_timesincevax_0_plr
-    - report_postest_timesincevax_1_plr
-    - report_emergency_timesincevax_0_plr
-    - report_emergency_timesincevax_1_plr
-    - report_covidemergency_timesincevax_0_plr
-    - report_covidemergency_timesincevax_1_plr
-    - report_covidadmitted_timesincevax_0_plr
-    - report_covidadmitted_timesincevax_1_plr
-    outputs:
-      moderately_sensitive:
-        html: output/report/draft-supplement.html
-        md: output/report/draft-supplement.md
-
   rmd_report_models:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report_comparemodels.Rmd",  knit_root_dir
       = "/workspace",  output_dir = "/workspace/output/report", output_format = c("rmarkdown::github_document")   )'

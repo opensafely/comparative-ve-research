@@ -73,10 +73,10 @@ action_model<- function(
     run = glue("r:latest analysis/models/model_{modeltype}.R"),
     arguments = c(outcome, timescale, censor_seconddose, samplesize_nonoutcomes_n),
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       rds = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/model{modeltype}*.rds")
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       txt = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/model{modeltype}*.txt"),
       csv = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/model{modeltype}*.csv")
     )
@@ -93,10 +93,10 @@ action_report <- function(
     run = glue("r:latest analysis/models/report_{modeltype}.R"),
     arguments = c(outcome, timescale, censor_seconddose),
     needs = list("design", glue("model_{outcome}_{timescale}_{censor_seconddose}_{modeltype}")),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       rds = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.rds")
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       csv = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.csv"),
       svg = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.svg"),
       png = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.png")
@@ -109,9 +109,9 @@ action_report <- function(
 # specify project ----
 
 ## defaults ----
-defaults_list <- list(
+defaults_list <- lst(
   version = "3.0",
-  expectations= list(population_size=100000L)
+  expectations= lst(population_size=100000L)
 )
 
 ## actions ----
@@ -129,7 +129,7 @@ actions_list <- splice(
   action(
     name = "seconddose_extract",
     run = "cohortextractor:latest generate_cohort --study-definition study_definition_2dose --output-format feather",
-    highly_sensitive = list(
+    highly_sensitive = lst(
       cohort = "output/input_2dose.feather"
     )
   ),
@@ -138,7 +138,7 @@ actions_list <- splice(
     name = "seconddose_process",
     run = "r:latest analysis/seconddose/process.R",
     needs = list("seconddose_extract"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       data = "output/data/seconddose_data_processed.rds"
     )
   ),
@@ -147,7 +147,7 @@ actions_list <- splice(
     name = "seconddose_graphs",
     run = "r:latest analysis/seconddose/graphs.R",
     needs = list("seconddose_process"),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       data = "output/seconddose/plots/plot*.png"
     )
   ),
@@ -158,7 +158,7 @@ actions_list <- splice(
   action(
     name = "hcw_extract",
     run = "cohortextractor:latest generate_cohort --study-definition study_definition_hcw --output-format feather",
-    highly_sensitive = list(
+    highly_sensitive = lst(
       cohort = "output/input_hcw.feather"
     )
   ),
@@ -167,7 +167,7 @@ actions_list <- splice(
     name = "hcw_process",
     run = "r:latest analysis/hcw/process.R",
     needs = list("hcw_extract"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       data = "output/data/hcw_data_processed.rds",
       datavax = "output/data/hcw_data_vax.rds"
     )
@@ -178,7 +178,7 @@ actions_list <- splice(
     run = "r:latest analysis/process/data_properties.R",
     arguments = c("output/data/hcw_data_processed.rds", "output/data_properties"),
     needs = list("hcw_process"),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       cohort = "output/data_properties/hcw_data_processed*.txt"
     )
   ),
@@ -187,7 +187,7 @@ actions_list <- splice(
     name = "hcw_descr",
     run = "r:latest analysis/hcw/descr.R",
     needs = list("hcw_process"),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       png = "output/hcw/*.png",
       svg = "output/hcw/*.svg",
       html = "output/hcw/*.html",
@@ -201,7 +201,7 @@ actions_list <- splice(
   action(
     name = "design",
     run = "r:latest analysis/process/design.R",
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       metadata = "output/data/metadata*"
     )
   ),
@@ -210,7 +210,7 @@ actions_list <- splice(
     name = "extract",
     run = "cohortextractor:latest generate_cohort --study-definition study_definition --output-format feather",
     needs = list("design"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       cohort = "output/input.feather"
     )
   ),
@@ -219,7 +219,7 @@ actions_list <- splice(
     name = "data_process",
     run = "r:latest analysis/process/data_process.R",
     needs = list("design", "extract"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       processed = "output/data/data_processed.rds"
     )
   ),
@@ -229,7 +229,7 @@ actions_list <- splice(
     run = "r:latest analysis/process/data_properties.R",
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("data_process"),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       cohort = "output/data_properties/data_processed*.txt"
     )
   ),
@@ -238,11 +238,11 @@ actions_list <- splice(
     name = "data_selection",
     run = "r:latest analysis/process/data_selection.R",
     needs = list("design", "data_process"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       data_allvax = "output/data/data_cohort_allvax.rds",
       data = "output/data/data_cohort.rds"
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       flow = "output/data/flowchart.csv"
     )
   ),
@@ -253,7 +253,7 @@ actions_list <- splice(
     name = "descr_table1",
     run = "r:latest analysis/descriptive/table1.R",
     needs = list("design", "data_selection"),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       rds = "output/descriptive/tables/table1*.rds",
       html = "output/descriptive/tables/table1*.html",
       csv = "output/descriptive/tables/table1*.csv"
@@ -264,7 +264,7 @@ actions_list <- splice(
     name = "descr_table1_allvax",
     run = "r:latest analysis/descriptive/table1_allvax.R",
     needs = list("design", "data_selection"),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       rds = "output/descriptive/tables/table1_allvax*.rds",
       html = "output/descriptive/tables/table1_allvax*.html",
       csv = "output/descriptive/tables/table1_allvax*.csv"
@@ -276,10 +276,10 @@ actions_list <- splice(
     run = "r:latest analysis/descriptive/table_irr.R",
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       rds = "output/descriptive/tables/table_irr*.rds"
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       html = "output/descriptive/tables/table_irr*.html",
       csv = "output/descriptive/tables/table_irr*.csv"
     )
@@ -290,10 +290,10 @@ actions_list <- splice(
     run = "r:latest analysis/descriptive/km.R",
     arguments = c("output/data/data_processed.rds", "output/data_properties"),
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       rds = "output/descriptive/km/plot_survival*.rds"
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       png = "output/descriptive/km/plot_survival*.png",
       svg = "output/descriptive/km/plot_survival*.svg"
     )
@@ -303,10 +303,10 @@ actions_list <- splice(
     name = "descr_vaxdate",
     run = "r:latest analysis/descriptive/vax_date.R",
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       rds = "output/descriptive/vaxdate/*.rds"
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       png = "output/descriptive/vaxdate/*.png"
     )
   ),
@@ -315,10 +315,10 @@ actions_list <- splice(
     name = "descr_seconddose",
     run = "r:latest analysis/descriptive/seconddose.R",
     needs = list("design", "data_selection"),
-    highly_sensitive = list(
+    highly_sensitive = lst(
       rds = "output/descriptive/seconddose/*.rds"
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       png = "output/descriptive/seconddose/*.png"
     )
   ),
@@ -454,7 +454,7 @@ actions_list <- splice(
         )
       )
       ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       out = "output/report/objects/*"
     )
   ),
@@ -476,7 +476,7 @@ actions_list <- splice(
         )
       )
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       html = "output/report/effectiveness_report.html",
       md = "output/report/effectiveness_report.md"
     )
@@ -505,12 +505,12 @@ actions_list <- splice(
         )
       )
     ),
-    moderately_sensitive = list(
+    moderately_sensitive = lst(
       html = "output/report/effectiveness_report_comparemodels.html",
       md = "output/report/effectiveness_report_comparemodels.md",
       figures = "output/report/figures_timescales/*.png"
     )
-  ),
+  )
 
 
   # action(
@@ -525,7 +525,7 @@ actions_list <- splice(
   #     "descr_km", "descr_vaxdate",
   #     "report_objects"
   #   ),
-  #   moderately_sensitive = list(
+  #   moderately_sensitive = lst(
   #     html = "output/report/draft-manuscript.html",
   #     md = "output/report/draft-manuscript.md"
   #   )
@@ -552,7 +552,7 @@ actions_list <- splice(
   #       )
   #     )
   #   ),
-  #   moderately_sensitive = list(
+  #   moderately_sensitive = lst(
   #     html = "output/report/draft-supplement.html",
   #     md = "output/report/draft-supplement.md"
   #   )
