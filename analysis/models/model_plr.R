@@ -197,9 +197,9 @@ nsevents <- function(x, events, df){
 
 # mimicing timescale / stratification in simple cox models
 if(timescale=="calendar"){
-  formula_timescale_pw <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
-  formula_timescale_ns <- . ~ . + ns(tstop_calendar, 4) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(tstop_calendar, 4)*region # spline for space-time adjustments
+  formula_timescale_pw <- . ~ . + ns(tstop_calendar, 3) # spline for timescale only
+  formula_timescale_ns <- . ~ . + ns(tstop_calendar, 3) # spline for timescale only
+  formula_spacetime <- . ~ . + ns(tstop_calendar, 3)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az * timesincevax_pw
   formula_timesincevax_ns <- . ~ . + vax1_az * nsevents(tstop, outcome_event, 4)
@@ -208,7 +208,7 @@ if(timescale=="calendar"){
 if(timescale=="timesincevax"){
   formula_timescale_pw <- . ~ . + timesincevax_pw # spline for timescale only
   formula_timescale_ns <- . ~ . + nsevents(tstop, outcome_event, 4) # spline for timescale only
-  formula_spacetime <- . ~ . + ns(vax1_day, 4)*region # spline for space-time adjustments
+  formula_spacetime <- . ~ . + ns(vax1_day, 3)*region # spline for space-time adjustments
 
   formula_timesincevax_pw <- . ~ . + vax1_az + vax1_az:timesincevax_pw
   formula_timesincevax_ns <- . ~ . + vax1_az + vax1_az:nsevents(tstop, outcome_event, 4)
