@@ -51,6 +51,7 @@ formula_exposure <- . ~ . + timesincevax_pw
 formula_demog <- . ~ . + poly(age, degree=2, raw=TRUE) + sex + imd_Q5 + ethnicity_combined + rural_urban_group
 formula_comorbs <- . ~ . +
   prior_covid_infection +
+  prior_tests_cat +
   multimorb +
   learndis +
   sev_mental
