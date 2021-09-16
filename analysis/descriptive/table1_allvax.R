@@ -21,6 +21,7 @@ library('gtsummary')
 ## Import custom user functions from lib
 
 source(here("analysis", "lib", "utility_functions.R"))
+source(here("analysis", "lib", "redaction_functions.R"))
 
 ## import command-line arguments ----
 args <- commandArgs(trailingOnly=TRUE)
@@ -53,27 +54,30 @@ data_cohort <- read_rds(here("output", "data", "data_cohort_allvax.rds")) %>%
     fu_days20 = tte_censor20,
   )
 
+extra_labels <- list(cev ~ "Clinically Extremely Vulnerable") %>%
+  set_names(., map_chr(., all.vars))
 
 ## baseline variables
 tab_summary_baseline <- data_cohort %>%
   select(
-    all_of(names(var_labels)), cev,
+    all_of(names(var_labels)),
+    cev,
     -age, -stp, -vax1_type, -fu_days12, -fu_days20
   ) %>%
   tbl_summary(
     by = vax1_type_descr,
-    label=unname(splice(var_labels, list(cev = cev ~ "Clinically Extremely Vulnerable"))[names(.)]),
+    label=unname(splice(var_labels, extra_labels)[names(.)]),
     missing = "ifany"
   )  %>%
   modify_footnote(starts_with("stat_") ~ NA)
 
 
-tab_summary_baseline$inputs$data <- NULL
+tab_summary_baseline_redacted <- redact_tblsummary(tab_summary_baseline, 5, "[REDACTED]")
 
-tab_csv <- tab_summary_baseline$table_body
-names(tab_csv) <- tab_summary_baseline$table_header$label
-tab_csv <- tab_csv[, (!tab_summary_baseline$table_header$hide | tab_summary_baseline$table_header$label=="variable")]
+tab_csv <- tab_summary_baseline_redacted$table_body
+names(tab_csv) <- tab_summary_baseline_redacted$table_header$label
+tab_csv <- tab_csv[, (!tab_summary_baseline_redacted$table_header$hide | tab_summary_baseline_redacted$table_header$label=="variable")]
 
-write_rds(tab_summary_baseline, here("output", "descriptive", "tables", "table1_allvax.rds"))
-gtsave(as_gt(tab_summary_baseline), here("output", "descriptive", "tables", "table1_allvax.html"))
+write_rds(tab_summary_baseline_redacted, here("output", "descriptive", "tables", "table1_allvax.rds"))
+gtsave(as_gt(tab_summary_baseline_redacted), here("output", "descriptive", "tables", "table1_allvax.html"))
 write_csv(tab_csv, here("output", "descriptive", "tables", "table1_allvax.csv"))
