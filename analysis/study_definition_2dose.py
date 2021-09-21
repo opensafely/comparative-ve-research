@@ -79,7 +79,7 @@ study = StudyDefinition(
   #################################################################
   
   covid_vax_pfizer_1_date=patients.with_tpp_vaccination_record(
-    product_name_matches="COVID-19 mRNA Vaccine Pfizer-BioNTech BNT162b2 30micrograms/0.3ml dose conc for susp for inj MDV",
+    product_name_matches="COVID-19 mRNA Vaccine Comirnaty 30micrograms/0.3ml dose conc for susp for inj MDV (Pfizer)",
     find_first_match_in_period=True,
     returning="date",
     date_format="YYYY-MM-DD",
@@ -94,7 +94,7 @@ study = StudyDefinition(
   
   
   covid_vax_pfizer_2_date=patients.with_tpp_vaccination_record(
-    product_name_matches="COVID-19 mRNA Vaccine Pfizer-BioNTech BNT162b2 30micrograms/0.3ml dose conc for susp for inj MDV",
+    product_name_matches="COVID-19 mRNA Vaccine Comirnaty 30micrograms/0.3ml dose conc for susp for inj MDV (Pfizer)",
     on_or_after="covid_vax_pfizer_1_date + 1 days",
     find_first_match_in_period=True,
     returning="date",
@@ -109,7 +109,7 @@ study = StudyDefinition(
   ),
   
   covid_vax_pfizer_3_date=patients.with_tpp_vaccination_record(
-    product_name_matches="COVID-19 mRNA Vaccine Pfizer-BioNTech BNT162b2 30micrograms/0.3ml dose conc for susp for inj MDV",
+    product_name_matches="COVID-19 mRNA Vaccine Comirnaty 30micrograms/0.3ml dose conc for susp for inj MDV (Pfizer)",
     on_or_after="covid_vax_pfizer_2_date + 1 days",
     find_first_match_in_period=True,
     returning="date",
