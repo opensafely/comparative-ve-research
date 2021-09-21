@@ -1,0 +1,2 @@
+n,age_median,age_Q1,age_Q3,female,fu_years,fu_median,priorinfection,seconddose_12week,postest,covidemergency,emergency,admitted,covidadmitted,coviddeath,death,seconddose
+317341,44,33,53,0.7861574772878386,118770.75701574264,140,0.11469365761121317,0.9448133080818426,6962,282,24659,6648,166,NA,47,311704

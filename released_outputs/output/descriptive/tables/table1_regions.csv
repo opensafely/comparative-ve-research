@@ -1,48 +1,41 @@
-variable,**Characteristic**,"**BNT162b2**, N = 259,753","**ChAdOx1**, N = 93,133"
-ageband,Age,NA,NA
-ageband,18-30,"43,041 (17%)","16,336 (18%)"
-ageband,30s,"61,683 (24%)","21,698 (23%)"
-ageband,40s,"65,951 (25%)","22,369 (24%)"
-ageband,50s,"68,659 (26%)","25,255 (27%)"
-ageband,60-64,"20,419 (7.9%)","7,475 (8.0%)"
-sex,Sex,NA,NA
-sex,Female,"205,383 (79%)","72,291 (78%)"
-sex,Male,"54,370 (21%)","20,842 (22%)"
-ethnicity_combined,Ethnicity,NA,NA
-ethnicity_combined,White,"215,843 (83%)","76,557 (82%)"
-ethnicity_combined,Black,"9,119 (3.5%)","5,536 (5.9%)"
-ethnicity_combined,South Asian,"24,299 (9.4%)","7,596 (8.2%)"
-ethnicity_combined,Mixed,"4,053 (1.6%)","1,691 (1.8%)"
-ethnicity_combined,Other,"6,439 (2.5%)","1,753 (1.9%)"
-imd_Q5,IMD,NA,NA
-imd_Q5,1 most deprived,"38,245 (15%)","15,962 (17%)"
-imd_Q5,2,"48,701 (19%)","18,059 (19%)"
-imd_Q5,3,"57,202 (22%)","19,950 (21%)"
-imd_Q5,4,"58,798 (23%)","20,244 (22%)"
-imd_Q5,5 least deprived,"56,807 (22%)","18,918 (20%)"
-vax1_day,Day of vaccination,"39 (34, 46)","60 (44, 92)"
-bmi,Body Mass Index,NA,NA
-bmi,Not obese,"204,084 (79%)","71,677 (77%)"
-bmi,Obese I (30-34.9),"31,768 (12%)","12,207 (13%)"
-bmi,Obese II (35-39.9),"14,573 (5.6%)","5,536 (5.9%)"
-bmi,Obese III (40+),"9,328 (3.6%)","3,713 (4.0%)"
-heart_failure,Heart failure,637 (0.2%),252 (0.3%)
-other_heart_disease,Other heart disease,"4,702 (1.8%)","1,690 (1.8%)"
-dialysis,Dialysis,17 (<0.1%),8 (<0.1%)
-diabetes,Diabetes,"14,135 (5.4%)","4,852 (5.2%)"
-chronic_liver_disease,Chronic liver disease,659 (0.3%),321 (0.3%)
-current_copd,COPD,"1,319 (0.5%)",470 (0.5%)
-other_resp_conditions,Other respiratory conditions,753 (0.3%),309 (0.3%)
-lung_cancer,Lung Cancer,53 (<0.1%),14 (<0.1%)
-haematological_cancer,Haematological cancer,443 (0.2%),171 (0.2%)
-cancer_excl_lung_and_haem,"Cancer excl. lung, haemo","6,650 (2.6%)","2,279 (2.4%)"
-any_immunosuppression,Immunosuppressed,"5,494 (2.1%)","1,820 (2.0%)"
-other_neuro_conditions,Other neurological conditions,"1,255 (0.5%)",451 (0.5%)
-LD_incl_DS_and_CP,Learning disabilities,372 (0.1%),165 (0.2%)
-psychosis_schiz_bipolar,Serious mental illness,"1,631 (0.6%)",902 (1.0%)
-multimorb,Morbidity count,NA,NA
-multimorb,0,"208,363 (80%)","74,130 (80%)"
-multimorb,1,"42,241 (16%)","15,607 (17%)"
-multimorb,2,"8,094 (3.1%)","2,998 (3.2%)"
-multimorb,3+,"1,055 (0.4%)",398 (0.4%)
-prior_covid_infection,Prior SARS-CoV-2 infection,"28,823 (11%)","15,096 (16%)"
+variable,var_type,var_class,var_label,row_type,label,stat_1,stat_2
+region,categorical,factor,Region,label,Region,NA,NA
+region,categorical,factor,Region,level,North East and Yorkshire,"53,522 (21%)","16,418 (26%)"
+region,categorical,factor,Region,level,East of England,"62,377 (25%)","11,861 (18%)"
+region,categorical,factor,Region,level,Midlands,"50,582 (20%)","17,224 (27%)"
+region,categorical,factor,Region,level,South West,"35,948 (14%)","5,056 (7.9%)"
+region,categorical,factor,Region,level,London,"10,405 (4.1%)","2,148 (3.3%)"
+region,categorical,factor,Region,level,North West,"23,644 (9.3%)","7,875 (12%)"
+region,categorical,factor,Region,level,South East,"16,656 (6.6%)","3,625 (5.6%)"
+stp,categorical,factor,STP,label,STP,NA,NA
+stp,categorical,factor,STP,level,E54000005,"22,059 (8.7%)","11,728 (18%)"
+stp,categorical,factor,STP,level,E54000026,"10,595 (4.2%)","3,183 (5.0%)"
+stp,categorical,factor,STP,level,E54000014,"9,927 (3.9%)","2,973 (4.6%)"
+stp,categorical,factor,STP,level,E54000006,"15,030 (5.9%)","1,394 (2.2%)"
+stp,categorical,factor,STP,level,E54000024,"10,001 (4.0%)","1,697 (2.6%)"
+stp,categorical,factor,STP,level,E54000021,"11,464 (4.5%)","1,924 (3.0%)"
+stp,categorical,factor,STP,level,E54000017,"4,294 (1.7%)","1,109 (1.7%)"
+stp,categorical,factor,STP,level,E54000040,"9,190 (3.6%)","1,006 (1.6%)"
+stp,categorical,factor,STP,level,E54000022,"12,666 (5.0%)","1,377 (2.1%)"
+stp,categorical,factor,STP,level,E54000009,"16,433 (6.5%)","3,296 (5.1%)"
+stp,categorical,factor,STP,level,E54000023,"10,746 (4.2%)","1,205 (1.9%)"
+stp,categorical,factor,STP,level,E54000025,"6,905 (2.7%)","2,475 (3.9%)"
+stp,categorical,factor,STP,level,E54000027,"9,749 (3.9%)","1,845 (2.9%)"
+stp,categorical,factor,STP,level,E54000013,"5,274 (2.1%)","3,617 (5.6%)"
+stp,categorical,factor,STP,level,E54000049,"18,819 (7.4%)","6,785 (11%)"
+stp,categorical,factor,STP,level,E54000015,"9,165 (3.6%)","5,264 (8.2%)"
+stp,categorical,factor,STP,level,E54000043,"4,651 (1.8%)",735 (1.1%)
+stp,categorical,factor,STP,level,E54000012,"12,077 (4.8%)","2,098 (3.3%)"
+stp,categorical,factor,STP,level,E54000036,"2,705 (1.1%)",463 (0.7%)
+stp,categorical,factor,STP,level,E54000044,165 (<0.1%),21 (<0.1%)
+stp,categorical,factor,STP,level,E54000042,"8,036 (3.2%)",862 (1.3%)
+stp,categorical,factor,STP,level,E54000007,"3,184 (1.3%)",582 (0.9%)
+stp,categorical,factor,STP,level,E54000029,656 (0.3%),303 (0.5%)
+stp,categorical,factor,STP,level,E54000037,"10,351 (4.1%)",570 (0.9%)
+stp,categorical,factor,STP,level,E54000033,"8,201 (3.2%)","2,667 (4.2%)"
+stp,categorical,factor,STP,level,E54000041,"9,051 (3.6%)","2,282 (3.6%)"
+stp,categorical,factor,STP,level,E54000020,"5,510 (2.2%)","1,432 (2.2%)"
+stp,categorical,factor,STP,level,E54000010,"1,514 (0.6%)",191 (0.3%)
+stp,categorical,factor,STP,level,E54000016,"2,821 (1.1%)",540 (0.8%)
+stp,categorical,factor,STP,level,E54000008,"1,641 (0.6%)",508 (0.8%)
+stp,categorical,factor,STP,level,E54000035,254 (0.1%),75 (0.1%)
