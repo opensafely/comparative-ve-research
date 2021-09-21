@@ -253,8 +253,10 @@ actions_list <- splice(
     name = "descr_table1",
     run = "r:latest analysis/descriptive/table1.R",
     needs = list("design", "data_selection"),
+    # highly_sensitive = lst(
+    #   rds = "output/descriptive/tables/table1*.rds"
+    # ),
     moderately_sensitive = lst(
-      rds = "output/descriptive/tables/table1*.rds",
       html = "output/descriptive/tables/table1*.html",
       csv = "output/descriptive/tables/table1*.csv"
     )

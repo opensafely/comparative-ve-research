@@ -154,6 +154,7 @@ redact_tblsummary <- function(x, threshold, redact_chr=NA_character_){
 
   x$inputs$data <- NULL
   x$inputs$meta_data <- NULL
+  x$inputs$label <- NULL
 
   x
 

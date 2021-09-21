@@ -138,7 +138,6 @@ actions:
     - data_selection
     outputs:
       moderately_sensitive:
-        rds: output/descriptive/tables/table1*.rds
         html: output/descriptive/tables/table1*.html
         csv: output/descriptive/tables/table1*.csv
 
