@@ -267,7 +267,7 @@ actions_list <- splice(
     run = "r:latest analysis/descriptive/table1_allvax.R",
     needs = list("design", "data_selection"),
     moderately_sensitive = lst(
-      rds = "output/descriptive/tables/table1_allvax*.rds",
+      #rds = "output/descriptive/tables/table1_allvax*.rds",
       html = "output/descriptive/tables/table1_allvax*.html",
       csv = "output/descriptive/tables/table1_allvax*.csv"
     )
