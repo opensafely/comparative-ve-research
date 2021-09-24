@@ -75,6 +75,7 @@ plot_stack <-
     )
   )+
   scale_y_continuous(
+    labels = scales::label_number(accuracy = 1, big.mark=","),
     expand = expansion(c(0, NA))
   )+
   scale_fill_brewer(type="qual", palette="Set1")+
@@ -116,6 +117,10 @@ plot_step <-
       breaks=as.Date(seq(floor_date(min(cumulvax$vax1_date), "month"), ceiling_date(max(cumulvax$vax1_date), "month"),by="month")),
       labels = scales::label_date("%B %y")
     )
+  )+
+  scale_y_continuous(
+    labels = scales::label_number(accuracy = 1, big.mark=","),
+    expand = expansion(c(0, NA))
   )+
   scale_colour_brewer(type="qual", palette="Set1")+
   labs(
