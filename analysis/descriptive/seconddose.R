@@ -207,7 +207,7 @@ surv_plot_samebrand <- survtidyall %>%
   facet_wrap(vars(outcome_descr), ncol=1)+
   scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
   scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
-  scale_x_continuous(breaks = seq(0,lastfupday,28), expand=expansion(mult=c(0)))+
+  scale_x_continuous(breaks = seq(0,lastfupday,14), expand=expansion(mult=c(0)))+
   scale_y_continuous(expand = expansion(mult=c(0)), limits=c(0,1))+
   coord_cartesian(xlim=c(0, lastfupday) ,ylim=c(0,NA))+
   labs(
@@ -251,7 +251,7 @@ surv_plot_diffbrand <- survtidyall %>%
   )+
   scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
   scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
-  scale_x_continuous(breaks = seq(0,lastfupday,28), expand=expansion(mult=c(0)))+
+  scale_x_continuous(breaks = seq(0,lastfupday,14), expand=expansion(mult=c(0)))+
   scale_y_continuous(expand = expansion(mult=c(0)), limits=c(0,NA))+
   coord_cartesian(xlim=c(0, lastfupday) ,ylim=c(0,NA))+
   labs(
