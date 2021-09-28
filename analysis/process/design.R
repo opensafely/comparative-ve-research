@@ -18,7 +18,7 @@ study_dates <- list(
   start_date = "2020-12-08", #inclusive
   start_date_pfizer = "2020-12-08",
   start_date_az = "2021-01-04",
-  start_date_moderna = "2021-03-04",
+  start_date_moderna = "2021-04-13",
   lastvax_date = "2021-02-28", #inclusive
   end_date = "2021-06-13" #inclusive
 )
