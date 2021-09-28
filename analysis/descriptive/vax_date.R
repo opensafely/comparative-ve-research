@@ -146,3 +146,5 @@ write_rds(plot_stack, here("output", "descriptive", "vaxdate", "plot_vaxdate_sta
 ggsave(plot_step, filename="plot_vaxdate_step.png", path=here("output", "descriptive", "vaxdate"))
 ggsave(plot_stack, filename="plot_vaxdate_stack.png", path=here("output", "descriptive", "vaxdate"))
 
+ggsave(plot_step, filename="plot_vaxdate_step.svg", path=here("output", "descriptive", "vaxdate"))
+ggsave(plot_stack, filename="plot_vaxdate_stack.svg", path=here("output", "descriptive", "vaxdate"))
