@@ -30,13 +30,6 @@ if(Sys.getenv("OPENSAFELY_BACKEND") %in% c("", "expectations")){
 }
 
 
-## import global vars ----
-gbl_vars <- jsonlite::fromJSON(
-  txt="./analysis/global-variables.json"
-)
-#list2env(gbl_vars, globalenv())
-
-
 ## create output directory ----
 fs::dir_create(here("output", "seconddose", "plots"))
 

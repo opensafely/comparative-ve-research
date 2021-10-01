@@ -2,8 +2,8 @@
 # # # # # # # # # # # # # # # # # # # # #
 # This script:
 # imports processed data
-# creates indicator variables for each potential cohort/outcome combination of interest
-# creates a metadata df that describes each cohort
+# filters out people who are excluded from the main analysis
+# outputs inclusion/exclusions flowchart data
 # # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----
@@ -21,11 +21,6 @@ args <- commandArgs(trailingOnly=TRUE)
 ## create output directories ----
 fs::dir_create(here("output", "data"))
 
-
-# import globally defined repo variables from
-gbl_vars <- jsonlite::read_json(
-  path=here("analysis", "global-variables.json")
-)
 
 ## Import processed data ----
 

@@ -1,16 +1,14 @@
 
 # # # # # # # # # # # # # # # # # # # # #
 # This script:
-# imports processed data and restricts it to patients in "cohort"
-# fits some marginal structural models for vaccine effectiveness, with different adjustment sets
-# saves model summaries (tables and figures)
-# "tte" = "time-to-event"
+# imports processed data
+# fits some Cox models with time-varying effects
 #
-# The script should be run via an action in the project.yaml
-# The script must be accompanied by four arguments,
-# 1. the name of the cohort defined in data_define_cohorts.R
-# 2. the name of the outcome defined in data_define_cohorts.R
-# 4. the stratification variable. Use "all" if no stratification
+# The script must be accompanied by three arguments,
+# `outcome` - the dependent variable in the regression model
+# `timescale` - either "timesincevax" or "calendar"
+# `censor_seconddose` - second at second dose (1) or not (0)
+
 # # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----

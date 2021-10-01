@@ -1,4 +1,7 @@
-
+# # # # # # # # # # # # # # # # # # # # #
+# This script plots time to second dose, censoring by the different study outcomes
+# It's basically the same as the KM plots in the `km.R` script, but presents the data a bit differently, and looks for cross-brand second doses
+# # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----
 

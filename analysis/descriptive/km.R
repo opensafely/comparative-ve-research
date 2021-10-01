@@ -1,4 +1,6 @@
-
+# # # # # # # # # # # # # # # # # # # # #
+# This script creates a Kaplan-Meier plots for the study outcomes
+# # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----
 

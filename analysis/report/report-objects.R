@@ -10,11 +10,6 @@ library('scales')
 source(here("analysis", "lib", "utility_functions.R"))
 
 
-
-gbl_vars <- jsonlite::read_json(
-  path=here("analysis", "global-variables.json")
-)
-
 data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
 
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))

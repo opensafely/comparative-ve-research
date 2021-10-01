@@ -14,7 +14,7 @@ import codelists
 # import json module
 import json
 
-# import global-variables.json
+# import study dates
 with open("./output/data/metadata_study-dates.json") as f:
   study_dates = json.load(f)
 

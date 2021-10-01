@@ -5,8 +5,11 @@
 # calculates robust CIs taking into account patient-level clustering
 # outputs effect plots for the primary vaccine-outcome relationship
 #
-# The script should only be run via an action in the project.yaml only
-# The script must be accompanied by the following arguments: outcome, timescale, censor_seconddose
+# The script must be accompanied by three arguments,
+# `outcome` - the dependent variable in the regression model
+# `timescale` - either "timesincevax" or "calendar"
+# `censor_seconddose` - second at second dose (1) or not (0)
+
 # # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----

@@ -1,14 +1,11 @@
 ######################################
 
 # This script:
-# imports data extracted by the cohort extractor
+# imports data extracted by the cohort extractor (or dummy data)
 # fills in unknown ethnicity from GP records with ethnicity from SUS (secondary care)
 # tidies missing values
-# re-orders date variables so no negative time differences (only actually does anything for dummy data)
 # standardises some variables (eg convert to factor) and derives some new ones
-# saves processed one-row-per-patient dataset
-# saves one-row-per-patient dataset for vaccines and for hospital admissions
-
+# organises vaccination date data to "vax X type", "vax X date" (rather than "pfizer X date", "az X date", ...)
 ######################################
 
 

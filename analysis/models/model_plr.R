@@ -6,9 +6,10 @@
 #
 # The script should be run via an action in the project.yaml
 # The script must be accompanied by four arguments,
-# 1. the name of the cohort defined in data_define_cohorts.R
-# 2. the name of the outcome defined in data_define_cohorts.R
-# 4. the stratification variable. Use "all" if no stratification
+# `outcome` - the dependent variable in the regression model
+# `timescale` - either "timesincevax" or "calendar"
+# `censor_seconddose` - second at second dose (1) or not (0)
+# `samplesize_nonoutcomes_n` - how many people to sample from those who did not experience the outcome (all those who experienced the outcome are included)
 # # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----

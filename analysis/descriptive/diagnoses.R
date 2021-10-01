@@ -1,4 +1,7 @@
-
+# # # # # # # # # # # # # # # # # # # # #
+# This script looks at emergency attendnace diagnoses
+# An ad-hoc script which is NOT part of the main analysis
+# # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----
 

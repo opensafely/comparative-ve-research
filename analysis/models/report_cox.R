@@ -1,13 +1,13 @@
 
 # # # # # # # # # # # # # # # # # # # # #
 # This script:
-# imports fitted MSMs
-# calculates robust CIs taking into account patient-level clustering
-# outputs effect plots for the primary vaccine-outcome relationship
-# outputs plots showing model-estimated spatio-temporal trends
+# imports fitted PLR models
+# outputs comparative effects plots
 #
-# The script should only be run via an action in the project.yaml only
-# The script must be accompanied by four arguments: cohort, outcome, brand, and stratum
+# The script must be accompanied by three arguments,
+# `outcome` - the dependent variable in the regression model
+# `timescale` - either "timesincevax" or "calendar"
+# `censor_seconddose` - second at second dose (1) or not (0)
 # # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----

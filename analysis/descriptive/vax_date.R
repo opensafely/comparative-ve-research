@@ -1,4 +1,6 @@
-
+# # # # # # # # # # # # # # # # # # # # #
+# This script plots cumulative vaccine coverage in the study population
+# # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----
 

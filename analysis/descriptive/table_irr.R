@@ -1,12 +1,5 @@
-
 # # # # # # # # # # # # # # # # # # # # #
-# This script:
-# takes a cohort name as defined in data_define_cohorts.R, and imported as an Arg
-# creates descriptive outputs on patient characteristics by vaccination status at 0, 28, and 56 days.
-#
-# The script should be run via an action in the project.yaml
-# The script must be accompanied by one argument,
-# 1. the name of the cohort defined in data_define_cohorts.R
+# This script creates a table of incidence rates for diffferent outcomes, stratified by vaccine type and times since vaccination.
 # # # # # # # # # # # # # # # # # # # # #
 
 # Preliminaries ----
