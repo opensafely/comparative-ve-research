@@ -142,7 +142,11 @@ cmlinc_ns <-
     ~read_rds(here("output", "models", .x, "timesincevax", "0", glue("reportplr_adjustedsurvival_ns.rds"))),
     .id="outcome"
   ) %>%
-  left_join(metadata_outcomes, by="outcome")
+  left_join(metadata_outcomes, by="outcome") %>%
+  mutate(
+    inc_format = label_number(0.1, scale=1000)(1-survival),
+    inc_CI = paste0("(" , label_number(0.1, scale=1000)(1-survival.ul), ", ", label_number(0.1, scale=1000)(1-survival.ll), ")")
+  )
 
 write_csv(cmlinc_ns, here("output", "report", "objects", "cmlinc_ns.csv"))
 
@@ -152,7 +156,11 @@ cmlinc_pw <-
     ~read_rds(here("output", "models", .x, "timesincevax", "0", glue("reportplr_adjustedsurvival_pw.rds"))),
     .id="outcome"
   ) %>%
-  left_join(metadata_outcomes, by="outcome")
+  left_join(metadata_outcomes, by="outcome") %>%
+  mutate(
+    inc_format = label_number(0.1, scale=1000)(1-survival),
+    inc_CI = paste0("(" , label_number(0.1, scale=1000)(1-survival.ul), ", ", label_number(0.1, scale=1000)(1-survival.ll), ")")
+  )
 
 write_csv(cmlinc_pw, here("output", "report", "objects", "cmlinc_pw.csv"))
 
