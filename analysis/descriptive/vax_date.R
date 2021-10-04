@@ -150,3 +150,6 @@ ggsave(plot_stack, filename="plot_vaxdate_stack.png", path=here("output", "descr
 
 ggsave(plot_step, filename="plot_vaxdate_step.svg", path=here("output", "descriptive", "vaxdate"))
 ggsave(plot_stack, filename="plot_vaxdate_stack.svg", path=here("output", "descriptive", "vaxdate"))
+
+ggsave(plot_step, filename="plot_vaxdate_step.pdf", path=here("output", "descriptive", "vaxdate"))
+ggsave(plot_stack, filename="plot_vaxdate_stack.pdf", path=here("output", "descriptive", "vaxdate"))

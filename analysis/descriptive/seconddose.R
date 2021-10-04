@@ -69,6 +69,26 @@ data_tte <-
     vaxmoderna2_date = if_else(vax1_type=="moderna", vax2_date, as.Date(NA)),
 )
 
+data_tab <- data_tte %>%
+  mutate(
+    vax2_type_descr =if_else(vax2_day-vax1_day<20*7, vax2_type_descr, factor(NA_character_))
+  )
+
+dose_tab <- redacted_summary_catcat(
+  data_tab$vax2_type_descr, data_tab$vax1_type_descr,
+  .missing_name="No second dose",
+  .redacted_name="REDACTED",
+  redaction_threshold=5L,
+  redaction_accuracy=1L,
+  .total_name=NULL
+) %>%
+  select(
+    `First dose`=.level2,
+    `Second dose, up to 20 weeks`=.level1,
+    everything()
+  )
+
+write_csv(dose_tab, here("output","descriptive","seconddose", "seconddose.csv"))
 
 seconddose <- function(outcome){
 
@@ -173,6 +193,7 @@ seconddose <- function(outcome){
     )
   write_rds(surv_plot, here("output", "descriptive", "seconddose", glue("plot_seconddose_{outcome}.rds")))
   ggsave(surv_plot, filename=glue("plot_seconddose_{outcome}.png"), path=here("output", "descriptive", "seconddose"))
+  ggsave(surv_plot, filename=glue("plot_seconddose_{outcome}.pdf"), path=here("output", "descriptive", "seconddose"))
 
   survtidy
 }
@@ -232,6 +253,7 @@ surv_plot_samebrand <- survtidyall %>%
 
 write_rds(surv_plot_samebrand, here("output", "descriptive", "seconddose", glue("plot_seconddose_samebrand.rds")))
 ggsave(surv_plot_samebrand, filename=glue("plot_seconddose_samebrand.png"), path=here("output", "descriptive", "seconddose"))
+ggsave(surv_plot_samebrand, filename=glue("plot_seconddose_samebrand.pdf"), path=here("output", "descriptive", "seconddose"))
 
 
 surv_plot_diffbrand <- survtidyall %>%
@@ -278,3 +300,4 @@ surv_plot_diffbrand <- survtidyall %>%
 
 write_rds(surv_plot_diffbrand, here("output", "descriptive", "seconddose", glue("plot_seconddose_diffbrand.rds")))
 ggsave(surv_plot_diffbrand, filename=glue("plot_seconddose_diffbrand.png"), path=here("output", "descriptive", "seconddose"))
+ggsave(surv_plot_diffbrand, filename=glue("plot_seconddose_diffbrand.pdf"), path=here("output", "descriptive", "seconddose"))

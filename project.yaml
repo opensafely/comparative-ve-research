@@ -186,6 +186,8 @@ actions:
         rds: output/descriptive/vaxdate/*.rds
       moderately_sensitive:
         png: output/descriptive/vaxdate/*.png
+        pdf: output/descriptive/vaxdate/*.pdf
+        svg: output/descriptive/vaxdate/*.svg
 
   descr_seconddose:
     run: r:latest analysis/descriptive/seconddose.R
@@ -197,6 +199,8 @@ actions:
         rds: output/descriptive/seconddose/*.rds
       moderately_sensitive:
         png: output/descriptive/seconddose/*.png
+        pdf: output/descriptive/seconddose/*.pdf
+        csv: output/descriptive/seconddose/*.csv
 
   ## # # # # # # # # # # # # # # # # # # # 
   ## Models 

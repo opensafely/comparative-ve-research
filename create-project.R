@@ -309,7 +309,9 @@ actions_list <- splice(
       rds = "output/descriptive/vaxdate/*.rds"
     ),
     moderately_sensitive = lst(
-      png = "output/descriptive/vaxdate/*.png"
+      png = "output/descriptive/vaxdate/*.png",
+      pdf = "output/descriptive/vaxdate/*.pdf",
+      svg = "output/descriptive/vaxdate/*.svg"
     )
   ),
 
@@ -321,7 +323,9 @@ actions_list <- splice(
       rds = "output/descriptive/seconddose/*.rds"
     ),
     moderately_sensitive = lst(
-      png = "output/descriptive/seconddose/*.png"
+      png = "output/descriptive/seconddose/*.png",
+      pdf = "output/descriptive/seconddose/*.pdf",
+      csv = "output/descriptive/seconddose/*.csv",
     )
   ),
 

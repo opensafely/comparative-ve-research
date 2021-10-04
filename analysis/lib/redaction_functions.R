@@ -287,7 +287,7 @@ redacted_summary_catcat <- function(
     ) %>%
     select(-.redacted_name1, -.redacted_name2)
 
- print(dat_freq_redact0)
+ #print(dat_freq_redact0)
 
   dat_redacted <- dat_freq_redact0 %>%
     mutate(across(
