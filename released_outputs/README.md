@@ -63,12 +63,19 @@
       * [output/descriptive/km/plot_survival_vaxany2.svg](output/descriptive/km/plot_survival_vaxany2.svg)
     * output/descriptive/seconddose
       * [output/descriptive/seconddose/plot_seconddose_all.png](output/descriptive/seconddose/plot_seconddose_all.png)
+      * [output/descriptive/seconddose/plot_seconddose_covidadmitted.pdf](output/descriptive/seconddose/plot_seconddose_covidadmitted.pdf)
       * [output/descriptive/seconddose/plot_seconddose_covidadmitted.png](output/descriptive/seconddose/plot_seconddose_covidadmitted.png)
+      * [output/descriptive/seconddose/plot_seconddose_covidemergency.pdf](output/descriptive/seconddose/plot_seconddose_covidemergency.pdf)
       * [output/descriptive/seconddose/plot_seconddose_covidemergency.png](output/descriptive/seconddose/plot_seconddose_covidemergency.png)
+      * [output/descriptive/seconddose/plot_seconddose_death.pdf](output/descriptive/seconddose/plot_seconddose_death.pdf)
       * [output/descriptive/seconddose/plot_seconddose_death.png](output/descriptive/seconddose/plot_seconddose_death.png)
+      * [output/descriptive/seconddose/plot_seconddose_diffbrand.pdf](output/descriptive/seconddose/plot_seconddose_diffbrand.pdf)
       * [output/descriptive/seconddose/plot_seconddose_diffbrand.png](output/descriptive/seconddose/plot_seconddose_diffbrand.png)
+      * [output/descriptive/seconddose/plot_seconddose_postest.pdf](output/descriptive/seconddose/plot_seconddose_postest.pdf)
       * [output/descriptive/seconddose/plot_seconddose_postest.png](output/descriptive/seconddose/plot_seconddose_postest.png)
+      * [output/descriptive/seconddose/plot_seconddose_samebrand.pdf](output/descriptive/seconddose/plot_seconddose_samebrand.pdf)
       * [output/descriptive/seconddose/plot_seconddose_samebrand.png](output/descriptive/seconddose/plot_seconddose_samebrand.png)
+      * [output/descriptive/seconddose/seconddose.csv](output/descriptive/seconddose/seconddose.csv)
     * output/descriptive/tables
       * [output/descriptive/tables/table1.csv](output/descriptive/tables/table1.csv)
       * [output/descriptive/tables/table1.html](output/descriptive/tables/table1.html)
@@ -83,8 +90,12 @@
       * [output/descriptive/tables/table_irr.html](output/descriptive/tables/table_irr.html)
       * [output/descriptive/tables/table_irr_simple.html](output/descriptive/tables/table_irr_simple.html)
     * output/descriptive/vaxdate
+      * [output/descriptive/vaxdate/plot_vaxdate_stack.pdf](output/descriptive/vaxdate/plot_vaxdate_stack.pdf)
       * [output/descriptive/vaxdate/plot_vaxdate_stack.png](output/descriptive/vaxdate/plot_vaxdate_stack.png)
+      * [output/descriptive/vaxdate/plot_vaxdate_stack.svg](output/descriptive/vaxdate/plot_vaxdate_stack.svg)
+      * [output/descriptive/vaxdate/plot_vaxdate_step.pdf](output/descriptive/vaxdate/plot_vaxdate_step.pdf)
       * [output/descriptive/vaxdate/plot_vaxdate_step.png](output/descriptive/vaxdate/plot_vaxdate_step.png)
+      * [output/descriptive/vaxdate/plot_vaxdate_step.svg](output/descriptive/vaxdate/plot_vaxdate_step.svg)
   * output/hcw
     * [output/hcw/table1.csv](output/hcw/table1.csv)
     * [output/hcw/table1.html](output/hcw/table1.html)
