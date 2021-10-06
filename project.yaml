@@ -202,6 +202,19 @@ actions:
         pdf: output/descriptive/seconddose/*.pdf
         csv: output/descriptive/seconddose/*.csv
 
+  descr_eventrate:
+    run: r:latest analysis/descriptive/event_date.R
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/descriptive/eventdate/*.rds
+      moderately_sensitive:
+        png: output/descriptive/eventdate/*.png
+        pdf: output/descriptive/eventdate/*.pdf
+        csv: output/descriptive/eventdate/*.csv
+
   ## # # # # # # # # # # # # # # # # # # # 
   ## Models 
   ## # # # # # # # # # # # # # # # # # # # 

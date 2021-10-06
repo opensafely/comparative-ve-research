@@ -329,6 +329,20 @@ actions_list <- splice(
     )
   ),
 
+  action(
+    name = "descr_eventrate",
+    run = "r:latest analysis/descriptive/event_date.R",
+    needs = list("design", "data_selection"),
+    highly_sensitive = lst(
+      rds = "output/descriptive/eventdate/*.rds"
+    ),
+    moderately_sensitive = lst(
+      png = "output/descriptive/eventdate/*.png",
+      pdf = "output/descriptive/eventdate/*.pdf",
+      csv = "output/descriptive/eventdate/*.csv",
+    )
+  ),
+
 
   comment("# # # # # # # # # # # # # # # # # # #", "Models", "# # # # # # # # # # # # # # # # # # #"),
 
