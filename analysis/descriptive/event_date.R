@@ -34,10 +34,14 @@ fs::dir_create(here("output", "descriptive", "eventdate"))
 
 data_cohort <- read_rds(here::here("output", "data", "data_cohort.rds"))
 
-
-
 data_tte <- data_cohort %>%
-  mutate(
+  transmute(
+    patient_id,
+    vax1_date,
+    vax1_day,
+    vax1_type,
+    vax1_type_descr,
+
     end_date,
     censor_date = pmin(
       vax1_date - 1 + lastfupday,
@@ -93,13 +97,13 @@ data_pt <- tmerge(
     alltimes = event(times, times)
   ) %>%
   mutate(
-    tstart_calendar = tstart + vax1_day - 1,
-    tstop_calendar = tstop + vax1_day - 1,
-    vax1_az = (vax1_type=="az")*1,
     date = as.Date(vax1_date)+tstart,
     date_week = lubridate::floor_date(date, unit="week", week_start=1)
   )
 
+
+rm(data_tte)
+rm(data_cohort)
 
 data_by_day <-
   data_pt %>%
