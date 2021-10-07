@@ -202,7 +202,7 @@ actions:
         pdf: output/descriptive/seconddose/*.pdf
         csv: output/descriptive/seconddose/*.csv
 
-  descr_eventrate:
+  descr_eventdate:
     run: r:latest analysis/descriptive/event_date.R
     needs:
     - design
@@ -213,7 +213,7 @@ actions:
       moderately_sensitive:
         png: output/descriptive/eventdate/*.png
         pdf: output/descriptive/eventdate/*.pdf
-        csv: output/descriptive/eventdate/*.csv
+        svg: output/descriptive/eventdate/*.svg
 
   ## # # # # # # # # # # # # # # # # # # # 
   ## Models 

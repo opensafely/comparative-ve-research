@@ -168,7 +168,7 @@ event_rates <-
 
 
 
-write_rds(event_rates, here("output", "descriptive", "vaxdate", "eventdate_step.rds"))
+write_rds(event_rates, here("output", "descriptive", "eventdate", "eventdate_step.rds"))
 ggsave(event_rates, filename="plot_eventdate_step.png", path=here("output", "descriptive", "eventdate"))
 ggsave(event_rates, filename="plot_eventdate_step.svg", path=here("output", "descriptive", "eventdate"))
 ggsave(event_rates, filename="plot_eventdate_step.pdf", path=here("output", "descriptive", "eventdate"))
