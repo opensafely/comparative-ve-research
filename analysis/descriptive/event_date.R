@@ -135,7 +135,7 @@ event_rates <-
   ggplot()+
   geom_hline(aes(yintercept=0), colour='black')+
   geom_step(aes(x=date_week, y=rate, colour=vax1_type_descr), size=1)+
-  facet_grid(rows=vars(outcome_descr_wrap), switch="y")+
+  facet_grid(rows=vars(outcome_descr_wrap), switch="y", scales = "free_y")+
   scale_x_date(
     breaks = seq(min(data_by_day$date_week),max(data_by_day$date_week)+1,by=28),
     limits = c(lubridate::floor_date(min(data_by_day$date_week), "1 month"), NA),
