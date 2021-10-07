@@ -145,7 +145,7 @@ event_rates <-
  # geom_step(aes(x=date_week, y=rate, colour=vax1_type_descr), size=1)+
   geom_segment(aes(x=date_week, y=rate, xend=date_week+7, yend=rate, colour=vax1_type_descr), size=1)+
   geom_segment(aes(x=date_week+7, y=rate, xend=date_week+7, yend=rate_end, colour=vax1_type_descr), size=0.5)+
-  facet_grid(cols=vars(outcome_descr_wrap), switch="y", scales = "free_y")+
+  facet_grid(rows=vars(outcome_descr_wrap), switch="y", scales = "free_y")+
   scale_x_date(
     breaks = seq(min(data_by_day$date_week), max(data_by_day$date_week)+15,by=28),
     limits = c(lubridate::floor_date(min(data_by_day$date_week), "1 month"), NA),
