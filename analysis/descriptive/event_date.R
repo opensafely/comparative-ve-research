@@ -87,14 +87,17 @@ data_pt <- tmerge(
   status_vax1 = tdc(tte_vax1),
   status_postest = tdc(tte_postest),
   status_covidemergency = tdc(tte_covidemergency),
-  status_covidadmitted = tdc(tte_covidadmitted)
-
+  status_covidadmitted = tdc(tte_covidadmitted),
+  status_censor = tdc(tte_censor)
 ) %>%
   tmerge( # add row for each day
     data1 = .,
     data2 = alltimes,
     id = patient_id,
     alltimes = event(times, times)
+  ) %>%
+  filter(
+    status_censor==0 # not strictly necessary as tstop=tte_censor above
   ) %>%
   mutate(
     date = as.Date(vax1_date)+tstart,
@@ -111,9 +114,9 @@ data_by_day <-
   summarise(
     #vax1 = mean(vax1),
     #underfup = n(),
-    postest=mean(postest),
-    covidemergency=mean(covidemergency),
-    covidadmitted=mean(covidadmitted),
+    postest=weighted.mean(postest, 1-status_postest),
+    covidemergency=weighted.mean(covidemergency, 1-status_covidemergency),
+    covidadmitted=weighted.mean(covidadmitted, 1-status_covidadmitted),
 
   ) %>%
   pivot_longer(
@@ -147,7 +150,7 @@ event_rates <-
       labels = scales::label_date("%b %y")
     )
   )+
-  scale_y_continuous(expand=expansion(0), labels=scales::label_number(0.1, scale=1000))+
+  scale_y_continuous(expand=expansion(0), labels=scales::label_number(0.01, scale=1000))+
   scale_colour_brewer(type="qual", palette="Set1")+
   labs(
     x="Date",
@@ -158,6 +161,7 @@ event_rates <-
   theme(
     legend.position = c(0.95,0.15),
     legend.justification = c(1,0),
+    strip.placement = "outside",
     strip.text.y.left = element_text(angle = 0),
     axis.line.x = element_line(colour = "black"),
     axis.text.x.top = element_text(vjust = 1, hjust=0),
