@@ -130,6 +130,10 @@ data_by_day <-
   mutate(
     outcome_descr=fct_inorder(outcome_descr),
     outcome_descr_wrap=fct_inorder(str_wrap(outcome_descr,15))
+  ) %>%
+  group_by(outcome_descr,vax1_type_descr) %>%
+  mutate(
+    rate_end=lead(rate)
   )
 
 
@@ -137,20 +141,22 @@ event_rates <-
   data_by_day %>%
   ggplot()+
   geom_hline(aes(yintercept=0), colour='black')+
-  geom_step(aes(x=date_week, y=rate, colour=vax1_type_descr), size=1)+
+ # geom_step(aes(x=date_week, y=rate, colour=vax1_type_descr), size=1)+
+  geom_segment(aes(x=date_week, y=rate, xend=date_week+7, yend=rate, colour=vax1_type_descr), size=1)+
+  geom_segment(aes(x=date_week+7, y=rate, xend=date_week+7, yend=rate_end, colour=vax1_type_descr), size=1)+
   facet_grid(rows=vars(outcome_descr_wrap), switch="y", scales = "free_y")+
   scale_x_date(
-    breaks = seq(min(data_by_day$date_week),max(data_by_day$date_week)+1,by=28),
+    breaks = seq(min(data_by_day$date_week), max(data_by_day$date_week)+15,by=28),
     limits = c(lubridate::floor_date(min(data_by_day$date_week), "1 month"), NA),
     labels = scales::label_date("%d/%m"),
-    expand = expansion(add=1),
+    expand = expansion(add=3),
     sec.axis = sec_axis(
       trans = ~as.Date(.),
       breaks=as.Date(seq(floor_date(min(data_by_day$date_week), "month"), ceiling_date(max(data_by_day$date_week), "month"),by="month")),
       labels = scales::label_date("%b %y")
     )
   )+
-  scale_y_continuous(expand=expansion(0), labels=scales::label_number(0.01, scale=1000))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.05)), labels=scales::label_number(0.01, scale=1000))+
   scale_colour_brewer(type="qual", palette="Set1")+
   labs(
     x="Date",
@@ -159,12 +165,11 @@ event_rates <-
   )+
   theme_minimal()+
   theme(
-    legend.position = c(0.95,0.15),
+    legend.position = c(0.95,0.16),
     legend.justification = c(1,0),
     strip.placement = "outside",
     strip.text.y.left = element_text(angle = 0),
-    axis.line.x = element_line(colour = "black"),
-    axis.text.x.top = element_text(vjust = 1, hjust=0),
+    axis.text.x.top = element_text(hjust=0),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     axis.ticks.x = element_line(colour = 'black')
