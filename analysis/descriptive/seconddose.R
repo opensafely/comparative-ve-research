@@ -71,7 +71,7 @@ data_tte <-
 data_tab <- data_tte %>%
   mutate(
     vax2_type_descr =if_else((vax2_day-vax1_day)<=20*7, vax2_type_descr, factor(NA_character_)),
-    vaxmatch = vax2_type_descr == vax1_type_descr
+    vaxmatch = as.character(vax2_type_descr) == as.character(vax1_type_descr)
   )
 
 dose_tab <- redacted_summary_catcat(
