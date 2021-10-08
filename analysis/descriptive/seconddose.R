@@ -49,7 +49,6 @@ ceiling_any <- function(x, to=1){
 data_cohort <- read_rds(here::here("output", "data", "data_cohort.rds"))
 
 
-
 data_tte <-
   data_cohort %>%
   mutate(
@@ -71,12 +70,13 @@ data_tte <-
 
 data_tab <- data_tte %>%
   mutate(
-    vax2_type_descr =if_else(vax2_day-vax1_day<20*7, vax2_type_descr, factor(NA_character_))
+    vax2_type_descr =if_else((vax2_day-vax1_day)<=20*7, vax2_type_descr, factor(NA_character_)),
+    vaxmatch = vax2_type_descr == vax1_type_descr
   )
 
 dose_tab <- redacted_summary_catcat(
-  data_tab$vax2_type_descr, data_tab$vax1_type_descr,
-  .missing_name="No second dose",
+  data_tab$vaxmatch, data_tab$vax1_type_descr,
+  .missing_name="no second dose at 20 weeks",
   .redacted_name="REDACTED",
   redaction_threshold=5L,
   redaction_accuracy=1L,
@@ -84,7 +84,7 @@ dose_tab <- redacted_summary_catcat(
 ) %>%
   select(
     `First dose`=.level2,
-    `Second dose, up to 20 weeks`=.level1,
+    `Matching second dose`=.level1,
     everything()
   )
 
