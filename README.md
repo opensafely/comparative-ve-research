@@ -46,7 +46,7 @@ Scripts are organised into five directories:
 
     -   [`model_plr.R`](./analysis/R/models/model_plr.R) fits the pooled logistic regression models. This script takes four arguments:
 
-        -   `outcome`, for example `"postest" for positive SARS-CoV-2 test or `"covidadmitted"` COVID-19 hospitalisation
+        -   `outcome`, for example `"postest"` for positive SARS-CoV-2 test or `"covidadmitted"` COVID-19 hospitalisation
         -   `timescale`, either `calendar` for calendar-time or `timesincevax` for vaccination-time
         -   `censor_seconddose`, whether (`1`) or not (`0`) to censor follow-up at the second dose
         -   `samplesize_nonoutcomes_n`, to reduce computations time, the size of the sample for those who did not experience the outcome of interest. All those who experienced the outcome were included.
