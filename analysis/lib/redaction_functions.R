@@ -240,7 +240,7 @@ redacted_summary_catcat <- function(
   variable2,
   .missing_name = "(missing)",
   .redacted_name="redacted",
-  redaction_threshold=5,
+  redaction_threshold=5L,
   redaction_accuracy=1L,
   .total_name=NULL
 ){
@@ -269,7 +269,6 @@ redacted_summary_catcat <- function(
       pct_nonmiss = (n_nonmiss/sum(n_nonmiss, na.rm=TRUE)),
     ) %>%
     select(-n_nonmiss)
-
 
 
   dat_freq_redact0 <- dat_freq %>%
