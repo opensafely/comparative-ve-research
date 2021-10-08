@@ -40,9 +40,7 @@ gbl_vars <- jsonlite::fromJSON(
 
 # Introduction
 
-The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised clinical trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 vaccine (*ChAdOx1*). To date, there have been no RCTs that have directly compared these two vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same cohort. The concurrent roll-out of BNT162b2 and ChAdOx1 within the same UK population provides an opportunity to emulate such a trial using observational data.
-
-COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease. Patient-facing health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used (`r format(as.Date(gbl_vars$start_date_az), "%d %B %Y")` onwards). This study assessed the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP database covering around 40% of England's population.
+This study assessed the comparative effectiveness of one dose of ChAdOx1 with one dose of BNT162b2 in HCWs, using the OpenSAFELY-TPP database covering around 40% of England's population.
 
 The code and data for this report can be found at the OpenSafely [comparative-ve-research GitHub repository](https://github.com/opensafely/comparative-ve-research).
 
@@ -58,10 +56,9 @@ Vaccinated HCWs were included in the study if:
 -   not classed as Clinically Extremely Vulnerable, as set out by government guidance, at the time of vaccination;
 -   information on sex, ethnicity, deprivation, and geographical region was known.
 
-Study participants were followed up for 14 weeks from the date of the first dose, or until the first of:
+Study participants were followed up for 20 weeks from the date of the first dose, or until the first of:
 
 -   death or deregistration;
--   Second vaccine dose;
 -   The study end date, `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`.
 
 ### Identifying vaccinated HCWs
