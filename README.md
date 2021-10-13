@@ -63,6 +63,12 @@ Scripts are organised into five directories:
     -   [`effectiveness_report.rmd`](./analysis/report/effectiveness_report.rmd) is a R markdown file that puts a lot of the outputs together in one file for easy checking distribution. A pre-cursor to the manuscript.
     -   [`effectiveness_report_comparemodels.rmd`](./analysis/report/effectiveness_report_comparemodels.rmd) makes it easy to compare Cox versus PLR models, and calendar-time or vaccination-time timescales.
 
+## Manuscript
+
+Materials for the manuscript are in the [`manuscript/`](./manuscript) directory. This includes a bibliography, author list, citation style, [the Rmarkdown document where the manuscript is authored](./manuscript/draft-manuscript.Rmd), and rendered copies of the latest version of the manuscript itself.
+
+Figures, tables, and inline numbers in the Rmarkdown manuscript are taken from [non-disclosive, released materials](./released_outputs) from the OpenSAFELY platform.
+
 # About the OpenSAFELY framework
 
 The OpenSAFELY framework is a secure analytics platform for electronic health records research in the NHS.

@@ -1,15 +1,15 @@
 ---
 title: "Comparative effectiveness of ChAdOx1 versus BNT162b2 COVID-19 vaccines in Health and Social Care workers in England: a cohort study using OpenSAFELY"
 output:
-  pdf_document:
-    toc: no
+  word_document: default
   html_document:
     keep_md: yes
     self_contained: yes
   bookdown::html_document2:
     number_sections: no
     toc: no
-  word_document: default
+  pdf_document:
+    toc: no
 bibliography: references.bib
 csl: vancouver.csl
 link-citations: yes
@@ -512,7 +512,7 @@ Our study suggests that there is little to differentiate the vaccines with respe
 
 ## Conclusion
 
-This study found no substantial differences in the incidence of SARS-CoV-2 infection or COVID-19-related hospital events following vaccination with BNT162b2 or ChAdOx1 in a cohort of health and social care workers in England. The incidence of COVID-19-related A&E attendances or hospital admissions four weeks after the first dose of either vaccine was fewer than one event in 10,000-person-years, suggesting strong protective effects for both vaccines but nevertheless limiting power to reliably estimate comparative effectiveness with respect to severe COVID-19 outcomes. Further studies are needed to assess comparative effectiveness in newer, more prevalent variants.
+This study found no substantial differences in the incidence of SARS-CoV-2 infection or COVID-19-related hospital events following vaccination with BNT162b2 or ChAdOx1 in a cohort of health and social care workers in England. The incidence of COVID-19-related A&E attendances or hospital admissions four weeks after the first dose of either vaccine was fewer than one event in 10,000-person-years, suggesting strong protective effects for both vaccines but nevertheless limiting power to reliably estimate comparative effectiveness with respect to severe COVID-19 outcomes. Further studies are needed to assess comparative effectiveness in newer, more prevalent variants and to assess longer-term effectiveness.
 
 \newpage
 
