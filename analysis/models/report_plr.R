@@ -26,11 +26,20 @@ if(length(args)==0){
   outcome <- "postest"
   timescale <- "timesincevax"
   censor_seconddose <- as.integer("0")
+  exclude_prior_infection <- as.integer("1")
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
   censor_seconddose <- as.integer(args[[3]])
+  if (length(args)<4) {exclude_prior_infection <- 0L} else {exclude_prior_infection <- as.integer(args[[4]])}
+}
+
+
+if(exclude_prior_infection==1L){
+  sens_path <- paste0(censor_seconddose,"/","1")
+} else {
+  sens_path <- censor_seconddose
 }
 
 
@@ -105,6 +114,12 @@ if(timescale=="timesincevax"){
 }
 
 
+if(exclude_prior_infection==1L){
+  formula_exclude_prior_infection <- . ~ . - prior_covid_infection
+} else(
+  formula_exclude_prior_infection <- . ~ .
+)
+
 
 ## NOTE
 # calendar-time PLR models are still probably wrong!
@@ -119,7 +134,7 @@ formula_vaxonly_pw <- formula_outcome  %>% update(formula_timesincevax_pw) %>% u
 formula0_pw <- formula_vaxonly_pw
 formula1_pw <- formula_vaxonly_pw %>% update(formula_spacetime)
 formula2_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog)
-formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
+formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs) %>% update(formula_exclude_prior_infection)
 
 ### natural cubic spline formulae ----
 ### estimands
@@ -128,7 +143,7 @@ formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% u
 formula0_ns <- formula_vaxonly_ns
 formula1_ns <- formula_vaxonly_ns %>% update(formula_spacetime)
 formula2_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog)
-formula3_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
+formula3_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs) %>% update(formula_exclude_prior_infection)
 
 
 ## functions for variance estimation ----
@@ -291,13 +306,13 @@ get_HR <- function(.data, model, vcov, term_index){
 
 # Import processed data ----
 
-data_plr <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, "modelplr_data.rds"))
+data_plr <- read_rds(here("output", "models", outcome, timescale, sens_path, "modelplr_data.rds"))
 
 
 
 ## report peicewise models ----
-# tidy_plr_pw <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, "modelplr_tidy_pw.rds"))
-# tidy_plr_pwc <- read_rds(here("output", "models", outcome, "calendar", censor_seconddose, "modelplr_tidy_pw.rds"))
+# tidy_plr_pw <- read_rds(here("output", "models", outcome, timescale, sens_path, "modelplr_tidy_pw.rds"))
+# tidy_plr_pwc <- read_rds(here("output", "models", outcome, "calendar", sens_path, "modelplr_tidy_pw.rds"))
 #
 # effectsplr <- tidy_plr_pw %>%
 #   filter(str_detect(term, fixed("vax1_az"))) %>%
@@ -313,8 +328,8 @@ data_plr <- read_rds(here("output", "models", outcome, timescale, censor_secondd
 #   ) %>%
 #   ungroup()
 #
-# write_rds(effectsplr, path = here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effects_pw.rds")))
-# write_csv(effectsplr, path = here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effects_pw.csv")))
+# write_rds(effectsplr, path = here("output", "models", outcome, timescale, sens_path, glue("reportplr_effects_pw.rds")))
+# write_csv(effectsplr, path = here("output", "models", outcome, timescale, sens_path, glue("reportplr_effects_pw.csv")))
 #
 # plotplr <-
 #   ggplot(data = effectsplr) +
@@ -358,9 +373,9 @@ data_plr <- read_rds(here("output", "models", outcome, timescale, censor_secondd
 #
 # ## save plot
 #
-# write_rds(plotplr, path=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_pw.rds")))
-# ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_pw.svg")), plotplr, width=20, height=15, units="cm")
-# ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_pw.png")), plotplr, width=20, height=15, units="cm")
+# write_rds(plotplr, path=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_pw.rds")))
+# ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_pw.svg")), plotplr, width=20, height=15, units="cm")
+# ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_pw.png")), plotplr, width=20, height=15, units="cm")
 #
 #
 
@@ -380,7 +395,7 @@ data_plr <- read_rds(here("output", "models", outcome, timescale, censor_secondd
 report_estimates <- function(modeltype, timestr){
 
 
-  tidy_plr <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_{modeltype}.rds")))
+  tidy_plr <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_tidy_{modeltype}.rds")))
 
   # effectsplr <- tidy_plr_pw %>%
   #   filter(str_detect(term, fixed("vax1_az"))) %>%
@@ -400,15 +415,15 @@ report_estimates <- function(modeltype, timestr){
 
   ### imort models ----
 
-  plrmod0 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_model0{modeltype}.rds")))
-  plrmod1 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_model1{modeltype}.rds")))
-  plrmod2 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_model2{modeltype}.rds")))
-  plrmod3 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_model3{modeltype}.rds")))
+  plrmod0 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_model0{modeltype}.rds")))
+  plrmod1 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_model1{modeltype}.rds")))
+  plrmod2 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_model2{modeltype}.rds")))
+  plrmod3 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_model3{modeltype}.rds")))
 
-  vcov0 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov0{modeltype}.rds")))
-  vcov1 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov1{modeltype}.rds")))
-  vcov2 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov2{modeltype}.rds")))
-  vcov3 <- read_rds(here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov3{modeltype}.rds")))
+  vcov0 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_vcov0{modeltype}.rds")))
+  vcov1 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_vcov1{modeltype}.rds")))
+  vcov2 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_vcov2{modeltype}.rds")))
+  vcov3 <- read_rds(here("output", "models", outcome, timescale, sens_path, glue("modelplr_vcov3{modeltype}.rds")))
 
   term_index0 <- str_detect(names(coef(plrmod0)), fixed(timestr)) | str_detect(names(coef(plrmod0)), fixed("vax1_az"))
   term_index1 <- str_detect(names(coef(plrmod1)), fixed(timestr)) | str_detect(names(coef(plrmod1)), fixed("vax1_az"))
@@ -437,7 +452,7 @@ report_estimates <- function(modeltype, timestr){
       tidy_plr %>% group_by(model_name, model) %>% summarise() %>% ungroup(), by="model"
     )
 
-  write_rds(effectsplr, path=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effects_{modeltype}.rds")))
+  write_rds(effectsplr, path=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effects_{modeltype}.rds")))
 
 
   ### print estimates at midpoints of cuts
@@ -454,8 +469,8 @@ report_estimates <- function(modeltype, timestr){
     left_join(cuts, by=c("tstop"="midpoint_rounded"))
 
 
-  write_rds(effectsplr_pw, path = here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effects_{modeltype}_midpoint.rds")))
-  write_csv(effectsplr_pw, path = here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effects_{modeltype}_midpoint.csv")))
+  write_rds(effectsplr_pw, path = here("output", "models", outcome, timescale, sens_path, glue("reportplr_effects_{modeltype}_midpoint.rds")))
+  write_csv(effectsplr_pw, path = here("output", "models", outcome, timescale, sens_path, glue("reportplr_effects_{modeltype}_midpoint.csv")))
 
   plotplr_pw <-
     ggplot(data = effectsplr_pw) +
@@ -497,9 +512,9 @@ report_estimates <- function(modeltype, timestr){
     NULL
 
 
-  write_rds(plotplr_pw, path=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_{modeltype}_midpoint.rds")))
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_{modeltype}_midpoint.svg")), plotplr_pw, width=20, height=15, units="cm")
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_{modeltype}_midpoint.png")), plotplr_pw, width=20, height=15, units="cm")
+  write_rds(plotplr_pw, path=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_{modeltype}_midpoint.rds")))
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_{modeltype}_midpoint.svg")), plotplr_pw, width=20, height=15, units="cm")
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_{modeltype}_midpoint.png")), plotplr_pw, width=20, height=15, units="cm")
 
 
   ### plot HR ----
@@ -534,9 +549,9 @@ report_estimates <- function(modeltype, timestr){
     NULL
 
 
-  write_rds(plotplr, path=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_{modeltype}.rds")))
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_{modeltype}.svg")), plotplr, width=20, height=15, units="cm")
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_effectsplot_{modeltype}.png")), plotplr, width=20, height=15, units="cm")
+  write_rds(plotplr, path=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_{modeltype}.rds")))
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_{modeltype}.svg")), plotplr, width=20, height=15, units="cm")
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_effectsplot_{modeltype}.png")), plotplr, width=20, height=15, units="cm")
 
 
   ### marginalised cumulative incidence ----
@@ -689,10 +704,10 @@ report_estimates <- function(modeltype, timestr){
       axis.text.x.top=element_text(hjust=0)
     )
 
-  write_rds(cmlinc_curves, here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_adjustedsurvival_{modeltype}.rds")), compress="gz")
+  write_rds(cmlinc_curves, here("output", "models", outcome, timescale, sens_path, glue("reportplr_adjustedsurvival_{modeltype}.rds")), compress="gz")
 
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_adjustedsurvival_{modeltype}.svg")), cmlinc_plot, width=20, height=15, units="cm")
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_adjustedsurvival_{modeltype}.png")), cmlinc_plot, width=20, height=15, units="cm")
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_adjustedsurvival_{modeltype}.svg")), cmlinc_plot, width=20, height=15, units="cm")
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_adjustedsurvival_{modeltype}.png")), cmlinc_plot, width=20, height=15, units="cm")
 
 
   diff_plot <- ggplot(diff_curves %>% filter(model=="3"))+
@@ -720,10 +735,10 @@ report_estimates <- function(modeltype, timestr){
       axis.text.x.top=element_text(hjust=0)
     )
 
-  write_rds(diff_curves, here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_adjusteddiff_{modeltype}.rds")), compress="gz")
+  write_rds(diff_curves, here("output", "models", outcome, timescale, sens_path, glue("reportplr_adjusteddiff_{modeltype}.rds")), compress="gz")
 
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_adjusteddiff_{modeltype}.svg")), diff_plot, width=20, height=15, units="cm")
-  ggsave(filename=here("output", "models", outcome, timescale, censor_seconddose, glue("reportplr_adjusteddiff_{modeltype}.png")), diff_plot, width=20, height=15, units="cm")
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_adjusteddiff_{modeltype}.svg")), diff_plot, width=20, height=15, units="cm")
+  ggsave(filename=here("output", "models", outcome, timescale, sens_path, glue("reportplr_adjusteddiff_{modeltype}.png")), diff_plot, width=20, height=15, units="cm")
 
 
 }

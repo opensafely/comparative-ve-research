@@ -66,19 +66,30 @@ action <- function(
 
 ## model action function ----
 action_model<- function(
-  outcome, timescale, censor_seconddose, modeltype, samplesize_nonoutcomes_n=NULL
+  outcome, timescale, censor_seconddose, modeltype, samplesize_nonoutcomes_n=NULL, exclude_prior_infection=NULL
 ){
+
+  if(is.null(exclude_prior_infection)){
+    exclude_prior_infection_path<-""
+    exclude_prior_infection_needs<-""
+  } else{
+    if(exclude_prior_infection=="1"){
+      exclude_prior_infection_path<-"/1"
+      exclude_prior_infection_needs<-"_1"
+    }
+  }
+
   action(
-    name = glue("model_{outcome}_{timescale}_{censor_seconddose}_{modeltype}"),
+    name = glue("model_{outcome}_{timescale}_{censor_seconddose}{exclude_prior_infection_needs}_{modeltype}"),
     run = glue("r:latest analysis/models/model_{modeltype}.R"),
-    arguments = c(outcome, timescale, censor_seconddose, samplesize_nonoutcomes_n),
+    arguments = c(outcome, timescale, censor_seconddose, samplesize_nonoutcomes_n, exclude_prior_infection),
     needs = list("design", "data_selection"),
     highly_sensitive = lst(
-      rds = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/model{modeltype}*.rds")
+      rds = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/model{modeltype}*.rds")
     ),
     moderately_sensitive = lst(
-      txt = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/model{modeltype}*.txt"),
-      csv = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/model{modeltype}*.csv")
+      txt = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/model{modeltype}*.txt"),
+      csv = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/model{modeltype}*.csv")
     )
   )
 }
@@ -86,20 +97,30 @@ action_model<- function(
 
 ## report action function ----
 action_report <- function(
-  outcome, timescale, censor_seconddose, modeltype
+  outcome, timescale, censor_seconddose, modeltype, exclude_prior_infection=NULL
 ){
+  if(is.null(exclude_prior_infection)){
+    exclude_prior_infection_path<-""
+    exclude_prior_infection_needs<-""
+  } else{
+    if(exclude_prior_infection=="1"){
+      exclude_prior_infection_path<-"/1"
+      exclude_prior_infection_needs<-"_1"
+    }
+  }
+
   action(
-    name = glue("report_{outcome}_{timescale}_{censor_seconddose}_{modeltype}"),
+    name = glue("report_{outcome}_{timescale}_{censor_seconddose}{exclude_prior_infection_needs}_{modeltype}"),
     run = glue("r:latest analysis/models/report_{modeltype}.R"),
-    arguments = c(outcome, timescale, censor_seconddose),
-    needs = list("design", glue("model_{outcome}_{timescale}_{censor_seconddose}_{modeltype}")),
+    arguments = c(outcome, timescale, censor_seconddose, exclude_prior_infection),
+    needs = list("design", glue("model_{outcome}_{timescale}_{censor_seconddose}{exclude_prior_infection_needs}_{modeltype}")),
     highly_sensitive = lst(
-      rds = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.rds")
+      rds = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/report{modeltype}_*.rds")
     ),
     moderately_sensitive = lst(
-      csv = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.csv"),
-      svg = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.svg"),
-      png = glue("output/models/{outcome}/{timescale}/{censor_seconddose}/report{modeltype}_*.png")
+      csv = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/report{modeltype}_*.csv"),
+      svg = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/report{modeltype}_*.svg"),
+      png = glue("output/models/{outcome}/{timescale}/{censor_seconddose}{exclude_prior_infection_path}/report{modeltype}_*.png")
     )
   )
 }
@@ -455,6 +476,49 @@ actions_list <- splice(
   action_report("covidadmitted", "calendar", "0", "plr"),
 
 
+
+
+  comment("# # # # # # # # # # # # # # # # # # #", "sensitivity -- exclude prior infection", "# # # # # # # # # # # # # # # # # # #"),
+
+  comment("###  Positive SARS-CoV-2 Test"),
+  action_model("postest", "timesincevax", "1", "plr", 50000, "1"),
+  action_report("postest", "timesincevax", "1", "plr", "1"),
+
+  action_model("postest", "timesincevax", "0", "plr", 50000, "1"),
+  action_report("postest", "timesincevax", "0", "plr", "1"),
+
+  comment("###  A&E attendence"),
+  action_model("emergency", "timesincevax", "1", "plr", 50000, "1"),
+  action_report("emergency", "timesincevax", "1", "plr", "1"),
+
+  action_model("emergency", "timesincevax", "0", "plr", 50000, "1"),
+  action_report("emergency", "timesincevax", "0", "plr", "1"),
+
+  comment("###  COVID-19 A&E attendence"),
+  action_model("covidemergency", "timesincevax", "1", "plr", 50000, "1"),
+  action_report("covidemergency", "timesincevax", "1", "plr", "1"),
+
+  action_model("covidemergency", "timesincevax", "0", "plr", 50000, "1"),
+  action_report("covidemergency", "timesincevax", "0", "plr", "1"),
+
+
+  comment("### Unplanned Hospital admission"),
+  action_model("admitted", "timesincevax", "1", "plr", 50000, "1"),
+  action_report("admitted", "timesincevax", "1", "plr", "1"),
+
+  action_model("admitted", "timesincevax", "0", "plr", 50000, "1"),
+  action_report("admitted", "timesincevax", "0", "plr", "1"),
+
+
+  comment("###  COVID-19 hospital admission"),
+
+  action_model("covidadmitted", "timesincevax", "1", "plr", 50000, "1"),
+  action_report("covidadmitted", "timesincevax", "1", "plr", "1"),
+
+  action_model("covidadmitted", "timesincevax", "0", "plr", 50000, "1"),
+  action_report("covidadmitted", "timesincevax", "0", "plr", "1"),
+
+
   comment("# # # # # # # # # # # # # # # # # # #", "Reports", "# # # # # # # # # # # # # # # # # # #"),
 
 
@@ -476,6 +540,28 @@ actions_list <- splice(
       ),
     moderately_sensitive = lst(
       out = "output/report/objects/*"
+    )
+  ),
+
+
+  action(
+    name = "report_objects_sensitivity",
+    run = "r:latest analysis/report/report-objects-sensitivity.R",
+    arguments = NULL,
+    needs = splice(
+      "design", "data_selection",
+      as.list(
+        glue_data(
+          .x = expand_grid(
+            outcome = c("postest", "covidemergency", "covidadmitted"),
+            censor_seconddose = c("0", "1")
+          ),
+          "report_{outcome}_timesincevax_{censor_seconddose}_1_plr"
+        )
+      )
+    ),
+    moderately_sensitive = lst(
+      out = "output/report/objects/sensitivty/exclude_prior_infection/*"
     )
   ),
 

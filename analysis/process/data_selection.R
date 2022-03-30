@@ -40,6 +40,7 @@ data_criteria <- data_processed %>%
     vax1_beforelastvaxdate = vax1_date <= lastvax_date,
     vax1_afterstartdate = vax1_date >= start_date_az,
     vax1_azpfizer = vax1_type %in% c("az", "pfizer"),
+    has_no_prior_infection = !prior_covid_infection,
 
     include = (
       has_age & has_sex & has_imd & has_ethnicity & has_region & has_rural &
@@ -66,7 +67,8 @@ data_flowchart <- data_criteria %>%
     c0_all = vax1_azpfizer & vax1_afterstartdate & vax1_beforelastvaxdate,
     #c1_1yearfup = c0_all & (has_follow_up_previous_year),
     c1_notmissing = c0_all & (has_age & has_sex & has_imd & has_ethnicity & has_region & has_rural),
-    c2_notcev = c1_notmissing & not_cev
+    c2_notcev = c1_notmissing & not_cev,
+    c3_prior_infection = c2_notcev & has_no_prior_infection
   ) %>%
   summarise(
     across(.fns=sum)
@@ -86,9 +88,7 @@ data_flowchart <- data_criteria %>%
       crit == "c0" ~ "HCWs aged 18-64\n  receiving first dose of BNT162b2 or ChAdOx1\n  between 4 January and 28 February 2021",
       crit == "c1" ~ "  with no missing demographic information",
       crit == "c2" ~ "  who are not clinically extremely vulnerable",
-      #crit == "c3" ~ "  with vaccination on or before recruitment end date",
-      #crit == "c4" ~ "  with vaccination on or after recruitment start date",
-      #crit == "c5" ~ "  with Pfizer/BNT or Oxford/AZ vaccine",
+      crit == "c3" ~ "  with no evidence of prior SARS-CoV-2 infection",
       TRUE ~ NA_character_
     )
   )
