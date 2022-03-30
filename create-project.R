@@ -546,7 +546,7 @@ actions_list <- splice(
 
   action(
     name = "report_objects_sensitivity",
-    run = "r:latest analysis/report/report-objects.R",
+    run = "r:latest analysis/report/report-objects-sensitivity.R",
     arguments = NULL,
     needs = splice(
       "design", "data_selection",

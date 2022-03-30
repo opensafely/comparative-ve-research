@@ -1513,7 +1513,7 @@ actions:
         out: output/report/objects/*
 
   report_objects_sensitivity:
-    run: r:latest analysis/report/report-objects.R
+    run: r:latest analysis/report/report-objects-sensitivity.R
     needs:
     - design
     - data_selection
