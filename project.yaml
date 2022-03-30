@@ -1229,6 +1229,271 @@ actions:
         png: output/models/covidadmitted/calendar/0/reportplr_*.png
 
   ## # # # # # # # # # # # # # # # # # # # 
+  ## sensitivity -- exclude prior infection 
+  ## # # # # # # # # # # # # # # # # # # # 
+  ## ###  Positive SARS-CoV-2 Test 
+
+  model_postest_timesincevax_1_1_plr:
+    run: r:latest analysis/models/model_plr.R postest timesincevax 1 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/timesincevax/1/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/postest/timesincevax/1/1/modelplr*.txt
+        csv: output/models/postest/timesincevax/1/1/modelplr*.csv
+
+  report_postest_timesincevax_1_1_plr:
+    run: r:latest analysis/models/report_plr.R postest timesincevax 1 1
+    needs:
+    - design
+    - model_postest_timesincevax_1_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/timesincevax/1/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/postest/timesincevax/1/1/reportplr_*.csv
+        svg: output/models/postest/timesincevax/1/1/reportplr_*.svg
+        png: output/models/postest/timesincevax/1/1/reportplr_*.png
+
+  model_postest_timesincevax_0_1_plr:
+    run: r:latest analysis/models/model_plr.R postest timesincevax 0 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/timesincevax/0/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/postest/timesincevax/0/1/modelplr*.txt
+        csv: output/models/postest/timesincevax/0/1/modelplr*.csv
+
+  report_postest_timesincevax_0_1_plr:
+    run: r:latest analysis/models/report_plr.R postest timesincevax 0 1
+    needs:
+    - design
+    - model_postest_timesincevax_0_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/postest/timesincevax/0/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/postest/timesincevax/0/1/reportplr_*.csv
+        svg: output/models/postest/timesincevax/0/1/reportplr_*.svg
+        png: output/models/postest/timesincevax/0/1/reportplr_*.png
+
+  ## ###  A&E attendence 
+
+  model_emergency_timesincevax_1_1_plr:
+    run: r:latest analysis/models/model_plr.R emergency timesincevax 1 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/1/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/emergency/timesincevax/1/1/modelplr*.txt
+        csv: output/models/emergency/timesincevax/1/1/modelplr*.csv
+
+  report_emergency_timesincevax_1_1_plr:
+    run: r:latest analysis/models/report_plr.R emergency timesincevax 1 1
+    needs:
+    - design
+    - model_emergency_timesincevax_1_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/1/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/emergency/timesincevax/1/1/reportplr_*.csv
+        svg: output/models/emergency/timesincevax/1/1/reportplr_*.svg
+        png: output/models/emergency/timesincevax/1/1/reportplr_*.png
+
+  model_emergency_timesincevax_0_1_plr:
+    run: r:latest analysis/models/model_plr.R emergency timesincevax 0 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/0/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/emergency/timesincevax/0/1/modelplr*.txt
+        csv: output/models/emergency/timesincevax/0/1/modelplr*.csv
+
+  report_emergency_timesincevax_0_1_plr:
+    run: r:latest analysis/models/report_plr.R emergency timesincevax 0 1
+    needs:
+    - design
+    - model_emergency_timesincevax_0_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/emergency/timesincevax/0/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/emergency/timesincevax/0/1/reportplr_*.csv
+        svg: output/models/emergency/timesincevax/0/1/reportplr_*.svg
+        png: output/models/emergency/timesincevax/0/1/reportplr_*.png
+
+  ## ###  COVID-19 A&E attendence 
+
+  model_covidemergency_timesincevax_1_1_plr:
+    run: r:latest analysis/models/model_plr.R covidemergency timesincevax 1 50000
+      1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidemergency/timesincevax/1/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/covidemergency/timesincevax/1/1/modelplr*.txt
+        csv: output/models/covidemergency/timesincevax/1/1/modelplr*.csv
+
+  report_covidemergency_timesincevax_1_1_plr:
+    run: r:latest analysis/models/report_plr.R covidemergency timesincevax 1 1
+    needs:
+    - design
+    - model_covidemergency_timesincevax_1_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidemergency/timesincevax/1/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/covidemergency/timesincevax/1/1/reportplr_*.csv
+        svg: output/models/covidemergency/timesincevax/1/1/reportplr_*.svg
+        png: output/models/covidemergency/timesincevax/1/1/reportplr_*.png
+
+  model_covidemergency_timesincevax_0_1_plr:
+    run: r:latest analysis/models/model_plr.R covidemergency timesincevax 0 50000
+      1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidemergency/timesincevax/0/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/covidemergency/timesincevax/0/1/modelplr*.txt
+        csv: output/models/covidemergency/timesincevax/0/1/modelplr*.csv
+
+  report_covidemergency_timesincevax_0_1_plr:
+    run: r:latest analysis/models/report_plr.R covidemergency timesincevax 0 1
+    needs:
+    - design
+    - model_covidemergency_timesincevax_0_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidemergency/timesincevax/0/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/covidemergency/timesincevax/0/1/reportplr_*.csv
+        svg: output/models/covidemergency/timesincevax/0/1/reportplr_*.svg
+        png: output/models/covidemergency/timesincevax/0/1/reportplr_*.png
+
+  ## ### Unplanned Hospital admission 
+
+  model_admitted_timesincevax_1_1_plr:
+    run: r:latest analysis/models/model_plr.R admitted timesincevax 1 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/admitted/timesincevax/1/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/admitted/timesincevax/1/1/modelplr*.txt
+        csv: output/models/admitted/timesincevax/1/1/modelplr*.csv
+
+  report_admitted_timesincevax_1_1_plr:
+    run: r:latest analysis/models/report_plr.R admitted timesincevax 1 1
+    needs:
+    - design
+    - model_admitted_timesincevax_1_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/admitted/timesincevax/1/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/admitted/timesincevax/1/1/reportplr_*.csv
+        svg: output/models/admitted/timesincevax/1/1/reportplr_*.svg
+        png: output/models/admitted/timesincevax/1/1/reportplr_*.png
+
+  model_admitted_timesincevax_0_1_plr:
+    run: r:latest analysis/models/model_plr.R admitted timesincevax 0 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/admitted/timesincevax/0/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/admitted/timesincevax/0/1/modelplr*.txt
+        csv: output/models/admitted/timesincevax/0/1/modelplr*.csv
+
+  report_admitted_timesincevax_0_1_plr:
+    run: r:latest analysis/models/report_plr.R admitted timesincevax 0 1
+    needs:
+    - design
+    - model_admitted_timesincevax_0_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/admitted/timesincevax/0/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/admitted/timesincevax/0/1/reportplr_*.csv
+        svg: output/models/admitted/timesincevax/0/1/reportplr_*.svg
+        png: output/models/admitted/timesincevax/0/1/reportplr_*.png
+
+  ## ###  COVID-19 hospital admission 
+
+  model_covidadmitted_timesincevax_1_1_plr:
+    run: r:latest analysis/models/model_plr.R covidadmitted timesincevax 1 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/timesincevax/1/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/covidadmitted/timesincevax/1/1/modelplr*.txt
+        csv: output/models/covidadmitted/timesincevax/1/1/modelplr*.csv
+
+  report_covidadmitted_timesincevax_1_1_plr:
+    run: r:latest analysis/models/report_plr.R covidadmitted timesincevax 1 1
+    needs:
+    - design
+    - model_covidadmitted_timesincevax_1_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/timesincevax/1/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/covidadmitted/timesincevax/1/1/reportplr_*.csv
+        svg: output/models/covidadmitted/timesincevax/1/1/reportplr_*.svg
+        png: output/models/covidadmitted/timesincevax/1/1/reportplr_*.png
+
+  model_covidadmitted_timesincevax_0_1_plr:
+    run: r:latest analysis/models/model_plr.R covidadmitted timesincevax 0 50000 1
+    needs:
+    - design
+    - data_selection
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/timesincevax/0/1/modelplr*.rds
+      moderately_sensitive:
+        txt: output/models/covidadmitted/timesincevax/0/1/modelplr*.txt
+        csv: output/models/covidadmitted/timesincevax/0/1/modelplr*.csv
+
+  report_covidadmitted_timesincevax_0_1_plr:
+    run: r:latest analysis/models/report_plr.R covidadmitted timesincevax 0 1
+    needs:
+    - design
+    - model_covidadmitted_timesincevax_0_1_plr
+    outputs:
+      highly_sensitive:
+        rds: output/models/covidadmitted/timesincevax/0/1/reportplr_*.rds
+      moderately_sensitive:
+        csv: output/models/covidadmitted/timesincevax/0/1/reportplr_*.csv
+        svg: output/models/covidadmitted/timesincevax/0/1/reportplr_*.svg
+        png: output/models/covidadmitted/timesincevax/0/1/reportplr_*.png
+
+  ## # # # # # # # # # # # # # # # # # # # 
   ## Reports 
   ## # # # # # # # # # # # # # # # # # # # 
 
@@ -1246,6 +1511,21 @@ actions:
     outputs:
       moderately_sensitive:
         out: output/report/objects/*
+
+  report_objects_sensitivity:
+    run: r:latest analysis/report/report-objects.R
+    needs:
+    - design
+    - data_selection
+    - report_postest_timesincevax_0_1_plr
+    - report_postest_timesincevax_1_1_plr
+    - report_covidemergency_timesincevax_0_1_plr
+    - report_covidemergency_timesincevax_1_1_plr
+    - report_covidadmitted_timesincevax_0_1_plr
+    - report_covidadmitted_timesincevax_1_1_plr
+    outputs:
+      moderately_sensitive:
+        out: output/report/objects/sensitivty/exclude_prior_infection/*
 
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",  knit_root_dir

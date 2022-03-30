@@ -27,14 +27,21 @@ if(length(args)==0){
   timescale <- "timesincevax"
   censor_seconddose <- as.integer("0")
   samplesize_nonoutcomes_n <- 5000
+  exclude_prior_infection <- as.integer("1")
 } else {
   removeobs <- TRUE
   outcome <- args[[1]]
   timescale <- args[[2]]
   censor_seconddose <- as.integer(args[[3]])
   samplesize_nonoutcomes_n <- as.integer(args[[4]])
+  if (length(args)<5) {exclude_prior_infection <- 0L} else {exclude_prior_infection <- as.integer(args[[5]])}
 }
 
+if(exclude_prior_infection==1L){
+  sens_path <- paste0(censor_seconddose,"/","1")
+} else {
+  sens_path <- censor_seconddose
+}
 
 
 ## Import libraries ----
@@ -52,15 +59,18 @@ source(here("analysis", "lib", "redaction_functions.R"))
 source(here("analysis", "lib", "survival_functions.R"))
 
 
+
+
+
 # create output directories ----
-fs::dir_create(here("output", "models", outcome, timescale, censor_seconddose))
+fs::dir_create(here("output", "models", outcome, timescale, sens_path))
 
 ## create special log file ----
-cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_log_{outcome}.txt")), append = FALSE)
+cat(glue("## script info for {outcome} ##"), "  \n", file = here("output", "models", outcome, timescale, sens_path, glue("modelplr_log_{outcome}.txt")), append = FALSE)
 ## function to pass additional log text
 logoutput <- function(...){
-  cat(..., file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
-  cat("\n", file = here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat(..., file = here("output", "models", outcome, timescale, sens_path, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
+  cat("\n", file = here("output", "models", outcome, timescale, sens_path, glue("modelplr_log_{outcome}.txt")), sep = "\n  ", append = TRUE)
 }
 
 ## import metadata ----
@@ -83,7 +93,12 @@ if(censor_seconddose==1){
 }
 
 # Import data ----
-data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
+
+
+data_cohort <- read_rds(here("output", "data", "data_cohort.rds")) %>%
+  filter(
+    prior_covid_infection==0 | (exclude_prior_infection!=1L)
+  )
 
 # calculate time to event variables
 data_tte <- data_cohort %>%
@@ -157,7 +172,7 @@ logoutput(
   glue("data_pt memory usage = ", format(object.size(data_plr), units="GB", standard="SI", digits=3L))
 )
 
-write_rds(data_plr, here("output", "models", outcome, timescale, censor_seconddose, "modelplr_data.rds"), compress="gz")
+write_rds(data_plr, here("output", "models", outcome, timescale, sens_path, "modelplr_data.rds"), compress="gz")
 
 ## make formulas ----
 
@@ -217,6 +232,14 @@ if(timescale=="timesincevax"){
 }
 
 
+if(exclude_prior_infection==1L){
+  formula_exclude_prior_infection <- . ~ . - prior_covid_infection
+} else(
+  formula_exclude_prior_infection <- . ~ .
+)
+
+
+
 ## NOTE
 # calendar-time PLR models are still probably wrong!
 # as time-varying splines for both vaccination time and calendar time are included.
@@ -230,7 +253,7 @@ formula_vaxonly_pw <- formula_outcome  %>% update(formula_timesincevax_pw) %>% u
 formula0_pw <- formula_vaxonly_pw
 formula1_pw <- formula_vaxonly_pw %>% update(formula_spacetime)
 formula2_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog)
-formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
+formula3_pw <- formula_vaxonly_pw %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs) %>% update(formula_exclude_prior_infection)
 
 ### natural cubic spline formulae ----
 ### estimands
@@ -239,7 +262,7 @@ formula_vaxonly_ns <- formula_outcome  %>% update(formula_timesincevax_ns) %>% u
 formula0_ns <- formula_vaxonly_ns
 formula1_ns <- formula_vaxonly_ns %>% update(formula_spacetime)
 formula2_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog)
-formula3_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs)
+formula3_ns <- formula_vaxonly_ns %>% update(formula_spacetime) %>% update(formula_demog) %>% update (formula_comorbs) %>% update(formula_exclude_prior_infection)
 
 
 ## optimisation options ----
@@ -281,10 +304,10 @@ plr_process <- function(plrmod, number, cluster, splinetype){
   #write_rds(tidy, here("output", "models", outcome, timescale, glue("modelplr_tidy{number}{splinetype}.rds")), compress="gz")
 
   vcov <- vcovCL(plrmod, cluster = cluster, type = "HC0")
-  write_rds(vcov, here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_vcov{number}{splinetype}.rds")), compress="gz")
+  write_rds(vcov, here("output", "models", outcome, timescale, sens_path, glue("modelplr_vcov{number}{splinetype}.rds")), compress="gz")
 
   plrmod$data <- NULL
-  write_rds(plrmod, here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_model{number}{splinetype}.rds")), compress="gz")
+  write_rds(plrmod, here("output", "models", outcome, timescale, sens_path, glue("modelplr_model{number}{splinetype}.rds")), compress="gz")
 
   lst(glance, tidy)
 }
@@ -367,15 +390,15 @@ model_glance <- bind_rows(summary0$glance, summary1$glance, summary2$glance, sum
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_glance, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_glance_pw.csv")))
+write_csv(model_glance, here::here("output", "models", outcome, timescale, sens_path, glue("modelplr_glance_pw.csv")))
 
 model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$tidy) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_pw.csv")))
-write_rds(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_pw.rds")))
+write_csv(model_tidy, here::here("output", "models", outcome, timescale, sens_path, glue("modelplr_tidy_pw.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, sens_path, glue("modelplr_tidy_pw.rds")))
 
 ## continuous estimands ----
 
@@ -447,15 +470,15 @@ model_glance <- bind_rows(summary0$glance, summary1$glance, summary2$glance, sum
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_glance, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_glance_ns.csv")))
+write_csv(model_glance, here::here("output", "models", outcome, timescale, sens_path, glue("modelplr_glance_ns.csv")))
 
 model_tidy <- bind_rows(summary0$tidy, summary1$tidy, summary2$tidy, summary3$tidy) %>%
   mutate(
     model_name = fct_recode(as.character(model), !!!model_names),
     outcome = outcome
   )
-write_csv(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_ns.csv")))
-write_rds(model_tidy, here::here("output", "models", outcome, timescale, censor_seconddose, glue("modelplr_tidy_ns.rds")))
+write_csv(model_tidy, here::here("output", "models", outcome, timescale, sens_path, glue("modelplr_tidy_ns.csv")))
+write_rds(model_tidy, here::here("output", "models", outcome, timescale, sens_path, glue("modelplr_tidy_ns.rds")))
 
 ## print warnings ----
 print(warnings())
