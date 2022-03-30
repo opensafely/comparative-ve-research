@@ -1,0 +1,603 @@
+---
+title: "Comparative vaccine effectiveness of ChAdOx1 versus BNT162b2 in Health and Social Care workers in England: Supplementary materials"
+output:
+  pdf_document:
+    toc: no
+  word_document: default
+  bookdown::html_document2:
+    number_sections: no
+    toc: no
+  html_document:
+    keep_md: yes
+    self_contained: yes
+header-includes:
+- \usepackage{float} 
+- \floatplacement{figure}{H}
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+
+library('tidyverse')
+library('here')
+library('glue')
+library('lubridate')
+library('gt')
+library('patchwork')
+library('scales')
+source(here("analysis", "lib", "utility_functions.R"))
+
+
+#output_dir <- here("output")
+output_dir <- here("released_outputs", "output")
+
+fs::dir_create(output_dir, "report", "figures")
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.path = paste0(fs::path(output_dir, "report", "figures"), "/"),
+  fig.pos = 'H' #to stop figures floating around when rendering to pdf
+)
+
+gbl_vars <- jsonlite::read_json(
+  path=here("output", "data", "metadata_study-dates.json")
+)
+
+flowchart <- read_csv(fs::path(output_dir, "data", "flowchart.csv"))
+
+metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
+
+list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
+list2env(list_formula, globalenv())
+lastfupday <- lastfupday20
+```
+
+```{r characteristics, echo=FALSE, warning=FALSE, message=FALSE}
+baseline <- read_csv(fs::path(output_dir, "report", "objects", "baseline.csv"))
+baseline_az <- read_csv(fs::path(output_dir, "report", "objects", "baseline_az.csv"))
+baseline_pfizer <- read_csv(fs::path(output_dir, "report", "objects", "baseline_pfizer.csv"))
+```
+
+```{r, effects, echo=FALSE, message=FALSE, warning=FALSE}
+
+  outcomes <- 
+    c(
+      "postest",
+      "covidemergency",
+      "covidadmitted"
+    ) %>% 
+    set_names(., .)
+
+  cmlinc_ns <- read_csv(fs::path(output_dir, "report", "objects", "cmlinc_ns.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+  cmlinc_pw <- read_csv(fs::path(output_dir, "report", "objects", "cmlinc_pw.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+  
+  riskdiff_ns <- read_csv(fs::path(output_dir, "report", "objects", "riskdiff_ns.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+  riskdiff_pw <- read_csv(fs::path(output_dir, "report", "objects", "riskdiff_pw.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+  
+  hazard_ns <- read_csv(fs::path(output_dir, "report", "objects", "hazard_ns.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+  hazard_pw <- read_csv(fs::path(output_dir, "report", "objects", "hazard_pw.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+
+  
+  plot_cmlinc <- function(model){
+    modell <- model
+    
+    cmlinc_ns %>%
+      filter(model == modell) %>%
+      ggplot()+
+      geom_step(aes(x=tstop, y=(1-survival)*1000, group=vax1_az_descr, colour=vax1_az_descr))+
+      geom_rect(aes(xmin=tstop, xmax=lead_tstop, ymin=(1-survival.ll)*1000, ymax=(1-survival.ul)*1000, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
+      geom_hline(aes(yintercept=0), colour='black')+
+      facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+      scale_x_continuous(
+        breaks = seq(0,7*52,by=28),
+        expand = expansion(0)
+      )+
+      scale_y_continuous(
+        expand = expansion(0),
+        #limits = c(0L,NA)
+      )+
+      scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+      scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+      labs(
+        x=NULL,
+        y="Marginalised\ncumul. incidence\nper 1000",
+        colour=NULL
+      )+
+      theme_minimal(base_size = 9)+
+      theme(
+        legend.position=c(0.95,0.95),
+        legend.justification = c(1,1),
+        legend.direction = "vertical",
+        axis.text.x.top=element_text(hjust=0),
+  
+        panel.border = element_blank(),
+        axis.line.y = element_line(colour = "black"),
+        axis.line.x.top = element_line(colour = "black"),
+  
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        strip.background = element_blank(),
+  
+  
+        panel.spacing = unit(0.8, "lines"),
+  
+      )+
+      NULL
+  }
+  
+   plot_riskdiff <- function(model){
+    
+    modell <- model
+    riskdiff_ns %>%
+      filter(model==modell) %>%
+      ggplot()+
+      geom_hline(aes(yintercept=0), colour='black')+
+      geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
+      geom_rect(aes(xmin=tstop, xmax=lead_tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
+      facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+      scale_x_continuous(
+        limits = c(0, NA),
+        breaks = seq(0,7*52,by=28),
+        expand = expansion(0)
+      )+
+      scale_y_continuous(
+        expand = expansion(0),
+        sec.axis = dup_axis(name="Higher incidence after \n <- ChAdOx1 | BNT162b2 ->", breaks = NULL)
+      )+
+      coord_cartesian(ylim= c(-3, 3))+
+      scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+      scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+      labs(
+        x=NULL,
+        y="Difference\nin cumul. incidence\nper 1000",
+        colour=NULL
+      )+
+      theme_minimal(base_size = 9)+
+      theme(
+        axis.line.y.left = element_line(colour = "black"),
+  
+        #panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_blank(),
+  
+        panel.spacing = unit(0.8, "lines"),
+  
+        plot.title = element_text(hjust = 0),
+        plot.title.position = "plot",
+        plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0, face= "italic")
+  
+       ) +
+     NULL
+  }
+  
+
+  plot_hazard <- function(model){
+    modell <- model
+    
+    hazard_ns %>% 
+      filter(model == modell) %>%
+      ggplot()+
+      geom_hline(aes(yintercept=1), colour='black')+
+      geom_step(aes(x=tstop, y=hr), colour='orchid4', direction="vh")+
+      geom_rect(aes(xmin=lag_tstop, xmax=tstop, ymin=hr.ll, ymax=hr.ul), alpha=0.1, colour="transparent", fill='orchid4')+
+      facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+      scale_x_continuous(
+        limits = c(0, NA),
+        breaks = seq(0,7*52,by=28),
+        expand = expansion(0)
+      )+
+      scale_y_log10(
+        breaks=c(0.1, 0.2, 0.5, 1, 2, 5, 10),
+        sec.axis = dup_axis(name="Higher hazard after \n <- ChAdOx1 | BNT162b2 ->", breaks = NULL)
+      )+
+      coord_cartesian(ylim= c(0.1, 10))+
+      labs(
+        x = "Days since first dose",
+        y = "Hazard ratio"
+      )+
+      theme_minimal(base_size = 9)+
+      theme(
+        axis.line.y.left = element_line(colour = "black"),
+  
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_blank(),
+  
+        panel.spacing = unit(0.8, "lines"),
+  
+        plot.title = element_text(hjust = 0),
+        plot.title.position = "plot",
+        plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0, face= "italic")
+  
+       ) +
+     NULL
+  }
+  
+  
+
+ 
+
+```
+
+\newpage
+
+### Figure S1a: Comparative effectiveness adjusting for region-specific calendar-time
+
+```{r comp1, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=7, out.extra=''}
+patchwork::wrap_plots(plot_cmlinc(1), plot_riskdiff(1), plot_hazard(1), ncol=1)
+```
+
+\newpage
+
+### Figure S1b: Comparative effectiveness adjusting for region-specific calendar-time and demographic characteristics
+
+```{r comp2, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=7, out.extra=''}
+patchwork::wrap_plots(plot_cmlinc(2), plot_riskdiff(2), plot_hazard(2), ncol=1)
+```
+
+\newpage
+
+### Figure S2: Fully adjusted comparative effectiveness using piecewise-constant estimates of the hazard
+
+```{r plot_effects_pw, echo=FALSE, message=FALSE, warning=FALSE, out.width='90%', fig.height=7, results='asis', out.extra=''}
+
+  plot_cmlinc_pw <- 
+    cmlinc_pw %>%
+    filter(model==3) %>%
+    ggplot()+
+    geom_step(aes(x=tstop, y=(1-survival)*1000, group=vax1_az_descr, colour=vax1_az_descr))+
+    geom_rect(aes(xmin=tstop, xmax=lead_tstop, ymin=(1-survival.ll)*1000, ymax=(1-survival.ul)*1000, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
+    geom_hline(aes(yintercept=0), colour='black')+
+    facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+    scale_x_continuous(
+      breaks = seq(0,7*52,by=28),
+      expand = expansion(0)
+    )+
+    scale_y_continuous(
+      expand = expansion(0),
+      #limits = c(0L,NA)
+    )+
+    scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+    scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+    labs(
+      x=NULL,
+      y="Marginalised\ncumul. incidence\nper 1000",
+      colour=NULL
+    )+
+    theme_minimal(base_size = 9)+
+    theme(
+      legend.position=c(0.05,0.1),
+      legend.justification = c(0,0),
+      legend.direction = "vertical",
+      axis.text.x.top=element_text(hjust=0),
+
+      panel.border = element_blank(),
+      axis.line.y = element_line(colour = "black"),
+      axis.line.x.top = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+
+
+      panel.spacing = unit(0.8, "lines"),
+
+    )+
+    NULL
+  
+  ## difference in cumulative incidence
+  
+  plot_riskdiff_pw <-
+    riskdiff_pw %>%
+    filter(model==3) %>%
+    ggplot()+
+    geom_hline(aes(yintercept=0), colour='black')+
+    geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
+    geom_rect(aes(xmin=tstop, xmax=lead_tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
+    facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+    scale_x_continuous(
+      limits = c(0, NA),
+      breaks = seq(0,7*52,by=28),
+      expand = expansion(0)
+    )+
+    scale_y_continuous(
+      expand = expansion(0),
+      sec.axis = dup_axis(name="Higher incidence after \n <- ChAdOx1 | BNT162b2 ->", breaks = NULL)
+    )+
+    coord_cartesian(ylim= c(-3, 3))+
+    scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+    scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+    labs(
+      x=NULL,
+      y="Difference\nin cumul. incidence\nper 1000",
+      colour=NULL
+    )+
+    theme_minimal(base_size = 9)+
+    theme(
+      axis.line.y.left = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+
+      panel.spacing = unit(0.8, "lines"),
+
+      plot.title = element_text(hjust = 0),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0, face= "italic")
+
+     ) +
+   NULL
+
+  
+  ## hazard ratio
+  plot_hazard_pw <-
+    hazard_pw %>%
+    filter(model==3) %>%
+    ggplot()+
+    geom_hline(aes(yintercept=1), colour='black')+
+    geom_step(aes(x=tstop, y=hr), colour='orchid4', direction="vh")+
+    geom_rect(aes(xmin=lag_tstop, xmax=tstop, ymin=hr.ll, ymax=hr.ul), alpha=0.1, colour="transparent", fill='orchid4')+
+    facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+    scale_x_continuous(
+      limits = c(0, NA),
+      breaks = seq(0,7*52,by=28),
+      expand = expansion(0)
+    )+
+    scale_y_log10(
+      breaks=c(0.1, 0.2, 0.5, 1, 2, 5, 10),
+      sec.axis = dup_axis(name="Higher hazard after \n <- ChAdOx1 | BNT162b2 ->", breaks = NULL)
+    )+
+    coord_cartesian(ylim= c(0.1, 10))+
+    labs(
+      x = "Days since first dose",
+      y = "Hazard ratio"
+    )+
+    theme_minimal(base_size = 9)+
+    theme(
+      axis.line.y.left = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+
+      panel.spacing = unit(0.8, "lines"),
+
+      plot.title = element_text(hjust = 0),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0, face= "italic")
+
+     ) +
+   NULL
+  
+patchwork::wrap_plots(plot_cmlinc_pw, plot_riskdiff_pw, plot_hazard_pw, ncol=1)
+```
+
+\newpage
+
+### Figure S3: Second dose interval
+
+Second dose events are censored by study end date, de-registration, death, and additionally by outcome-specific events.
+
+```{r seconddose, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::include_graphics(fs::path(output_dir, "descriptive", "seconddose", "plot_seconddose_all.png"))
+```
+
+\newpage
+
+### Figure S4: Event rates by calendar time
+
+```{r eventrates, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::include_graphics(fs::path(output_dir, "descriptive", "eventdate", "plot_eventdate_step.png"))
+```
+
+\newpage
+
+### Table S1: Inclusion criteria
+
+```{r flowchart, echo=FALSE, warning=FALSE, message=FALSE}
+flowchart %>%
+  transmute(
+    Participants = str_wrap(criteria, 40),
+    N = n,
+    `N excluded` = n_exclude,
+    #`% excluded` = pct_exclude,
+    `% remaining` = pct_all
+  ) %>%
+  mutate(
+    Participants=if_else(row_number()==1,"HCWs aged 18-64 receiving BNT162b2 or ChAdOx1 between 4 Jan and 28 Feb",  Participants)
+  ) %>%
+  gt() %>%
+  fmt_percent(
+    columns = starts_with(c("%")),
+    decimals = 1
+  ) %>%
+  fmt_number(
+    columns = starts_with(c("N")),
+    decimals= 0
+  ) %>%
+  fmt_missing(
+    everything(),
+    missing_text="-"
+  ) %>%
+  tab_style(
+    style=cell_text(whitespace ="pre-wrap"),
+    #style=cell_text(style ="italic"),
+    locations = cells_body(columns = "Participants")
+  )
+```
+
+\newpage
+
+### Table S2: Baseline characteristics before eligibility exclusions
+
+Characteristics for all HCWs aged 18-64 receiving a first dose of BNT162b2 or ChAdOx1 between 4 January and 28 February 2021 and actively registered at at TPP practice are reported, before exclusions due to missing demographic characteristics and Clinically Extremely Vulnerable status.
+
+```{r table1_allvax, echo=FALSE, warning=FALSE, message=FALSE, out.extra=''}
+table1_body <- read_csv(fs::path(output_dir, "descriptive", "tables", "table1_allvax.csv"))
+table1_by <- read_csv(fs::path(output_dir, "descriptive", "tables", "table1_allvax_by.csv"))
+
+table1 <- 
+  table1_body %>%
+  group_by(variable) %>%
+  mutate(
+    label = if_else(row_number()==1, label, str_c("&nbsp;&nbsp;&nbsp;", label)),
+  ) %>%
+  mutate(
+    across(
+      starts_with("stat_"),
+      ~if_else(is.na(.x) & row_number()==1, "", .x)
+    )
+  ) %>%
+  ungroup() %>%
+  mutate(
+    order = cumsum(lag(variable, 1, first(variable))!=variable)
+  ) %>%
+  select(
+    variable, var_label, label, starts_with("stat_"), order
+  ) %>%
+  rename(!!!set_names(table1_by$by_col, table1_by$by_chr))
+
+
+table1 %>%
+  gt() %>%
+  fmt_markdown(columns = "label") %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "gray96")
+    ),
+    locations = cells_body(
+      rows = order%%2 == 0
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+    ),
+    locations = cells_column_labels(everything())
+  ) %>%
+  cols_label(
+     label=md("Characteristic")
+  ) %>%
+  cols_hide(c("variable", "var_label", "order"))
+```
+
+\newpage
+
+### Table S3: Event rates
+
+```{r table_irr, echo=FALSE, message=FALSE, warning=FALSE}
+table_irr <- read_csv(here("output", "descriptive", "tables", "table_irr.csv"))
+
+table_irr %>%
+  filter(
+    event %in% c(
+      "postest",
+      "covidemergency",
+      "covidadmitted",
+      "coviddeath",
+      "seconddose"
+    )
+  ) %>%
+  transmute(
+    outcome_descr, timesincevax,
+    pfizer_q,
+    pfizer_rate_fmt = if_else(pfizer_rate<0.001, "<0.001", number_format(0.001)(pfizer_rate)),
+    pfizer_rate_fmt = if_else(pfizer_rate==0, "0", pfizer_rate_fmt),
+    az_q,
+    az_rate_fmt = if_else(az_rate<0.001, "<0.001", number_format(0.001)(az_rate)),
+    az_rate_fmt = if_else(az_rate==0, "0", az_rate_fmt),
+  ) %>%
+  gt(
+    groupname_col = "outcome_descr",
+  ) %>%
+  cols_label(
+    outcome_descr = "Outcome",
+    timesincevax = "Days since first dose",
+
+    pfizer_q = "Events / person-years",
+    pfizer_rate_fmt = "Incidence",
+
+    az_q   = "Events / person-years",
+    az_rate_fmt = "Incidence",
+  ) %>%
+  fmt_missing(
+    everything(),
+    missing_text="--"
+  ) %>%
+  cols_align(
+    align = "right",
+    columns = everything()
+  ) %>%
+  cols_align(
+    align = "left",
+    columns = "timesincevax"
+  ) %>% 
+  tab_spanner(
+    label = "BNT162b2",
+    columns = starts_with("pfizer")
+  ) %>%
+  tab_spanner(
+    label = "ChAdOx1",
+    columns = starts_with("az")
+  )
+```
+
+### Table S4: Vaccine type for second doses
+
+```{r seconddose_table, echo=FALSE, message=FALSE, warning=FALSE}
+seconddose <- read_csv(fs::path(output_dir, "descriptive", "seconddose", "seconddose.csv"))
+seconddose %>%
+  select(-REDACTED, -pct_nonmiss) %>%
+  gt(
+    #groupname_col="First dose"
+  ) %>%
+  fmt_percent(
+    columns = starts_with("pct"),
+    decimals = 1
+  ) %>%
+  fmt_number(
+    columns = starts_with(c("n")),
+    decimals= 0
+  ) %>%
+  fmt_missing(
+    everything(),
+    missing_text="(REDACTED)"
+  ) %>%
+  cols_label(
+    n = "N",
+    pct = "%"
+  )
+```

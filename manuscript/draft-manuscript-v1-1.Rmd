@@ -1,0 +1,568 @@
+---
+title: "Comparative effectiveness of ChAdOx1 versus BNT162b2 COVID-19 vaccines in Health and Social Care workers in England: a cohort study using OpenSAFELY"
+output:
+  word_document: default
+  html_document:
+    keep_md: yes
+    self_contained: yes
+  bookdown::html_document2:
+    number_sections: no
+    toc: no
+  pdf_document:
+    toc: no
+bibliography: references.bib
+csl: vancouver.csl
+link-citations: yes
+zotero: yes
+header-includes:
+- \usepackage{float} 
+- \floatplacement{figure}{H}
+- \usepackage{caption}
+- \captionsetup[figure]{labelformat=empty}
+- \captionsetup[table]{labelformat=empty}
+---
+
+```{r setup, include=FALSE}
+
+library('tidyverse')
+library('here')
+library('glue')
+library('lubridate')
+library('gt')
+library('patchwork')
+library('scales')
+source(here("analysis", "lib", "utility_functions.R"))
+
+# where are the outputs (ie the inputs for this manuscript!) saved?
+#output_dir_os <- here("output")
+output_dir_os <- here("released_outputs", "output")
+
+# where should we put the objects created within this rmd script?
+output_dir_rmd <- here("manuscript", "figures")
+fs::dir_create(output_dir_rmd)
+
+# only applicable if `self-contained: yes` option is enables in yaml header
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.path = paste0(output_dir_rmd, "/"),
+  fig.pos = 'H' #to stop figures floating around when rendering to pdf
+)
+
+gbl_vars <- jsonlite::read_json(
+  path=here("output", "data", "metadata_study-dates.json")
+)
+
+flowchart <- read_csv(fs::path(output_dir_os, "data", "flowchart.csv"))
+
+```
+
+```{r characteristics, echo=FALSE, warning=FALSE, message=FALSE}
+
+baseline <- read_csv(fs::path(output_dir_os, "report", "objects", "baseline.csv"))
+baseline_az <- read_csv(fs::path(output_dir_os, "report", "objects", "baseline_az.csv"))
+baseline_pfizer <- read_csv(fs::path(output_dir_os, "report", "objects", "baseline_pfizer.csv"))
+
+seconddose <- read_csv(fs::path(output_dir_os, "descriptive", "seconddose", "seconddose.csv"))
+
+samebrand_n <- seconddose %>% filter(`Matching second dose`=="yes") %>% pull(n) %>% sum
+noseconddose_n <- seconddose %>% filter(`Matching second dose`=="no second dose at 20 weeks") %>% pull(n) %>% sum
+crossbrand_n <- seconddose %>% filter(`Matching second dose`=="no") %>% pull(n) %>% sum
+crossbrand_prop <- crossbrand_n/baseline$n
+```
+
+```{r, effects, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+  outcomes <- 
+    c(
+      "postest",
+      "covidemergency",
+      "covidadmitted"
+    ) %>% 
+    set_names(., .)
+
+
+cmlinc_ns <- read_csv(fs::path(output_dir_os, "report", "objects", "cmlinc_ns.csv"))  %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15)),
+    inc_CI_to = paste0(label_number(0.1, scale=1000)(1-survival.ul), " to ", label_number(0.1, scale=1000)(1-survival.ll))
+  )
+cmlinc_pw <- read_csv(fs::path(output_dir_os, "report", "objects", "cmlinc_pw.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15)),
+    inc_CI_to = paste0(label_number(0.1, scale=1000)(1-survival.ul), " to ", label_number(0.1, scale=1000)(1-survival.ll))
+  )
+
+riskdiff_ns <- read_csv(fs::path(output_dir_os, "report", "objects", "riskdiff_ns.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15)),
+    diff_CI_to = paste0(label_number(0.01, scale=1000)(diff.ll), " to ", label_number(0.01, scale=1000)(diff.ul))
+  )
+riskdiff_pw <- read_csv(fs::path(output_dir_os, "report", "objects", "riskdiff_pw.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15)),
+    diff_CI_to = paste0(label_number(0.01, scale=1000)(diff.ll), " to ", label_number(0.01, scale=1000)(diff.ul))
+  )
+
+hazard_ns <- read_csv(fs::path(output_dir_os, "report", "objects", "hazard_ns.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+hazard_pw <- read_csv(fs::path(output_dir_os, "report", "objects", "hazard_pw.csv")) %>%
+  mutate(
+    outcome_descr = fct_inorder(outcome_descr),
+    model_name = fct_inorder(str_wrap(model_name, 15))
+  )
+
+cmlinc_ns3 <- cmlinc_ns %>% filter(model==3)
+cmlinc_pw3 <- cmlinc_pw %>% filter(model==3)
+riskdiff_ns3 <- riskdiff_ns %>% filter(model==3)
+riskdiff_pw3 <- riskdiff_pw %>% filter(model==3)
+hazard_ns3 <- hazard_ns %>% filter(model==3)
+hazard_pw3 <- hazard_pw %>% filter(model==3)
+  
+  
+```
+
+William J Hulme^1^, Elizabeth J Williamson^2^, Amelia Green^1^, Krishnan Bhaskaran^2^, Helen I McDonald^2^, Christopher T Rentsch^2^, Anna Schultze^2^, John Tazare^2^, Helen J Curtis^1^, Alex J Walker^1^, Laurie Tomlinson^2^, Tom Palmer^4,5^, Elsie Horne^4,5^, Brian MacKenna^1^, Caroline E Morton^1^, Amir Mehrkar^1^, Louis Fisher^1^, Seb Bacon^1^, Dave Evans^1^, Peter Inglesby^1^, George Hickman^1^, Simon Davy^1^, Tom Ward ^1^, Richard Croker^1^, Rosalind M Eggo^2^, Angel YS Wong^2^, Rohini Mathur^2^, Kevin Wing^2^, Harriet Forbes^2^, Daniel Grint^2^, Ian J Douglas^2^, Stephen JW Evans^2^, Liam Smeeth^2^, Chris Bates^3^, Jonathan Cockburn^3^, John Parry^3^, Frank Hester^3^, Sam Harper^3^, Jonathan AC Sterne^4,5^, Miguel Hernán^6,7^, Ben Goldacre^1^
+
+1\. The DataLab, Nuffield Department of Primary Care Health Sciences, University of Oxford, OX26GG, UK
+
+2\. London School of Hygiene and Tropical Medicine, Keppel Street, London, WC1E 7HT, UK
+
+3\. TPP, TPP House, 129 Low Lane, Horsforth, Leeds, LS18 5PX
+
+4\. Population Health Sciences, University of Bristol, Oakfield House, Oakfield Grove, Bristol, BS8 2BN, UK
+
+5\. NIHR Bristol, Biomedical Research Centre, Bristol, UK
+
+6\. CAUSALab, Harvard T.H. Chan School of Public Health, Boston, MA 02115
+
+7\. Departments of Epidemiology and Biostatistics, Harvard T.H. Chan School of Public Health, Boston, MA 02115
+
+\newpage
+
+## Abstract
+
+<!-- ### Standard -->
+
+<!-- *Background* -->
+
+<!-- The UK COVID-19 vaccination programme delivered both the BNT162b2 mRNA (Pfizer-BioNTech) and the ChAdOx1 (Oxford-AstraZeneca) vaccines during overlapping periods, providing a rare opportunity to emulate a trial that directly compares both vaccines using routinely-collected NHS data. Frontline Health and Social Care workers comprise a useful population to assess comparative effectiveness due to early vaccine eligibility and relatively high post-vaccination transmission risk due to occupational exposure. -->
+
+<!-- *Methods* -->
+
+<!-- With the approval of NHS England we used the OpenSAFELY-TPP database, covering 40% of GP practices in England and linked to national coronavirus surveillance, hospital episodes, and death registry data, to compare the effectiveness of ChAdOx1 versus BNT162b2 in `r label_number(1, big.mark=",")(flowchart[[nrow(flowchart), "n"]])` health and social care workers vaccinated between 4 January and 28 February 2021. Recipients were followed-up for 20 weeks. Second-dose effects were estimated under an intention-to-treat strategy. Primary outcomes were recorded SARS-CoV-2 infection, COVID-19-related accident and emergency attendance, and unplanned COVID-19-related hospital admission. -->
+
+<!-- *Results* -->
+
+<!-- The cumulative incidence of each outcome was similar for both vaccines during the first 20 weeks post-vaccination. The cumulative incidence of recorded SARS-CoV-2 infection 6 weeks after vaccination with BNT162b2 was `r filter(cmlinc_ns3, outcome=="postest", vax1_az==0, tstop==7*6)$inc_format` per 1000 people (95%CI `r filter(cmlinc_ns3, outcome=="postest", vax1_az==0, tstop==7*6)$inc_CI_to`) and with ChAdOx1 was `r filter(cmlinc_ns3, outcome=="postest", vax1_az==1, tstop==7*6)$inc_format` (95%CI `r filter(cmlinc_ns3, outcome=="postest", vax1_az==1, tstop==7*6)$inc_CI_to`), representing a difference of `r filter(riskdiff_ns3, outcome=="postest", tstop==7*6)$diff_format` per 1000 people (95%CI `r filter(riskdiff_ns3, outcome=="postest", tstop==7*6)$diff_CI_to`). The difference in the cumulative incidence per 1000 people of COVID-19 accident and emergency attendance at 6 weeks was `r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*6)$diff_format` per 1000 people (95%CI `r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*6)$diff_CI_to`). For COVID-19 hospital admission, this difference was `r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*6)$diff_format` per 1000 people (95%CI `r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*6)$diff_CI_to`). -->
+
+<!-- *Conclusion* -->
+
+<!-- In this cohort of healthcare workers where we would not anticipate vaccine type to be related to health status, we found no substantial differences in the incidence of SARS-CoV-2 infection or COVID-19 disease up to 20 weeks after vaccination. Incidence dropped sharply after 3-4 weeks and there were very few COVID-19 hospital attendance and admission events after this period. This is in line with expected onset of vaccine-induced immunity, and suggests strong protection against COVID-19 disease for both vaccines. -->
+
+<!-- **Keywords** COVID-19; Vaccine effectiveness; Target trial; EHR data -->
+
+*Objectives* To compare the effectiveness of the BNT162b2 mRNA (Pfizer-BioNTech) and the ChAdOx1 (Oxford-AstraZeneca) COVID-19 vaccines against infection and COVID-19 disease in health and social care workers.
+
+*Design* Cohort study, emulating a comparative effectiveness trial.
+
+*Setting* Linked primary care, hospital, and COVID-19 surveillance records available within the OpenSAFELY-TPP research platform, covering a period where the SARS-CoV-2 Alpha variant was dominant.
+
+*Participants* `r label_number(1, big.mark=",")(flowchart[[nrow(flowchart), "n"]])` health and social care workers vaccinated between 4 January and 28 February 2021, registered with a GP practice using the TPP SystmOne clinical information system in England, and not clinically extremely vulnerable.
+
+*Interventions* Vaccination with either BNT162b2 or ChAdOx1 administered as part of the national COVID-19 vaccine roll-out.
+
+*Main outcome measures* Recorded SARS-CoV-2 positive test, or COVID-19 related Accident and Emergency attendance or hospital admission occurring within 20 weeks of receipt of the first vaccine dose.
+
+*Results* The cumulative incidence of each outcome was similar for both vaccines during the first 20 weeks post-vaccination. The cumulative incidence of recorded SARS-CoV-2 infection 20 weeks after first-dose vaccination with BNT162b2 was `r filter(cmlinc_ns3, outcome=="postest", vax1_az==0, tstop==7*20)$inc_format` per 1000 people (95%CI `r filter(cmlinc_ns3, outcome=="postest", vax1_az==0, tstop==7*20)$inc_CI_to`) and with ChAdOx1 was `r filter(cmlinc_ns3, outcome=="postest", vax1_az==1, tstop==7*20)$inc_format` (95%CI `r filter(cmlinc_ns3, outcome=="postest", vax1_az==1, tstop==7*20)$inc_CI_to`), representing a difference of `r filter(riskdiff_ns3, outcome=="postest", tstop==7*20)$diff_format` per 1000 people (95%CI `r filter(riskdiff_ns3, outcome=="postest", tstop==7*20)$diff_CI_to`). The difference in the cumulative incidence per 1000 people of COVID-19 accident and emergency attendance at 20 weeks was `r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*20)$diff_format` per 1000 people (95%CI `r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*20)$diff_CI_to`). For COVID-19 hospital admission, this difference was `r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*20)$diff_format` per 1000 people (95%CI `r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*20)$diff_CI_to`).
+
+*Conclusions* In this cohort of healthcare workers where we would not anticipate vaccine type to be related to health status, we found no substantial differences in the incidence of SARS-CoV-2 infection or COVID-19 disease up to 20 weeks after vaccination. Incidence dropped sharply at 3-4 weeks post-vaccination and there were very few COVID-19 hospital attendance and admission events after this period. This is in line with expected onset of vaccine-induced immunity, and suggests strong protection against Alpha-variant COVID-19 disease for both vaccines in this relatively young and healthy population of HCWs.
+
+\newpage
+
+# Introduction
+
+The COVID-19 global pandemic has prompted the rapid development and delivery of vaccines to combat the disease. Following demonstration of high safety and efficacy against symptomatic and severe disease in phase-III randomised controlled trials (RCTs), two vaccines have been approved and widely administered as part of the national vaccination programme in the United Kingdom: the Pfizer-BioNTech BNT162b2 mRNA COVID-19 vaccine @polack2020 (*BNT162b2*) and the Oxford-AstraZeneca ChAdOx1 nCoV-19 viral vector vaccine @voysey2021 (*ChAdOx1*). Post-authorisation assessment of vaccine effectiveness using observational data is necessary to monitor the success of such programmes as, invariably, target populations and settings differ substantially from those of trials. To date, there have been no RCTs that have directly compared the BNT162b2 and ChAdOx1 vaccines to estimate the relative efficacy against COVID-19 infection and disease in the same population. The concurrent roll-out of these vaccines across the UK @collaborative2021, combined with the country's well-developed infrastructure for conducting research using routinely-collected primary care health data, provides a rare opportunity to emulate such a trial using observational data.
+
+COVID-19 vaccination in the UK has been prioritised based on the risk of infection and subsequent severity of disease @covid19. Health and social care workers (HCWs) were amongst the first groups eligible for vaccination due to the potentially high occupational exposure to the SARS-CoV-2 virus, making HCW status an important confounder of the effect of vaccination on infection and post-infection disease. By studying this group in isolation, this confounding is mitigated. Further, unlike many other young people vaccinated later, HCWs were vaccinated during a period of high community infection, increasing event rates and therefore statistical power.
+
+This cohort study used a target-trial design to assess the effectiveness of ChAdOx1 compared with BNT162b2 against COVID-19-related outcomes in HCWs, including second dose effectiveness, using the OpenSAFELY-TPP linked primary care database covering around 40% of England's population. Effectiveness was assessed primarily in an era where the SARS-CoV-2 Alpha variant was dominant.
+
+# Methods
+
+## Data source
+
+The OpenSAFELY-TPP database (<https://opensafely.org>) covers 24 million people registered at National Health Service (NHS) General Practices using TPP SystmOne electronic health record software. It includes pseudonymized data such as coded diagnoses, medications and physiological parameters. No free text data are included. This primary care data is linked, via NHS numbers, with Accident & Emergency (A&E) attendance and in-patient hospital spell records via NHS Digital's Hospital Episode Statistics (HES), national coronavirus testing records via the Second Generation Surveillance System (SGSS), and national death registry records from the Office for National Statistics (ONS). Vaccination status is available in the GP record directly via the National Immunisation Management System (NIMS). Self-designated HCW status is recorded for all vaccine recipients at the time of vaccination, and this information is sent to OpenSAFELY-TPP from NHS Digital's COVID-19 data store.
+
+## Study population
+
+We studied health and social care workers in England vaccinated with either BNT162b2 or ChAdOx1. This group was prioritised for vaccination at the start of the vaccine roll-out due to the potentially high occupational exposure to the SARS-CoV-2 virus, and many were vaccinated during the period where both vaccines were widely used.
+
+Vaccinated HCWs were included in the study if: they were registered at a GP practice using TPP's SystmOne clinical information system on the day that they received their first dose of BNT162b2 or ChAdOx1; the date of vaccination was between `r format(as.Date(gbl_vars$start_date_az), "%d %B")` (when ChAdOx1 was first administered in England) and `r format(as.Date(gbl_vars$lastvax_date), "%d %B %Y")` , a `r as.integer(as.Date(gbl_vars$lastvax_date) - as.Date(gbl_vars$start_date_az)) + 1`-day period during which both vaccines were being administered widely; they were aged between 18 and 64 inclusive; not classed as Clinically Extremely Vulnerable, as set out by government guidance @covid19, at the time of vaccination; information on sex, ethnicity, deprivation, and geographical region was known.
+
+Study participants were followed up for no more than 20 weeks from the day of the first dose, including time after their second dose. Follow-up was censored earlier than this at `r format(as.Date(gbl_vars$end_date), "%d %B %Y")`, death, or de-registration.
+
+## Outcomes
+
+Three outcomes were defined: positive SARS-CoV-2 test; COVID-19 A&E attendance; and unplanned COVID-19 hospital admission. Positive SARS-CoV-2 tests were identified using SGSS records and based on swab date. Both polymerase chain reaction (PCR) and lateral flow positive tests were included, without differentiation between symptomatic and asymptomatic infection. Test provenance, for example patient-initiated tests versus employee-screening, was not known. COVID-19 A&E attendances were identified using HES emergency care records with U07.1 ("COVID-19, virus identified") or U07.2 ("COVID-19, virus not identified") ICD-10 diagnosis codes @emergenc . Unplanned COVID-19 hospital admissions were identified using HES in-patient hospital records with U07.1 or U07.2 reason for admission ICD-10 codes.
+
+Although severe disease (such as requirement for intensive or critical care) and mortality were of interest there were too few events to investigate these outcomes fully. Unadjusted incidence of COVID-19 deaths are reported descriptively. These were identified using linked death registration data. Deaths COVID-19 ICD-10 codes (as above) mentioned anywhere on the death certificate (i.e., as an underlying or contributing cause of death) were included.
+
+## Additional variables
+
+Participant characteristics used describe the cohort and for confounder adjustment include: age, sex (male or female), English Index of Multiple Deprivation (IMD, grouped by quintiles), ethnicity (Black, Mixed, South Asian, White, Other, as per the UK census), NHS region (East of England, Midlands, London, North East and Yorkshire, North West, South East, South West), number of conditions in the clinically "at risk" (but not clinically extremely vulnerable) classification, as per national prioritisation guidelines, the number of SARS-CoV-2 tests in the 90 days prior to the study start date (via SGSS), rurality (urban conurbation, urban city or town, rural town or village), evidence of prior SARS-CoV-2 infection (positive test or COVID-19 hospitalisation), learning disabilities, severe mental illness. All characteristics were ascertained as at the time of vaccination.
+
+## Statistical Analysis
+
+We compared the effectiveness of a first dose of ChAdOx1 versus BNT162b2 using pooled logistic regression @ngwa2016 @efron1988 (PLR) on the time since vaccination timescale with the outcome risk estimated each day. The effect is permitted to vary over the timescale to account for the potential time-varying differences in vaccine protection between the two brands. A PLR model can be used to approximate Cox models with time-varying treatment effects on the time-since-vaccination timescale, and enables the estimation of risk-adjusted cumulative incidence for each vaccine type. This is the average over all participants of the cumulative incidence for each day of follow-up predicted by the PLR model, under the (counterfactual) assumption that everyone received the BNT162b2 vaccine or that everyone received the ChAdOx1 vaccine. Assuming adequate confounder adjustment, this estimates the vaccine-specific cumulative incidence that would have been observed in an RCT comparing the two vaccines in the population under consideration. Standard errors for the PLR model were obtained using the clustered sandwich estimator to account for within-participant clustering. Confidence intervals for the vaccine-specific marginal cumulative incidence, and their difference, were obtained using the delta method (i.e, a first-order Taylor series approximation of the variance).
+
+The PLR model included vaccine type, and a vaccine-specific 3-knot restricted cubic spline for time since vaccination. Knot locations were based on quartiles of the event times. Three models were fit for each outcome, with progressive adjustment for confounders: (1) adjusting for region-specific calendar-time effects, by including a 2-knot restricted cubic spline for the date of vaccination and its interaction with region; (2) additionally adjusting for demographic characteristics; (3) additionally adjusting for clinical characteristics.
+
+During the study period, the advice from the UK Chief Medical Officers was that "second doses of both vaccines will be administered towards the end of the recommended vaccine dosing schedule of 12 weeks" @statemena. Using an intention-to-treat approach, comparative effectiveness estimates beyond 14 weeks were considered to be second-dose effects. We report the actual timing of second doses to assess the extent of any deviation from this recommended treatment strategy, frequency of any cross-brand second doses, and how these may differ between vaccine types.
+
+<!-- Events occurring on the same day as vaccination are included in follow-up. -->
+
+PLR models are computationally expensive to fit, as the input dataset must be arranged as one row per person per day of follow-up. To manage this, a sampling strategy was used such that all those who experienced the event of interest are selected (to retain statistical power), and a random sample of 50,000 event-free participants are selected. Person-time is weighted by the inverse of the sampling probability to recover the characteristics of the complete cohort. <!--Sampling was based on a ranked hash of the person identifier to ensure the sampled non-events overlapped as much as possible across outcomes.-->
+
+## Missing data
+
+A complete-case approach was used to deal with missing values. After exclusions for missing values on demographic variables (see exclusion criteria), there were no missing values in remaining variables as they were defined by the presence or absence of clinical codes or events.
+
+## Software, code, and reproducibility
+
+Data management and analyses were conducted in Python 3.8 and R version 4.0.2. All code is available at <https://github.com/opensafely/comparative-ve-research>, and is shared openly for review and re-use under MIT open license. Codelists are available at <https://www.opencodelists.org/>. No person-level data is shared. Any reported figures based on counts below 6 are redacted or rounded for disclosure control.
+
+This study followed the STROBE-RECORD reporting guidelines.
+
+## Patient and public involvement
+
+We have developed a publicly available website <https://opensafely.org/> through which we invite any patient or member of the public to contact us regarding this study or the broader OpenSAFELY project.
+
+# Results
+
+## Study population
+
+A total of `r label_number(1, big.mark=",")(flowchart[[1, "n"]])` HCWs aged 18-64 receiving a first dose of BNT162b2 or ChAdOx1 between 4 January and 28 February 2021 and actively registered at at TPP practice were identified, with `r label_number(1, big.mark=",")(flowchart[[nrow(flowchart), "n"]])` (`r label_percent(0.1)(flowchart[[nrow(flowchart), "pct_all"]])`) meeting the study eligibility criteria (supplementary Tables S1 and S2).
+
+In total, `r label_number(1, big.mark=",")(baseline_pfizer$n)` (`r label_percent(0.1)(baseline_pfizer$n/baseline$n)`) were vaccinated with BNT162b2, contributing `r label_number(1, big.mark=",")(baseline_pfizer$fu_years)` person-years of potential follow-up (including all person-time prior to a censoring event, and possibly after an outcome event). For ChAdOx1, this was `r label_number(1, big.mark=",")(baseline_az$n)` (`r label_percent(0.1)(baseline_az$n/baseline$n)`) and `r label_number(1, big.mark=",")(baseline_az$fu_years)` person-years.
+
+Characteristics were largely well-balanced between recipients of each vaccine, though regional and temporal differences in the distribution of each vaccine are notable (Table 1). BNT162b2 was on average administered earlier than ChAdOx1 (Figure 1; median day of vaccination `r format(baseline_pfizer$median_vaxday, "%d %B")` for BNT162b2, `r format(baseline_az$median_vaxday, "%d %B")` for ChadOx1). BNT162b2 was relatively more likely to be administered in the South and East of England, and ChAdOx1 the Midlands and Northern England. Evidence of prior SARS-CoV-2 infection was higher in ChAdOx1 recipients (`r label_percent(0.1)(baseline_pfizer$priorinfection)` for BNT162b2, `r label_percent(0.1)(baseline_az$priorinfection)` for ChAdOx1), consistent with ChAdOx1 recipients being vaccinated later on average. The proportion of each clinical condition is slightly higher in ChAdOx1 recipients, though consistently under a 0.6% percent-point difference.
+
+\newpage
+
+#### Figure 1: Vaccination dates
+
+Cumulative enrollment of study participants by date.
+
+```{r, vaxdate, echo=FALSE, message=FALSE, warning=FALSE, out.width='60%', out.height='50%', results='asis', out.extra=''}
+#read_rds(fs::path(output_dir_os, "descriptive", "vaxdate", "plot_vaxdate_stack.rds"))
+knitr::include_graphics(fs::path(output_dir_os, "descriptive", "vaxdate", "plot_vaxdate_stack.png"))
+cat("  \n\n")
+```
+
+#### Table 1: Baseline characteristics
+
+Participant characteristics as on the day of vaccination.
+
+```{r table1, echo=FALSE, warning=FALSE, message=FALSE}
+table1_body <- read_csv(fs::path(output_dir_os, "descriptive", "tables", "table1.csv"))
+table1_by <- read_csv(fs::path(output_dir_os, "descriptive", "tables", "table1_by.csv"))
+
+table1 <- 
+  table1_body %>%
+  group_by(variable) %>%
+  mutate(
+    label = if_else(row_number()==1, label, str_c("&nbsp;&nbsp;&nbsp;", label)),
+  ) %>%
+  mutate(
+    across(
+      starts_with("stat_"),
+      ~if_else(is.na(.x) & row_number()==1, "", .x)
+    )
+  ) %>%
+  ungroup() %>%
+  mutate(
+    order = cumsum(lag(variable, 1, first(variable))!=variable)
+  ) %>%
+  select(
+    variable, var_label, label, starts_with("stat_"), order
+  ) %>%
+  rename(!!!set_names(table1_by$by_col, table1_by$by_chr))
+
+
+table1 %>%
+  gt() %>%
+  fmt_markdown(columns = "label") %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "gray96")
+    ),
+    locations = cells_body(
+      rows = order%%2 == 0
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+    ),
+    locations = cells_column_labels(everything())
+  ) %>%
+  cols_label(
+     label=md("Characteristic")
+  ) %>%
+  cols_hide(c("variable", "var_label", "order"))
+```
+
+\newpage
+
+## Events
+
+Over the duration of `r label_number(1, big.mark=",")(baseline$fu_years)` person-years of follow-up there were `r label_number(1, big.mar=",")(baseline$postest)` positive SARS-CoV-2 tests, `r label_number(1, big.mar=",")(baseline$covidemergency)` COVID-19 A&E attendances, and `r label_number(1, big.mar=",")(baseline$covidadmitted)` COVID-19 hospital admissions. While not a primary outcome, there were also `r if_else(is.na(baseline$death), " fewer than six", label_number(1)(as.integer(baseline$death)))` deaths from any cause, of which `r if_else(is.na(baseline$coviddeath), " fewer than six", label_number(1)(as.integer(baseline$coviddeath)))` were COVID-19 related (supplementary Table S3).
+
+## Second doses
+
+At 12 weeks (72 days), `r label_percent(0.1)(baseline_pfizer$seconddose_12week)` of BNT162b2 recipients had received a second dose, compared with `r label_percent(0.1)(baseline_az$seconddose_12week)` of ChAdOx1 recipients. There were `r label_number(1)(crossbrand_n)` (`r label_percent(0.01)(crossbrand_prop)`) participants who received a second dose within 20 weeks (140 days) that was not the same brand as the first dose, including Moderna mRNA-1273 vaccine second doses (supplementary Figure S3, Table S4).
+
+## Comparative effectiveness
+
+By 6 weeks (42 days) post-vaccination, prior to receipt of the second dose for the vast majority of participants, the ChAdOx1 versus BNT162b2 absolute risk difference per 1000 people (Figure 2) for a positive SARS-CoV-2 test was `r filter(riskdiff_ns3, outcome=="postest", tstop==7*6)$diff_format` (95%CI `r filter(riskdiff_ns3, outcome=="postest", tstop==7*6)$diff_CI_to`), for COVID-19 A&E attendances was `r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*6)$diff_format` (`r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*6)$diff_CI_to`) and for COVID-19 hospital admissions was `r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*6)$diff_format` (`r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*6)$diff_CI_to`).
+
+At 20 weeks (140 days) post-vaccination, at which time most participants had received their second dose, the absolute risk difference per 1000 people for a positive SARS-CoV-2 test was `r filter(riskdiff_ns3, outcome=="postest", tstop==7*20)$diff_format` (95%CI `r filter(riskdiff_ns3, outcome=="postest", tstop==7*20)$diff_CI_to`), for COVID-19 A&E attendances was `r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*20)$diff_format` (`r filter(riskdiff_ns3, outcome=="covidemergency", tstop==7*20)$diff_CI_to`) and for COVID-19 hospital admissions was `r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*20)$diff_format` (`r filter(riskdiff_ns3, outcome=="covidadmitted", tstop==7*20)$diff_CI_to`). We note that extrapolating beyond 20 weeks for positive SARS-CoV-2 tests, we would infer a small advantage for BNT162b2 in terms of absolute risk.
+
+In general, events rates are much higher in the first few weeks after vaccination, and then there is a clear leveling-off after around 3-4 weeks for both vaccines, beyond which the event rates were very low. For COVID-19 hospital attendance and admission events in particular, the difference in the cumulative incidence (and their CIs) was well below 1 event per 1000 people in either direction. The estimated log hazard ratios were non-zero at certain periods (Figure 2), but the underlying absolute risk was small enough that this did not manifest in substantial differences in the cumulative incidence beyond the fourth week.
+
+\newpage
+
+#### Figure 2: Comparative effectiveness
+
+For each outcome based on the fully adjusted model, the marginal cumulative incidence for ChAdOx1 and BNT162b2, their difference, and the hazard ratio are shown. Models that assumed piecewise-constant hazards gave similar effect estimates (supplementary Figure S2). The models with less extensive confounder adjustment gave very similar estimates (supplementary Figure S1) suggesting that recipients of each vaccine were similar after accounting for differences in vaccine allocation over space and time (as did all models).
+
+```{r plot_effects_ns, echo=FALSE, message=FALSE, warning=FALSE, out.extra='', fig.height=7.5, out.width='90%', results='asis'}
+plot_cmlinc_ns <- cmlinc_ns3 %>%
+    ggplot()+
+    geom_step(aes(x=tstop, y=(1-survival)*1000, group=vax1_az_descr, colour=vax1_az_descr))+
+    geom_rect(aes(xmin=tstop, xmax=lead_tstop, ymin=(1-survival.ll)*1000, ymax=(1-survival.ul)*1000, group=vax1_az_descr, fill=vax1_az_descr), alpha=0.1)+
+    geom_hline(aes(yintercept=0), colour='black')+
+    facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+    scale_x_continuous(
+      breaks = seq(0,7*52,by=28),
+      expand = expansion(0)
+    )+
+    scale_y_continuous(
+      expand = expansion(0),
+      #limits = c(0L,NA)
+    )+
+    scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+    scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+    labs(
+      x=NULL,
+      y="Marginalised\ncumul. incidence\nper 1000",
+      colour=NULL
+    )+
+    theme_minimal(base_size = 9)+
+    theme(
+      legend.position=c(0.05,0.1),
+      legend.justification = c(0,0),
+      legend.direction = "vertical",
+      axis.text.x.top=element_text(hjust=0),
+
+      panel.border = element_blank(),
+      axis.line.y = element_line(colour = "black"),
+      axis.line.x.top = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+
+
+      panel.spacing = unit(0.8, "lines"),
+
+    )+
+    NULL
+  
+  ## difference in cumulative incidence
+  
+  plot_riskdiff_ns <-
+    riskdiff_ns3 %>%
+    ggplot()+
+    geom_hline(aes(yintercept=0), colour='black')+
+    geom_step(aes(x=tstop, y=diff*1000), colour='orchid4')+
+    geom_rect(aes(xmin=tstop, xmax=lead_tstop, ymin=diff.ll*1000, ymax=diff.ul*1000), alpha=0.1, colour="transparent", fill='orchid4')+
+    facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+    scale_x_continuous(
+      limits = c(0, NA),
+      breaks = seq(0,7*52,by=28),
+      expand = expansion(0)
+    )+
+    scale_y_continuous(
+      expand = expansion(0),
+      sec.axis = dup_axis(name="Higher incidence after \n <- ChAdOx1 | BNT162b2 ->", breaks = NULL)
+    )+
+    coord_cartesian(ylim= c(-3, 3))+
+    scale_colour_brewer(type="qual", palette="Set1", na.value="grey")+
+    scale_fill_brewer(type="qual", palette="Set1", guide="none", na.value="grey")+
+    labs(
+      x=NULL,
+      y="Difference\nin cumul. incidence\nper 1000",
+      colour=NULL
+    )+
+    theme_minimal(base_size = 9)+
+    theme(
+      axis.line.y.left = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+
+      panel.spacing = unit(0.8, "lines"),
+
+      plot.title = element_text(hjust = 0),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0, face= "italic")
+
+     ) +
+   NULL
+
+  
+  ## hazard ratio
+  plot_hazard_ns <-
+    hazard_ns3 %>%
+    ggplot()+
+    geom_hline(aes(yintercept=1), colour='black')+
+    geom_step(aes(x=tstop, y=hr), colour='orchid4', direction="vh")+
+    geom_rect(aes(xmin=lag_tstop, xmax=tstop, ymin=hr.ll, ymax=hr.ul), alpha=0.1, colour="transparent", fill='orchid4')+
+    facet_wrap(facets=vars(outcome_descr), nrow=1, scales="free_y")+
+    scale_x_continuous(
+      limits = c(0, NA),
+      breaks = seq(0,7*52,by=28),
+      expand = expansion(0)
+    )+
+    scale_y_log10(
+      breaks=c(0.1, 0.2, 0.5, 1, 2, 5, 10),
+      sec.axis = dup_axis(name="Higher hazard after \n <- ChAdOx1 | BNT162b2 ->", breaks = NULL)
+    )+
+    coord_cartesian(ylim= c(0.1, 10))+
+    labs(
+      x = "Days since first dose",
+      y = "Hazard ratio"
+    )+
+    theme_minimal(base_size = 9)+
+    theme(
+      axis.line.y.left = element_line(colour = "black"),
+
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+
+      panel.spacing = unit(0.8, "lines"),
+
+      plot.title = element_text(hjust = 0),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      plot.caption = element_text(hjust = 0, face= "italic")
+
+     ) +
+   NULL
+
+  
+  plot_mainresults <- patchwork::wrap_plots(plot_cmlinc_ns, plot_riskdiff_ns, plot_hazard_ns, ncol=1)
+  ggsave(
+    filename="mainresults.pdf",
+    path=output_dir_rmd,
+    plot=plot_mainresults,
+  )
+  
+  plot_mainresults
+  
+```
+
+\newpage
+
+# Discussion
+
+## Key findings
+
+This observational study of `r label_number(1, big.mark=",")(flowchart[[nrow(flowchart), "n"]])` adult health and social care workers living in England found similar outcomes for those receiving the BNT162b2 or ChAdOx1 COVID-19 vaccines during the first 20 weeks post-vaccination in the Alpha variant era. Consistent with the expected time-to-onset of vaccine-induced immunity at around 2 weeks post-vaccination, plus the delay from infection to the event of interest, event rates tapered after the first few weeks. There were very few COVID-19 hospital attendance and admission events after this period, suggesting strong protective effects for both vaccines but nevertheless limiting power to reliably estimate comparative effectiveness with respect to severe COVID-19 outcomes.
+
+There is some evidence that, compared with ChAdOx1 recipients, there was better longer-term protection for BNT162b2 recipients, but they were more also likely to receive their second dose sooner, likely conferring a greater protective effect that is not accounted for in the intention-to-treat effectiveness estimates.
+
+## Strengths and weaknesses
+
+We used routinely-collected health records with comprehensive coverage of primary care, hospital admissions, COVID-19 testing, COVID-19 vaccination, and death registrations to study vaccinated health and social care workers. This group were eligible for vaccination at the start of the UK's vaccination programme due to exposure to higher viral loads and the need to reduce enforced absences in essential healthcare workers during a global pandemic. As such, HCW status is an important determinant of both vaccination time and SARS-CoV-2 infection, and a certain source of confounding in studies of vaccine effectiveness which may be reduced by studying this group in isolation. Although it is not typically possible to identify HCWs in NHS primary care records, this information was comprehensively collected at the time of COVID-19 vaccination and so is known for all vaccine recipients. HCWs are the only early vaccinees who are relatively young and healthy, and were vaccinated during a period where infection rates were high and both vaccines were being widely administered @collaborative2021. Overall, this provides a rare opportunity to study comparative effectiveness under conditions that, to some extent, approximate random vaccine allocation. However, some limitations remain.
+
+Despite reasonable balance of vaccine allocation across baseline characteristics and adjustment for a range of potential confounders, the possibility of unmeasured confounding remains. The cold storage requirements of BNT162b2 meant that it was more likely to have be administered in Acute NHS Trusts and other large vaccination centres, and is thus a potential confounder for instance due to differences in viral exposure across these settings. Though we adjusted for region, rurality, and deprivation, we were unable to directly account for occupational differences that may affect both exposure risk and vaccine type. For instance, we had no means to quantify any differences in HCW specialty, working hours, or patient contact time between the treatment groups. The primary care practices covered in this study are not geographically representative, as TPP SystmOne software is not widely-used in some regions such as London and the North West.
+
+We were unable to fully investigate differences in protection against severe disease, in large part due to clear protective benefits of both vaccines, reducing the absolute numbers of events, and therefore statistical power, in the studied cohort.
+
+Second-dose effects were considered using an intention-to-treat approach, which does not account for potential differences in the timing of the second dose between vaccine types. However, we found that by 12 weeks more BNT162b2 recipients had received a second dose than ChAdOx1 recipients, which would bias effect estimates in favour of BNT162b2 assuming higher protection after a second-dose of either vaccine. Regardless, there was insufficient power to reliably estimate comparative second-dose effects as event incidence at 12 weeks and beyond was low for both vaccines, with fewer than 10 positive tests per 1000-person-years, and far fewer for COVID-19 A&E attendances and hospital admissions during this period. The need for many thousands more person-years to detect differences in second-dose effects is encouraging to the extent that it suggests extremely high protective effects for both vaccines, though declining background case rates in England over the duration of the study period (Figure S4) would have also contributed to reduced event rates in both treatment groups.
+
+## Findings in context
+
+A number of studies have estimated first-dose COVID-19 vaccine effectiveness in observational data @Iheanacho2021, including BNT162b2 and ChAdOx1 vaccines in similar populations @vasileiou2021 @cabezas2021 @effectiv @bernal2021 @Shrotri2021 and in healthcare workers @Paris2021 @hall2021. Vaccine protection is typically assessed by comparing vaccinated against unvaccinated person-time, or against the early post-vaccination period before anticipated onset of vaccine-induced immunity. Such designs are vulnerable to confounding and selection bias, for example due to vaccine prioritisation and eligibility policies and risk or health-seeking behaviours. In addition, differences in vaccine access and acceptance can cause substantial imbalance between vaccinated and unvaccinated groups that may be impossible to account for. Many of these biases can be bypassed when making direct comparisons between recipients of different vaccine types, if the relative performance of two vaccines is of interest \@@Dickerman2022. To our knowledge, the present study is the first to assess effectiveness of the BNT162b2 and ChAdOx1 vaccines in a head-to-head comparison in either an experimental or observational setting.
+
+Our study suggests that there is little to differentiate the vaccines with respect to their protective effects against infection and hospital-related COVID-19 outcomes within the first 20 weeks after the first dose in adult HCWs under 65 years old. This pushes decisions about which vaccine to favour onto other attributes such as safety profile, logistics, and cost. However, we cannot rule-out larger differences in effectiveness in other settings. For instance: results seen in this cohort of predominantly healthy HCWs may not reflect comparative effectiveness in more vulnerable groups, such as the elderly or immunosuppressed; the dominant circulating variant during the period of study was the Alpha variant but has now been replaced by Delta variant against which vaccines may be less effective @bernal2021; longer-term effectiveness, and in particular the potential immunological waning, may differ.
+
+<!--# Inferring comparative effectiveness from these studies is possible by calculating the ratio of 1 minus the vaccine effectiveness for each vaccine: EAVE-II estimated VE in 18-64 age group in 5th week to be 92% for BNT162b2 and 100% for ChAdOx1, = HR=0.00; EAVE-II estimated VE in 65-79 age group in 4th week to be 91% for BNT162b2 and 68% for ChAdOx1, = HR=3.56; EAVE-II estimated VE in 80+ age group in 4th week to be 88% for BNT162b2 and 81% for ChAdOx1, = HR=1.58.-->
+
+## Conclusion
+
+This study found no substantial differences in the incidence of SARS-CoV-2 infection or COVID-19-related hospital events following vaccination with BNT162b2 or ChAdOx1 in a cohort of health and social care workers in England in the Alpha era. There were very few severe COVID-19 outcomes after the expected onset of vaccine-induced immunity at around 2 weeks, reducing power to reliably compare effectiveness against these outcomes. Further studies are needed to assess comparative effectiveness against newer, more prevalent variants and to assess longer-term effectiveness.
+
+\newpage
+
+# Summary
+
+### What is already known
+
+-   Phase III randomised controlled trials show clear evidence of efficacy of the BNT162b2 mRNA and the ChAdOx1 vaccines
+-   Observational studies have provided further evidence of effectiveness in mass vaccine rollout settings.
+-   No head-to-head comparison of these vaccines has been made in randomised trials, and such comparisons are difficult in observational data without administration of both vaccines across the same population at the same time.
+
+### What this study adds
+
+-   By exploiting the concurrent rollout of both vaccines in health and social care workers in England, we were able to make direct comparisons of first and second dose effectiveness between the vaccines.
+-   We found similar incidence rates for infection and COVID-19-related hospital attendance and admission.
+
+\newpage
+
+## Acknowledgements
+
+We are very grateful for all the support received from the TPP Technical Operations team throughout this work, and for generous assistance from the information governance and database teams at NHS England / NHSX.
+
+## Conflicts of Interest
+
+All authors have completed the ICMJE uniform disclosure form and declare the following: BG has received research funding from Health Data Research UK (HDRUK), the Laura and John Arnold Foundation, the Wellcome Trust, the NIHR Oxford Biomedical Research Centre, the NHS National Institute for Health Research School of Primary Care Research, the Mohn-Westlake Foundation, the Good Thinking Foundation, the Health Foundation, and the World Health Organisation; he also receives personal income from speaking and writing for lay audiences on the misuse of science. IJD holds shares in GlaxoSmithKline (GSK).
+
+## Funding
+
+This work was supported by the Medical Research Council MR/V015737/1 and the Longitudinal Health and wellbeing strand of the National Core Studies programme. The OpenSAFELY platform is funded by the Wellcome Trust. TPP provided technical expertise and infrastructure within their data centre pro bono in the context of a national emergency. BGs work on clinical informatics is supported by the NIHR Oxford Biomedical Research Centre and the NIHR Applied Research Collaboration Oxford and Thames Valley. BG's work on better use of data in healthcare more broadly is currently funded in part by: NIHR Oxford Biomedical Research Centre, NIHR Applied Research Collaboration Oxford and Thames Valley, the Mohn-Westlake Foundation, NHS England, and the Health Foundation; all DataLab staff are supported by BG's grants on this work. LS reports grants from Wellcome, MRC, NIHR, UKRI, British Council, GSK, British Heart Foundation, and Diabetes UK outside this work. KB holds a Wellcome Senior Research Fellowship (220283/Z/20/Z). HIM is funded by the NIHR Health Protection Research Unit in Immunisation, a partnership between Public Health England and London School of Hygiene & Tropical Medicine. AYSW holds a fellowship from the British Heart Foundation. EJW holds grants from MRC. RM holds a Sir Henry Wellcome Fellowship funded by the Wellcome Trust (201375/Z/16/Z). HF holds a UKRI fellowship. IJD holds grants from NIHR and GSK.
+
+Funders had no role in the study design, collection, analysis, and interpretation of data; in the writing of the report and in the decision to submit the article for publication.
+
+The views expressed are those of the authors and not necessarily those of the NIHR, NHS England, Public Health England or the Department of Health and Social Care.
+
+For the purpose of Open Access, the author has applied a CC BY public copyright licence to any Author Accepted Manuscript (AAM) version arising from this submission.
+
+## Information governance and ethical approval
+
+NHS England is the data controller; TPP is the data processor; and the key researchers on OpenSAFELY are acting with the approval of NHS England. This implementation of OpenSAFELY is hosted within the TPP environment which is accredited to the ISO 27001 information security standard and is NHS IG Toolkit compliant @betad @datasec ; Patient data has been pseudonymised for analysis and linkage using industry standard cryptographic hashing techniques; all pseudonymised datasets transmitted for linkage onto OpenSAFELY are encrypted; access to the platform is via a virtual private network (VPN) connection, restricted to a small group of researchers; the researchers hold contracts with NHS England and only access the platform to initiate database queries and statistical models; all database activity is logged; only aggregate statistical outputs leave the platform environment following best practice for anonymisation of results such as statistical disclosure control for low cell counts @isb1523 . The OpenSAFELY research platform adheres to the obligations of the UK General Data Protection Regulation (GDPR) and the Data Protection Act 2018. In March 2020, the Secretary of State for Health and Social Care used powers under the UK Health Service (Control of Patient Information) Regulations 2002 (COPI) to require organisations to process confidential patient information for the purposes of protecting public health, providing healthcare services to the public and monitoring and managing the COVID-19 outbreak and incidents of exposure; this sets aside the requirement for patient consent @coronavi2020 . Taken together, these provide the legal bases to link patient datasets on the OpenSAFELY platform. GP practices, from which the primary care data are obtained, are required to share relevant health information to support the public health response to the pandemic, and have been informed of the OpenSAFELY analytics platform.
+
+This study was approved by the Health Research Authority (REC reference 20/LO/0651) and by the LSHTM Ethics Board (reference 21863).
+
+## Guarantor
+
+BG is guarantor.
+
+\newpage
+
+## References
