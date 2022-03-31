@@ -95,7 +95,7 @@ write_csv(riskdiff_pw, here("output", "report", "objects", "sensitivity", "exclu
 hazard_ns <-
   map_dfr(
     outcomes,
-    ~read_rds(here("output", "models", .x, "timesincevax", "0", glue("reportplr_effects_ns.rds"))),
+    ~read_rds(here("output", "models", .x, "timesincevax", "0", "1", glue("reportplr_effects_ns.rds"))),
     .id="outcome"
   ) %>%
   left_join(metadata_outcomes, by="outcome")
@@ -105,7 +105,7 @@ write_csv(hazard_ns, here("output", "report", "objects", "sensitivity", "exclude
 hazard_pw <-
   map_dfr(
     outcomes,
-    ~read_rds(here("output", "models", .x, "timesincevax", "0", glue("reportplr_effects_pw.rds"))),
+    ~read_rds(here("output", "models", .x, "timesincevax", "0", "1", glue("reportplr_effects_pw.rds"))),
     .id="outcome"
   ) %>%
   left_join(metadata_outcomes, by="outcome")
