@@ -561,7 +561,7 @@ actions_list <- splice(
       )
     ),
     moderately_sensitive = lst(
-      out = "output/report/objects/sensitivty/exclude_prior_infection/*"
+      out = "output/report/objects/sensitivity/exclude_prior_infection/*"
     )
   ),
 
