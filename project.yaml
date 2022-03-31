@@ -1525,7 +1525,7 @@ actions:
     - report_covidadmitted_timesincevax_1_1_plr
     outputs:
       moderately_sensitive:
-        out: output/report/objects/sensitivty/exclude_prior_infection/*
+        out: output/report/objects/sensitivity/exclude_prior_infection/*
 
   rmd_report:
     run: r:latest -e 'rmarkdown::render("analysis/report/effectiveness_report.Rmd",  knit_root_dir
