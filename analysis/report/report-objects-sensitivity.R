@@ -10,8 +10,6 @@ library('scales')
 source(here("analysis", "lib", "utility_functions.R"))
 
 
-data_cohort <- read_rds(here("output", "data", "data_cohort.rds"))
-
 metadata_outcomes <- read_rds(here("output", "data", "metadata_outcomes.rds"))
 
 list_formula <- read_rds(here("output", "data", "metadata_formulas.rds"))
@@ -20,7 +18,7 @@ lastfupday <- lastfupday20
 
 ## create directory ----
 
-fs::dir_create(here("output", "report", "objects"))
+fs::dir_create(here("output", "report", "objects", "sensitivity", "exclude_prior_infection"))
 
 ## baseline information ----
 ### model plots information -----
