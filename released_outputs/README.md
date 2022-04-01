@@ -341,6 +341,14 @@
       * [output/report/objects/hazard_pw.csv](output/report/objects/hazard_pw.csv)
       * [output/report/objects/riskdiff_ns.csv](output/report/objects/riskdiff_ns.csv)
       * [output/report/objects/riskdiff_pw.csv](output/report/objects/riskdiff_pw.csv)
+      * output/report/objects/sensitivity
+        * output/report/objects/sensitivity/exclude_prior_infection
+          * [output/report/objects/sensitivity/exclude_prior_infection/cmlinc_ns.csv](output/report/objects/sensitivity/exclude_prior_infection/cmlinc_ns.csv)
+          * [output/report/objects/sensitivity/exclude_prior_infection/cmlinc_pw.csv](output/report/objects/sensitivity/exclude_prior_infection/cmlinc_pw.csv)
+          * [output/report/objects/sensitivity/exclude_prior_infection/hazard_ns.csv](output/report/objects/sensitivity/exclude_prior_infection/hazard_ns.csv)
+          * [output/report/objects/sensitivity/exclude_prior_infection/hazard_pw.csv](output/report/objects/sensitivity/exclude_prior_infection/hazard_pw.csv)
+          * [output/report/objects/sensitivity/exclude_prior_infection/riskdiff_ns.csv](output/report/objects/sensitivity/exclude_prior_infection/riskdiff_ns.csv)
+          * [output/report/objects/sensitivity/exclude_prior_infection/riskdiff_pw.csv](output/report/objects/sensitivity/exclude_prior_infection/riskdiff_pw.csv)
   * output/seconddose
     * output/seconddose/plots
       * [output/seconddose/plots/plot_histogram_daily_ageband.png](output/seconddose/plots/plot_histogram_daily_ageband.png)
